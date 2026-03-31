@@ -1,3 +1,8 @@
+$script:AvptState = @{
+    Connection = $null
+    Token      = $null
+}
+
 $publicPath = Join-Path -Path $PSScriptRoot -ChildPath 'Public'
 $privatePath = Join-Path -Path $PSScriptRoot -ChildPath 'Private'
 
@@ -14,4 +19,3 @@ $publicFunctions = Get-ChildItem -Path $publicPath -Filter '*.ps1' -ErrorAction 
     Select-Object -ExpandProperty BaseName
 
 Export-ModuleMember -Function $publicFunctions
-

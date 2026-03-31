@@ -8,7 +8,7 @@ It is designed to be more than a thin REST wrapper. The module focuses on practi
 
 This repository is in active public development.
 
-- Current version: `0.1.0`
+- Current version: `0.2.0`
 - License: MIT
 - PowerShell: `7.0+`
 - Support target: cross-platform where AvePoint API access is available
@@ -100,9 +100,10 @@ $clientSecret = ConvertTo-SecureString 'your-client-secret' -AsPlainText -Force
 $credential = [pscredential]::new('your-client-id', $clientSecret)
 
 Connect-AvptElements `
-    -Environment Production `
+    -Environment Commercial `
     -Credential $credential `
-    -TenantName 'contoso-demo'
+    -TenantName 'contoso-demo' `
+    -Scope 'your.scope.value'
 ```
 
 Certificate-based authentication will also be supported without storing secrets in the repository.
@@ -113,9 +114,14 @@ Examples will be expanded as the cmdlet surface grows.
 
 ```powershell
 Test-AvptElementsConnection
-Get-AvptCustomer -All
-Get-AvptBackupOverview -CustomerId '00000000-0000-0000-0000-000000000000'
+Disconnect-AvptElements
 ```
+
+Current implemented authentication commands:
+
+- `Connect-AvptElements`
+- `Disconnect-AvptElements`
+- `Test-AvptElementsConnection`
 
 ## Repository Layout
 
@@ -149,4 +155,3 @@ See [CONTRIBUTING.md](CONTRIBUTING.md) for development standards, public-safety 
 ## Roadmap
 
 See [docs/ROADMAP.md](docs/ROADMAP.md).
-
