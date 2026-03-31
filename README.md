@@ -8,7 +8,7 @@ It is designed to be more than a thin REST wrapper. The module focuses on practi
 
 This repository is in active public development.
 
-- Current version: `0.6.0`
+- Current version: `0.7.0`
 - License: MIT
 - PowerShell: `7.0+`
 - Support target: cross-platform where AvePoint API access is available
@@ -94,6 +94,18 @@ pwsh
 ```powershell
 Import-Module ./src/AvePoint.Elements/AvePoint.Elements.psd1 -Force
 ```
+
+To launch the app-style shell wrapper:
+
+```powershell
+Start-AvptElementsShell
+```
+
+The repository also includes:
+
+- `app/ElementsShell.ps1` as the launcher entry point
+- `tools/Build-ElementsShellExe.ps1` to package a Windows `.exe`
+- `.github/workflows/shell-package.yml` to build the wrapper in GitHub Actions on Windows
 
 ## Authentication Example
 
@@ -212,6 +224,7 @@ Current implemented commands:
 - `Get-AvptWorkspaceDataSecurityPosture`
 - `Get-AvptWorkspaceDataProtectionStatistic`
 - `Get-AvptTenantSummary`
+- `Start-AvptElementsShell`
 - `Test-AvptScopeSet`
 - `Test-AvptElementsConnection`
 
@@ -254,6 +267,7 @@ This project uses semantic versioning.
 - `0.4.0` baseline and risk coverage
 - `0.5.0` broader operational coverage
 - `0.6.0` onboarding and summary workflow improvements
+- `0.7.0` interactive shell wrapper and Windows `.exe` packaging path
 - `1.0.0` first stable public release
 
 Each release is tracked in `CHANGELOG.md` and published with a git tag.

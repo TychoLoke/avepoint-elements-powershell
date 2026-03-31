@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.7.0] - 2026-03-31
+
+### Added
+
+- `Start-AvptElementsShell` for a menu-driven interactive console wrapper
+- `app/ElementsShell.ps1` as the dedicated launcher entry point
+- `tools/Build-ElementsShellExe.ps1` and a Windows packaging workflow for building `ElementsShell.exe`
+
+### Changed
+
+- Extended the project from a cmdlet-only toolkit into an app-style shell experience
+- Added a packaging path for a Windows `.exe` without giving up cross-platform module usage
+
 ## [0.6.0] - 2026-03-31
 
 ### Added

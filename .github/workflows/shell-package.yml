@@ -1,0 +1,29 @@
+name: Package Elements Shell
+
+on:
+  workflow_dispatch:
+  push:
+    tags:
+      - '*'
+
+jobs:
+  build-shell:
+    runs-on: windows-latest
+
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+
+      - name: Setup PowerShell
+        uses: PowerShell/PowerShell-For-GitHub-Actions@v2
+
+      - name: Build ElementsShell.exe
+        shell: pwsh
+        run: |
+          ./tools/Build-ElementsShellExe.ps1
+
+      - name: Upload artifact
+        uses: actions/upload-artifact@v4
+        with:
+          name: ElementsShell
+          path: dist/ElementsShell.exe

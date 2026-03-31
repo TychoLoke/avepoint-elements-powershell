@@ -41,6 +41,7 @@ Describe 'AvePoint.Elements module manifest' {
             'Invoke-AvptTenantMonitorAction'
             'New-AvptBaseline'
             'New-AvptCustomer'
+            'Start-AvptElementsShell'
             'Test-AvptElementsConnection'
             'Test-AvptScopeSet'
         )
@@ -639,5 +640,17 @@ Describe 'Invoke-AvptPagedRequest' {
         }
 
         $result.Count | Should -Be 3
+    }
+}
+
+Describe 'Start-AvptElementsShell' {
+    It 'can start and exit without connecting when SkipConnect is used' {
+        InModuleScope AvePoint.Elements {
+            Mock Show-AvptBanner {}
+            Mock Test-AvptElementsConnection { $false }
+            Mock Read-AvptChoice { 'Exit' }
+
+            { Start-AvptElementsShell -SkipConnect } | Should -Not -Throw
+        }
     }
 }
