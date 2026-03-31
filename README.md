@@ -8,7 +8,7 @@ It is designed to be more than a thin REST wrapper. The module focuses on practi
 
 This repository is in active public development.
 
-- Current version: `0.2.1`
+- Current version: `0.2.2`
 - License: MIT
 - PowerShell: `7.0+`
 - Support target: cross-platform where AvePoint API access is available
@@ -113,6 +113,12 @@ Or use the built-in interactive menu:
 
 ```powershell
 Connect-AvptElements -Environment Commercial -Credential $credential -UseScopeMenu
+```
+
+Or run full guided onboarding:
+
+```powershell
+Connect-AvptElements
 ```
 
 To list the built-in permission catalog:

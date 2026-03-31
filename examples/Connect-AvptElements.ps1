@@ -15,3 +15,6 @@ Connect-AvptElements `
     -Environment Commercial `
     -Credential $credential `
     -UseScopeMenu
+
+# Or run the full guided onboarding flow.
+Connect-AvptElements

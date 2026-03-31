@@ -6,6 +6,8 @@ function Connect-AvptElements {
     .DESCRIPTION
     Creates an in-memory connection for the AvePoint Elements API using either
     client secret authentication or certificate-based authentication.
+    When called without the required connection details, it starts a guided
+    onboarding flow with environment and permission selection.
 
     .PARAMETER Environment
     The AvePoint Elements environment preset to use.
@@ -19,6 +21,10 @@ function Connect-AvptElements {
 
     .PARAMETER ReadOnlyScopeMenu
     Limits the interactive permission menu to read-only scopes.
+
+    .PARAMETER Guided
+    Forces the interactive onboarding flow even when other parameters could be
+    supplied directly.
 
     .PARAMETER Credential
     A PSCredential where the user name is the client ID and the password is the client secret.
@@ -52,11 +58,11 @@ function Connect-AvptElements {
     .EXAMPLE
     Connect-AvptElements -Environment Commercial -ClientId '00000000-0000-0000-0000-000000000000' -CertificatePath ./app.pfx -CertificatePassword (Read-Host -AsSecureString) -Scope 'elements.customers.read.all'
     #>
-    [CmdletBinding(DefaultParameterSetName = 'ClientSecret')]
+    [CmdletBinding(DefaultParameterSetName = 'Interactive')]
     param(
         [Parameter()]
         [ValidateSet('Commercial', 'Government', 'Aos2', 'FedRAMP')]
-        [string] $Environment = 'Commercial',
+        [string] $Environment,
 
         [Parameter()]
         [ValidateNotNullOrEmpty()]
@@ -68,15 +74,18 @@ function Connect-AvptElements {
         [Parameter()]
         [switch] $ReadOnlyScopeMenu,
 
-        [Parameter(Mandatory, ParameterSetName = 'ClientSecret')]
+        [Parameter()]
+        [switch] $Guided,
+
+        [Parameter(ParameterSetName = 'ClientSecret')]
         [pscredential] $Credential,
 
-        [Parameter(Mandatory, ParameterSetName = 'CertificatePath')]
-        [Parameter(Mandatory, ParameterSetName = 'CertificateThumbprint')]
+        [Parameter(ParameterSetName = 'CertificatePath')]
+        [Parameter(ParameterSetName = 'CertificateThumbprint')]
         [ValidateNotNullOrEmpty()]
         [string] $ClientId,
 
-        [Parameter(Mandatory, ParameterSetName = 'CertificatePath')]
+        [Parameter(ParameterSetName = 'CertificatePath')]
         [ValidateNotNullOrEmpty()]
         [string] $CertificatePath,
 
@@ -101,6 +110,50 @@ function Connect-AvptElements {
         [switch] $PassThru
     )
 
+    $shouldRunGuided = $Guided -or (
+        -not $PSBoundParameters.ContainsKey('Credential') -and
+        -not $PSBoundParameters.ContainsKey('ClientId') -and
+        -not $PSBoundParameters.ContainsKey('CertificatePath') -and
+        -not $PSBoundParameters.ContainsKey('CertificateThumbprint')
+    )
+
+    if ($shouldRunGuided) {
+        $guidedSession = Start-AvptConnectOnboarding -ReadOnlyScopeMenu:$ReadOnlyScopeMenu
+
+        $Environment = $guidedSession.Environment
+        $Scope = $guidedSession.Scope
+        $TenantName = $guidedSession.TenantName
+
+        if ($guidedSession.PSObject.Properties['Credential']) {
+            $Credential = $guidedSession.Credential
+        }
+
+        if ($guidedSession.PSObject.Properties['ClientId']) {
+            $ClientId = $guidedSession.ClientId
+        }
+
+        if ($guidedSession.PSObject.Properties['CertificatePath']) {
+            $CertificatePath = $guidedSession.CertificatePath
+        }
+
+        if ($guidedSession.PSObject.Properties['CertificatePassword']) {
+            $CertificatePassword = $guidedSession.CertificatePassword
+        }
+
+        if ($guidedSession.PSObject.Properties['CertificateThumbprint']) {
+            $CertificateThumbprint = $guidedSession.CertificateThumbprint
+        }
+    }
+
+    if (-not $Environment) {
+        if ($UseScopeMenu -or $ReadOnlyScopeMenu) {
+            $Environment = Read-AvptEnvironmentSelection
+        }
+        else {
+            $Environment = 'Commercial'
+        }
+    }
+
     if (-not $Scope) {
         if ($UseScopeMenu -or $ReadOnlyScopeMenu) {
             $Scope = Read-AvptPermissionSelection -ReadOnlyOnly:$ReadOnlyScopeMenu
@@ -108,6 +161,10 @@ function Connect-AvptElements {
         else {
             throw 'Scope is required. Provide -Scope or use -UseScopeMenu / -ReadOnlyScopeMenu.'
         }
+    }
+
+    if (-not $Credential -and -not $ClientId) {
+        throw 'Authentication details are required. Provide -Credential or certificate-based parameters, or run Connect-AvptElements with no arguments for guided onboarding.'
     }
 
     $environmentConfig = Get-AvptEnvironmentConfig -Environment $Environment
@@ -121,22 +178,23 @@ function Connect-AvptElements {
         TenantName  = $TenantName
     }
 
-    switch ($PSCmdlet.ParameterSetName) {
-        'ClientSecret' {
-            $connection.AuthType = 'ClientSecret'
-            $connection.ClientId = $Credential.UserName
-            $connection.ClientSecret = $Credential.Password
-        }
-        'CertificatePath' {
-            $connection.AuthType = 'Certificate'
-            $connection.ClientId = $ClientId
-            $connection.Certificate = Get-AvptCertificate -CertificatePath $CertificatePath -CertificatePassword $CertificatePassword
-        }
-        'CertificateThumbprint' {
-            $connection.AuthType = 'Certificate'
-            $connection.ClientId = $ClientId
-            $connection.Certificate = Get-AvptCertificate -Thumbprint $CertificateThumbprint
-        }
+    if ($Credential) {
+        $connection.AuthType = 'ClientSecret'
+        $connection.ClientId = $Credential.UserName
+        $connection.ClientSecret = $Credential.Password
+    }
+    elseif ($CertificatePath) {
+        $connection.AuthType = 'Certificate'
+        $connection.ClientId = $ClientId
+        $connection.Certificate = Get-AvptCertificate -CertificatePath $CertificatePath -CertificatePassword $CertificatePassword
+    }
+    elseif ($CertificateThumbprint) {
+        $connection.AuthType = 'Certificate'
+        $connection.ClientId = $ClientId
+        $connection.Certificate = Get-AvptCertificate -Thumbprint $CertificateThumbprint
+    }
+    else {
+        throw 'Certificate-based authentication requires -ClientId with either -CertificatePath or -CertificateThumbprint.'
     }
 
     $state.Connection = [pscustomobject] $connection
@@ -162,5 +220,16 @@ function Connect-AvptElements {
             TenantName  = $state.Connection.TenantName
             ExpiresAt   = $state.Token.ExpiresAt
         }
+    }
+    else {
+        Write-Host ''
+        Write-Host 'Connected to AvePoint Elements.' -ForegroundColor Green
+        Write-Host (" Environment : {0}" -f $state.Connection.Environment) -ForegroundColor DarkGray
+        Write-Host (" Auth Type   : {0}" -f $state.Connection.AuthType) -ForegroundColor DarkGray
+        Write-Host (" Scopes      : {0}" -f (($state.Connection.Scope | Sort-Object) -join ', ')) -ForegroundColor DarkGray
+        if ($state.Connection.TenantName) {
+            Write-Host (" Label       : {0}" -f $state.Connection.TenantName) -ForegroundColor DarkGray
+        }
+        Write-Host (" Expires At  : {0}" -f $state.Token.ExpiresAt) -ForegroundColor DarkGray
     }
 }

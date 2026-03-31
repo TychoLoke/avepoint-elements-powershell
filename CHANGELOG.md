@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.2.2] - 2026-03-31
+
+### Added
+
+- Guided onboarding flow for `Connect-AvptElements`
+- Interactive environment selection for Commercial, Government, AOS2, and FedRAMP
+- Interactive authentication method selection
+- Console banner and cleaner connection summary output
+
+### Changed
+
+- `Connect-AvptElements` now starts a full guided onboarding flow when called without connection parameters
+
 ## [0.2.1] - 2026-03-31
 
 ### Added

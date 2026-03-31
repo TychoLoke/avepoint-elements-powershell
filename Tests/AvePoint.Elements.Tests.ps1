@@ -53,6 +53,37 @@ Describe 'Connect-AvptElements' {
             (Get-AvptModuleState).Token.AccessToken | Should -Be 'token-value'
         }
     }
+
+    It 'uses guided onboarding when called without auth parameters' {
+        InModuleScope AvePoint.Elements {
+            Mock Start-AvptConnectOnboarding {
+                [pscustomobject]@{
+                    Environment = 'Commercial'
+                    TenantName  = 'contoso-demo'
+                    Scope       = @('elements.customers.read.all')
+                    Credential  = [pscredential]::new(
+                        'client-id',
+                        (ConvertTo-SecureString 'sample-secret' -AsPlainText -Force)
+                    )
+                }
+            }
+
+            Mock Request-AvptAccessToken {
+                [pscustomobject]@{
+                    AccessToken = 'token-value'
+                    ExpiresAt   = [DateTimeOffset]::UtcNow.AddHours(1)
+                    Scope       = @('elements.customers.read.all')
+                    TokenType   = 'Bearer'
+                }
+            }
+
+            $session = Connect-AvptElements -PassThru
+
+            $session.ClientId | Should -Be 'client-id'
+            $session.TenantName | Should -Be 'contoso-demo'
+            $session.Scope | Should -Contain 'elements.customers.read.all'
+        }
+    }
 }
 
 Describe 'Disconnect-AvptElements' {
