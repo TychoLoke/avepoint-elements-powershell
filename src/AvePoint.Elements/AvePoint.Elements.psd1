@@ -1,6 +1,6 @@
 @{
     RootModule           = 'AvePoint.Elements.psm1'
-    ModuleVersion        = '0.3.0'
+    ModuleVersion        = '0.4.0'
     GUID                 = '7fbe5f68-bb17-4a67-81d5-8ad3884d783f'
     Author               = 'Tycho Loke'
     CompanyName          = 'Open Source'
@@ -13,15 +13,22 @@
         'Disconnect-AvptElements'
         'Get-AvptBackupJob'
         'Get-AvptBackupOverview'
+        'Get-AvptBaseline'
+        'Get-AvptBaselineReport'
+        'Get-AvptBaselineTenant'
         'Get-AvptCustomer'
         'Get-AvptCustomerService'
         'Get-AvptPermissionScope'
         'Get-AvptProductOverview'
+        'Get-AvptRiskHitItem'
+        'Get-AvptRiskRule'
         'Get-AvptScanProfile'
         'Get-AvptScanProfileChange'
         'Get-AvptScanProfileDetail'
         'Get-AvptScopeBundle'
         'Get-AvptTenantSeat'
+        'Invoke-AvptTenantMonitorAction'
+        'New-AvptBaseline'
         'Test-AvptScopeSet'
         'Test-AvptElementsConnection'
     )
@@ -33,7 +40,7 @@
             Tags         = @('AvePoint', 'Elements', 'MSP', 'Automation', 'PowerShell')
             ProjectUri   = 'https://github.com/TychoLoke/avepoint-elements-powershell'
             LicenseUri   = 'https://github.com/TychoLoke/avepoint-elements-powershell/blob/main/LICENSE'
-            ReleaseNotes = 'Add the first read-only cmdlets for customers, services, licensing, backup visibility, and scan profiles.'
+            ReleaseNotes = 'Add baseline and risk cmdlets plus improved object shaping for customer and service outputs.'
         }
     }
 }

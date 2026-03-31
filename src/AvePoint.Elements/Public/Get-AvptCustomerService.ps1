@@ -21,7 +21,10 @@ function Get-AvptCustomerService {
     }
 
     foreach ($item in $items) {
-        ConvertTo-AvptFriendlyObject -InputObject $item -TypeName 'AvePoint.Elements.CustomerService'
+        $service = ConvertTo-AvptFriendlyObject -InputObject $item -TypeName 'AvePoint.Elements.CustomerService'
+        $service | Add-Member -NotePropertyName ProductCount -NotePropertyValue @($item.products).Count
+        $service | Add-Member -NotePropertyName ServiceNames -NotePropertyValue (@($item.products | ForEach-Object { $_.service }) -join ', ')
+        $service.products = @($item.products | ForEach-Object { ConvertTo-AvptNestedObject -InputObject $_ -TypeName 'AvePoint.Elements.ServiceSubscription' })
+        $service
     }
 }
-

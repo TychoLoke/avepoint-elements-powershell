@@ -17,7 +17,11 @@ function Invoke-AvptPagedOperation {
 
         [switch] $All,
 
-        [string] $ScopeBundle
+        [string] $ScopeBundle,
+
+        [string] $DataProperty = 'data',
+
+        [string] $MetadataProperty = 'metadata'
     )
 
     $results = [System.Collections.Generic.List[object]]::new()
@@ -35,7 +39,8 @@ function Invoke-AvptPagedOperation {
         $queryWithPaging.pageSize = $PageSize
 
         $response = Invoke-AvptWebRequest -Method $Method -Path $Path -Query $queryWithPaging -Body $Body -ScopeBundle $ScopeBundle
-        foreach ($item in @($response.data)) {
+        $pageItems = $response.$DataProperty
+        foreach ($item in @($pageItems)) {
             $results.Add($item)
         }
 
@@ -43,7 +48,7 @@ function Invoke-AvptPagedOperation {
             break
         }
 
-        $metadata = $response.metadata
+        $metadata = $response.$MetadataProperty
         if (-not $metadata) {
             break
         }

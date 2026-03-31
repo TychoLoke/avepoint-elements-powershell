@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.4.0] - 2026-03-31
+
+### Added
+
+- Baseline retrieval via `Get-AvptBaseline`, `Get-AvptBaselineReport`, and `Get-AvptBaselineTenant`
+- Risk visibility via `Get-AvptRiskRule` and `Get-AvptRiskHitItem`
+- Safe write actions with `ShouldProcess` via `New-AvptBaseline` and `Invoke-AvptTenantMonitorAction`
+
+### Changed
+
+- Improved customer output with tenant counts and tenant name summaries
+- Improved customer service output with product counts and service name summaries
+- Pagination helper now supports alternate metadata property names used by risk hit item responses
+
 ## [0.3.0] - 2026-03-31
 
 ### Added

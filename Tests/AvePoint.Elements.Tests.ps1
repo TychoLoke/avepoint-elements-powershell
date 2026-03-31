@@ -14,15 +14,22 @@ Describe 'AvePoint.Elements module manifest' {
             'Disconnect-AvptElements'
             'Get-AvptBackupJob'
             'Get-AvptBackupOverview'
+            'Get-AvptBaseline'
+            'Get-AvptBaselineReport'
+            'Get-AvptBaselineTenant'
             'Get-AvptCustomer'
             'Get-AvptCustomerService'
             'Get-AvptPermissionScope'
             'Get-AvptProductOverview'
+            'Get-AvptRiskHitItem'
+            'Get-AvptRiskRule'
             'Get-AvptScanProfile'
             'Get-AvptScanProfileChange'
             'Get-AvptScanProfileDetail'
             'Get-AvptScopeBundle'
             'Get-AvptTenantSeat'
+            'Invoke-AvptTenantMonitorAction'
+            'New-AvptBaseline'
             'Test-AvptElementsConnection'
             'Test-AvptScopeSet'
         )
@@ -210,6 +217,7 @@ Describe 'Read-only cmdlets' {
 
             $result = @(Get-AvptCustomer)
             $result[0].ManagementModeName | Should -Be 'PartnerManaged'
+            $result[0].TenantCount | Should -Be 0
         }
     }
 
@@ -229,6 +237,55 @@ Describe 'Read-only cmdlets' {
             $result = @(Get-AvptBackupJob -CustomerId 'customer-1')
             $result[0].JobTypeName | Should -Be 'Microsoft365'
             $result[0].StatusName | Should -Be 'Finished'
+        }
+    }
+
+    It 'uses the Baseline bundle for baseline retrieval' {
+        InModuleScope AvePoint.Elements {
+            Mock Invoke-AvptPagedOperation {
+                @(
+                    [pscustomobject]@{
+                        baselineId = 'baseline-1'
+                        baselineName = 'Baseline A'
+                        status = 3
+                    }
+                )
+            } -ParameterFilter { $ScopeBundle -eq 'Baseline' -and $Path -eq '/partner/external/v3/bm/baselines/batch' }
+
+            $result = @(Get-AvptBaseline)
+            $result[0].StatusName | Should -Be 'Active'
+        }
+    }
+
+    It 'uses the Risk bundle for risk rule retrieval' {
+        InModuleScope AvePoint.Elements {
+            Mock Invoke-AvptWebRequest {
+                [pscustomobject]@{
+                    result = @(
+                        [pscustomobject]@{
+                            ruleId = 'rule-1'
+                            dataSource = 6
+                            hitItemCount = 10
+                        }
+                    )
+                }
+            } -ParameterFilter { $ScopeBundle -eq 'Risk' -and $Path -like '*/detection/rules' }
+
+            $result = @(Get-AvptRiskRule -CustomerId 'customer-1' -TenantId 'tenant-1')
+            $result[0].DataSourceName | Should -Be 'Users'
+        }
+    }
+
+    It 'supports baseline creation with ShouldProcess' {
+        InModuleScope AvePoint.Elements {
+            Mock Invoke-AvptWebRequest {
+                [pscustomobject]@{
+                    baselineId = 'baseline-1'
+                }
+            } -ParameterFilter { $ScopeBundle -eq 'Baseline' -and $Path -eq '/partner/external/v3/bm/baselines' }
+
+            $result = New-AvptBaseline -Name 'Baseline A' -Color 0 -CustomerId 'customer-1' -TenantId 'tenant-1' -Confirm:$false
+            $result.baselineId | Should -Be 'baseline-1'
         }
     }
 }

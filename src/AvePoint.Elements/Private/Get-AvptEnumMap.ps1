@@ -70,6 +70,73 @@ function Get-AvptEnumMap {
             13 = 'NotStarted'
             14 = 'WaitingForConfiguration'
         }
+        BaselineStatus = @{
+            1 = 'RetrievingSettings'
+            2 = 'Unused'
+            3 = 'Active'
+            4 = 'SettingsRetrievalFailed'
+            5 = 'RetrievedWithException'
+            6 = 'Draft'
+        }
+        BaselineTenantStatus = @{
+            1  = 'Connected'
+            2  = 'DeployedWithException'
+            3  = 'Deploying'
+            4  = 'DeploymentDraftSaved'
+            5  = 'DeploymentFailed'
+            6  = 'Expired'
+            7  = 'Deployed'
+            8  = 'RestoreFailed'
+            9  = 'Restored'
+            10 = 'RestoredWithException'
+            11 = 'Restoring'
+            12 = 'RetrievingSetting'
+            13 = 'ReviewDeployment'
+            14 = 'ReviewRestore'
+            15 = 'ScheduledDeployment'
+            16 = 'ScheduleRestore'
+            17 = 'SettingsRetrievalFailed'
+        }
+        AutoAlignment = @{
+            0 = 'Disabled'
+            1 = 'Enabled'
+        }
+        BaselineJobType = @{
+            1 = 'ApplyBaseline'
+            2 = 'AutoAlignment'
+            3 = 'CreateBaseline'
+            4 = 'DetectDrift'
+            5 = 'Deploy'
+            6 = 'DeployDetectedDeviations'
+            7 = 'DailyTenantBackup'
+            8 = 'EditTenantConfigurations'
+            9 = 'RestoreToSpecificDate'
+            10 = 'Restore'
+        }
+        BaselineJobStatus = @{
+            0 = 'Waiting'
+            1 = 'InProgress'
+            2 = 'Finished'
+            3 = 'Failed'
+            4 = 'Skipped'
+            5 = 'FinishedWithException'
+        }
+        RiskDataSource = @{
+            1  = 'Exchange'
+            2  = 'Groups'
+            3  = 'Teams'
+            4  = 'SharePoint'
+            5  = 'OneDrive'
+            6  = 'Users'
+            8  = 'Environments'
+            9  = 'Connections'
+            10 = 'PowerApps'
+            11 = 'PowerAutomate'
+            12 = 'PowerBI'
+        }
+        RiskRuleStatus = @{
+            0 = 'Disabled'
+            1 = 'Enabled'
+        }
     }
 }
-
