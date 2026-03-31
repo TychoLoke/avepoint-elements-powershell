@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.7.8] - 2026-03-31
+
+### Changed
+
+- Opted GitHub workflows into Node 24 to stay ahead of the GitHub Actions Node 20 deprecation
+- Reduced future CI and packaging maintenance risk without changing the module or shell behavior
+
 ## [0.7.7] - 2026-03-31
 
 ### Changed
