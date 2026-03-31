@@ -1,6 +1,6 @@
 @{
     RootModule           = 'AvePoint.Elements.psm1'
-    ModuleVersion        = '0.5.0'
+    ModuleVersion        = '0.6.0'
     GUID                 = '7fbe5f68-bb17-4a67-81d5-8ad3884d783f'
     Author               = 'Tycho Loke'
     CompanyName          = 'Open Source'
@@ -9,6 +9,7 @@
     PowerShellVersion    = '7.0'
     CompatiblePSEditions = @('Core')
     FunctionsToExport    = @(
+        'Add-AvptCustomerService'
         'Connect-AvptElements'
         'Disconnect-AvptElements'
         'Get-AvptBackupJob'
@@ -18,6 +19,7 @@
         'Get-AvptBaselineTenant'
         'Get-AvptCustomer'
         'Get-AvptCustomerService'
+        'Get-AvptCustomerSummary'
         'Get-AvptPermissionScope'
         'Get-AvptProductOverview'
         'Get-AvptRiskHitItem'
@@ -28,6 +30,7 @@
         'Get-AvptSecurityUserOverview'
         'Get-AvptScopeBundle'
         'Get-AvptTenantSeat'
+        'Get-AvptTenantSummary'
         'Get-AvptUser'
         'Get-AvptUsers'
         'Get-AvptWorkspaceCompliance'
@@ -36,6 +39,7 @@
         'Get-AvptWorkspaceOverview'
         'Invoke-AvptTenantMonitorAction'
         'New-AvptBaseline'
+        'New-AvptCustomer'
         'Test-AvptScopeSet'
         'Test-AvptElementsConnection'
     )
@@ -47,7 +51,7 @@
             Tags         = @('AvePoint', 'Elements', 'MSP', 'Automation', 'PowerShell')
             ProjectUri   = 'https://github.com/TychoLoke/avepoint-elements-powershell'
             LicenseUri   = 'https://github.com/TychoLoke/avepoint-elements-powershell/blob/main/LICENSE'
-            ReleaseNotes = 'Add user and workspace operational cmdlets plus default display shaping for a more operator-friendly shell experience.'
+            ReleaseNotes = 'Add customer onboarding, customer service assignment, and guided customer/tenant summary commands for a more operational MSP workflow.'
         }
     }
 }

@@ -138,6 +138,15 @@ function Get-AvptEnumMap {
             0 = 'Disabled'
             1 = 'Enabled'
         }
+        CustomerOnboardingStatus = @{
+            1 = 'Successful'
+            2 = 'Failed'
+            3 = 'CustomerDoesNotExist'
+            4 = 'CustomerRegistrationFailed'
+            5 = 'AlreadyManagedByCurrentPartner'
+            6 = 'SameAsCurrentPartner'
+            7 = 'CustomerAlreadyExists'
+        }
         UserStatus = @{
             0 = 'MfaDisabled'
             1 = 'SignInBlocked'

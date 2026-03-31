@@ -37,3 +37,10 @@ Get-AvptBackupOverview
 Get-AvptProductOverview
 Get-AvptUser
 Get-AvptWorkspaceOverview
+Get-AvptCustomerSummary
+Get-AvptTenantSummary
+
+# Safe write actions.
+New-AvptCustomer -FirstName 'Alex' -LastName 'Morgan' -OrganizationName 'Contoso MSP Demo' `
+    -RegistrationAccount 'admin@contoso-demo.onmicrosoft.com' -Password 'UseATemporaryPassword123!' `
+    -CountryCode 'US' -WhatIf

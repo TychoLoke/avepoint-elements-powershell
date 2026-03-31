@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.6.0] - 2026-03-31
+
+### Added
+
+- Customer onboarding with `New-AvptCustomer` including interactive data center selection
+- Service assignment with `Add-AvptCustomerService` using `ShouldProcess`
+- Guided summary commands with `Get-AvptCustomerSummary` and `Get-AvptTenantSummary`
+
+### Changed
+
+- Added default display sets for onboarding and summary result types
+- Continued shifting the module toward operator workflows instead of raw endpoint-by-endpoint usage
+
 ## [0.5.0] - 2026-03-31
 
 ### Added

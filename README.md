@@ -8,7 +8,7 @@ It is designed to be more than a thin REST wrapper. The module focuses on practi
 
 This repository is in active public development.
 
-- Current version: `0.5.0`
+- Current version: `0.6.0`
 - License: MIT
 - PowerShell: `7.0+`
 - Support target: cross-platform where AvePoint API access is available
@@ -175,6 +175,9 @@ Get-AvptBackupOverview
 Get-AvptScanProfileDetail
 Get-AvptRiskHitItem
 Get-AvptProductOverview
+Get-AvptUser
+Get-AvptCustomerSummary
+Get-AvptTenantSummary
 ```
 
 Current implemented commands:
@@ -184,7 +187,9 @@ Current implemented commands:
 - `Get-AvptPermissionScope`
 - `Get-AvptScopeBundle`
 - `Get-AvptCustomer`
+- `Get-AvptCustomerSummary`
 - `Get-AvptCustomerService`
+- `Add-AvptCustomerService`
 - `Get-AvptTenantSeat`
 - `Get-AvptProductOverview`
 - `Get-AvptBackupOverview`
@@ -206,8 +211,20 @@ Current implemented commands:
 - `Get-AvptWorkspaceCompliance`
 - `Get-AvptWorkspaceDataSecurityPosture`
 - `Get-AvptWorkspaceDataProtectionStatistic`
+- `Get-AvptTenantSummary`
 - `Test-AvptScopeSet`
 - `Test-AvptElementsConnection`
+
+Examples of the newer usability-first workflow:
+
+```powershell
+New-AvptCustomer -FirstName 'Alex' -LastName 'Morgan' -OrganizationName 'Contoso MSP Demo' `
+    -RegistrationAccount 'admin@contoso-demo.onmicrosoft.com' -Password 'UseATemporaryPassword123!' `
+    -CountryCode 'US' -WhatIf
+
+Get-AvptCustomerSummary
+Get-AvptTenantSummary
+```
 
 The module now leans into an operator workflow:
 
@@ -236,6 +253,7 @@ This project uses semantic versioning.
 - `0.3.0` initial read-only cmdlets
 - `0.4.0` baseline and risk coverage
 - `0.5.0` broader operational coverage
+- `0.6.0` onboarding and summary workflow improvements
 - `1.0.0` first stable public release
 
 Each release is tracked in `CHANGELOG.md` and published with a git tag.

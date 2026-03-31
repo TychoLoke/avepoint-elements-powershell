@@ -5,6 +5,7 @@ function Initialize-AvptTypeData {
     $typeDisplaySets = @{
         'AvePoint.Elements.Customer' = @('organization', 'ownerEmail', 'countryOrRegion', 'ManagementModeName', 'TenantCount', 'JobStatusName')
         'AvePoint.Elements.CustomerService' = @('organization', 'customer', 'ProductCount', 'ServiceNames')
+        'AvePoint.Elements.CustomerSummary' = @('Organization', 'OwnerEmail', 'TenantCount', 'ProductCount', 'BackupModuleCount', 'ProtectedObjectCount')
         'AvePoint.Elements.ProductOverview' = @('productType', 'purchasedUserSeat')
         'AvePoint.Elements.BackupOverview' = @('customer', 'serviceModule', 'totalScannedObjects', 'totalProtectedObjects', 'dataSizeStoredInAvePoint')
         'AvePoint.Elements.BackupJob' = @('jobId', 'JobTypeName', 'jobModule', 'StatusName')
@@ -15,7 +16,10 @@ function Initialize-AvptTypeData {
         'AvePoint.Elements.RiskRule' = @('ruleId', 'ruleName', 'DataSourceName', 'hitItemCount')
         'AvePoint.Elements.RiskHitItem' = @('name', 'DataSourceName', 'severity', 'path')
         'AvePoint.Elements.SecurityUserOverview' = @('displayName', 'userPrincipalName', 'mail', 'StatusNames', 'company', 'department')
+        'AvePoint.Elements.NewCustomerResult' = @('OrganizationName', 'RegistrationAccount', 'StatusName', 'id')
         'AvePoint.Elements.User' = @('displayName', 'loginName', 'mail', 'StatusNames', 'jobTitle', 'department', 'usageLocation')
+        'AvePoint.Elements.AddCustomerServiceResult' = @('CustomerId', 'ProductName', 'status', 'message')
+        'AvePoint.Elements.TenantSummary' = @('TenantId', 'UserCount', 'HighRiskUserCount', 'Workspaces', 'ComplianceRate', 'SensitiveExposureSignals', 'ProtectionAlerts')
         'AvePoint.Elements.WorkspaceOverview' = @('workspaces', 'activeWorkspaces', 'orphanedWorkspaces', 'workspacesWithGuestUsers', 'reachingStorageLimitWorkspaces')
         'AvePoint.Elements.WorkspaceCompliance' = @('workspacesInCompliance', 'workspacesOutOfCompliance', 'ComplianceRate')
         'AvePoint.Elements.WorkspaceDataSecurityPosture' = @(

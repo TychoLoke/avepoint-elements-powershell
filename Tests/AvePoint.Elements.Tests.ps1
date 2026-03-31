@@ -10,6 +10,7 @@ Describe 'AvePoint.Elements module manifest' {
 
     It 'exports the expected public functions' {
         (Get-Command -Module AvePoint.Elements).Name | Should -Be @(
+            'Add-AvptCustomerService'
             'Connect-AvptElements'
             'Disconnect-AvptElements'
             'Get-AvptBackupJob'
@@ -19,6 +20,7 @@ Describe 'AvePoint.Elements module manifest' {
             'Get-AvptBaselineTenant'
             'Get-AvptCustomer'
             'Get-AvptCustomerService'
+            'Get-AvptCustomerSummary'
             'Get-AvptPermissionScope'
             'Get-AvptProductOverview'
             'Get-AvptRiskHitItem'
@@ -29,6 +31,7 @@ Describe 'AvePoint.Elements module manifest' {
             'Get-AvptScopeBundle'
             'Get-AvptSecurityUserOverview'
             'Get-AvptTenantSeat'
+            'Get-AvptTenantSummary'
             'Get-AvptUser'
             'Get-AvptUsers'
             'Get-AvptWorkspaceCompliance'
@@ -37,6 +40,7 @@ Describe 'AvePoint.Elements module manifest' {
             'Get-AvptWorkspaceOverview'
             'Invoke-AvptTenantMonitorAction'
             'New-AvptBaseline'
+            'New-AvptCustomer'
             'Test-AvptElementsConnection'
             'Test-AvptScopeSet'
         )
@@ -321,6 +325,46 @@ Describe 'Read-only cmdlets' {
         }
     }
 
+    It 'supports customer onboarding with ShouldProcess' {
+        InModuleScope AvePoint.Elements {
+            Mock Resolve-AvptDataCenterSelection { 'e44bb3ed-f1d8-4055-8c77-c8fd8cd63409' }
+            Mock Invoke-AvptWebRequest {
+                [pscustomobject]@{
+                    id = 'customer-2'
+                    status = 1
+                }
+            } -ParameterFilter { $ScopeBundle -eq 'Common' -and $Path -eq '/partner/external/v3/general/customers' }
+
+            $result = New-AvptCustomer -FirstName 'Alex' -LastName 'Morgan' -OrganizationName 'Contoso Demo' `
+                -RegistrationAccount 'admin@example.com' -Password 'Temporary123!' -CountryCode 'US' -Confirm:$false
+
+            $result.StatusName | Should -Be 'Successful'
+            $result.OrganizationName | Should -Be 'Contoso Demo'
+        }
+    }
+
+    It 'supports customer service assignment with ShouldProcess' {
+        InModuleScope AvePoint.Elements {
+            Mock Resolve-AvptCustomerSelection {
+                [pscustomobject]@{
+                    CustomerId = 'customer-1'
+                    Customer   = $null
+                }
+            }
+            Mock Resolve-AvptProductTypeSelection { 40 }
+            Mock Invoke-AvptWebRequest {
+                [pscustomobject]@{
+                    status = 1
+                    message = 'created'
+                }
+            } -ParameterFilter { $ScopeBundle -eq 'Common' -and $Path -eq '/partner/external/v3/general/customers/customer-1/services' }
+
+            $result = Add-AvptCustomerService -CustomerId 'customer-1' -ProductType 40 -LicenseType 0 -AvePointStorageType 0 -RetentionYear 1 -Confirm:$false
+            $result.ProductName | Should -Be 'Baseline Management'
+            $result.CustomerId | Should -Be 'customer-1'
+        }
+    }
+
     It 'uses the User bundle for security user overview' {
         InModuleScope AvePoint.Elements {
             Mock Resolve-AvptTenantSelection {
@@ -424,6 +468,106 @@ Describe 'Read-only cmdlets' {
             $result = Get-AvptWorkspaceCompliance -CustomerId 'customer-1' -TenantId 'tenant-1'
             $result.ComplianceRate | Should -Be 75
             $result.TotalWorkspacesEvaluated | Should -Be 100
+        }
+    }
+
+    It 'builds a customer summary from multiple sources' {
+        InModuleScope AvePoint.Elements {
+            Mock Resolve-AvptCustomerSelection {
+                [pscustomobject]@{
+                    CustomerId = 'customer-1'
+                    Customer   = $null
+                }
+            }
+            Mock Get-AvptCustomer {
+                [pscustomobject]@{
+                    id = 'customer-1'
+                    organization = 'Contoso'
+                    ownerEmail = 'owner@example.com'
+                    countryOrRegion = 'United States'
+                    ManagementModeName = 'PartnerManaged'
+                    TenantCount = 2
+                    TenantNames = 'Tenant A, Tenant B'
+                }
+            }
+            Mock Get-AvptCustomerService {
+                @(
+                    [pscustomobject]@{
+                        ServiceNames = 'Baseline Management'
+                        products = @([pscustomobject]@{ service = 'Baseline Management' })
+                    }
+                    [pscustomobject]@{
+                        ServiceNames = 'Workspace Management'
+                        products = @([pscustomobject]@{ service = 'Workspace Management' })
+                    }
+                )
+            }
+            Mock Get-AvptBackupOverview {
+                @(
+                    [pscustomobject]@{
+                        totalProtectedObjects = 5
+                        totalScannedObjects = 7
+                        dataSizeStoredInAvePoint = '1.50 GB'
+                    }
+                    [pscustomobject]@{
+                        totalProtectedObjects = 10
+                        totalScannedObjects = 20
+                        dataSizeStoredInAvePoint = '2.25 GB'
+                    }
+                )
+            }
+
+            $result = Get-AvptCustomerSummary -CustomerId 'customer-1'
+            $result.ProductCount | Should -Be 2
+            $result.ProtectedObjectCount | Should -Be 15
+            $result.AvePointStorageGb | Should -Be 3.75
+        }
+    }
+
+    It 'builds a tenant summary from user and workspace data' {
+        InModuleScope AvePoint.Elements {
+            Mock Resolve-AvptTenantSelection {
+                [pscustomobject]@{
+                    CustomerId = 'customer-1'
+                    TenantId   = 'tenant-1'
+                }
+            }
+            Mock Get-AvptSecurityUserOverview {
+                @(
+                    [pscustomobject]@{ StatusCodes = @(3, 6) }
+                    [pscustomobject]@{ StatusCodes = @(8) }
+                    [pscustomobject]@{ StatusCodes = @() }
+                )
+            }
+            Mock Get-AvptWorkspaceOverview {
+                [pscustomobject]@{
+                    workspaces = 50
+                    activeWorkspaces = 40
+                    orphanedWorkspaces = 5
+                    GuestWorkspaceRate = 20
+                }
+            }
+            Mock Get-AvptWorkspaceCompliance {
+                [pscustomobject]@{
+                    ComplianceRate = 88.5
+                }
+            }
+            Mock Get-AvptWorkspaceDataSecurityPosture {
+                [pscustomobject]@{
+                    TotalSensitiveExposureSignals = 12
+                }
+            }
+            Mock Get-AvptWorkspaceDataProtectionStatistic {
+                [pscustomobject]@{
+                    TotalProtectionAlerts = 7
+                }
+            }
+
+            $result = Get-AvptTenantSummary -CustomerId 'customer-1' -TenantId 'tenant-1'
+            $result.HighRiskUserCount | Should -Be 1
+            $result.InactiveUserCount | Should -Be 1
+            $result.TestUserCount | Should -Be 1
+            $result.ProtectionAlerts | Should -Be 7
         }
     }
 }
