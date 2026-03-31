@@ -1,0 +1,39 @@
+# PowerShell
+*.psd1.bak
+*.psm1.bak
+*.clixml
+
+# Build and test output
+TestResults/
+coverage.xml
+coverage.json
+artifacts/
+
+# Dependencies
+PSModules/
+
+# OS and editor files
+.DS_Store
+Thumbs.db
+.vscode/
+.idea/
+
+# Local environment and secrets
+.env
+.env.*
+*.secret
+*.secrets.*
+secrets.json
+appsettings.local.json
+local.settings.json
+*.pfx
+*.p12
+*.pem
+*.key
+*.cer
+*.crt
+*.jwk
+
+# Logs
+*.log
+

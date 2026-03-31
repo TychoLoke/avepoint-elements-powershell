@@ -1,0 +1,19 @@
+﻿<?xml version="1.0" encoding="utf-8" standalone="no"?>
+<test-results xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xsi:noNamespaceSchemaLocation="nunit_schema_2.5.xsd" name="Pester" total="2" errors="0" failures="0" not-run="0" inconclusive="0" ignored="0" skipped="0" invalid="0" date="2026-03-31" time="13:45:10">
+  <environment clr-version="10.0.5" user-domain="" machine-name="codex-dev-vm" cwd="/home/tycho/projects/avepoint-elements-powershell" nunit-version="2.5.8.0" os-version="6.8.0-106-generic" platform="Linux" user="tycho" />
+  <culture-info current-culture="" current-uiculture="" />
+  <test-suite type="TestFixture" name="Pester" executed="True" result="Success" success="True" time="1.2907" asserts="0" description="Pester">
+    <results>
+      <test-suite type="TestFixture" name="/home/tycho/projects/avepoint-elements-powershell/Tests/AvePoint.Elements.Tests.ps1" executed="True" result="Success" success="True" time="1.2907" asserts="0" description="/home/tycho/projects/avepoint-elements-powershell/Tests/AvePoint.Elements.Tests.ps1">
+        <results>
+          <test-suite type="TestFixture" name="AvePoint.Elements module manifest" executed="True" result="Success" success="True" time="0.4622" asserts="0" description="AvePoint.Elements module manifest">
+            <results>
+              <test-case description="imports successfully" name="AvePoint.Elements module manifest.imports successfully" time="0.2517" asserts="0" success="True" result="Success" executed="True" />
+              <test-case description="starts with no exported functions in scaffold state" name="AvePoint.Elements module manifest.starts with no exported functions in scaffold state" time="0.1216" asserts="0" success="True" result="Success" executed="True" />
+            </results>
+          </test-suite>
+        </results>
+      </test-suite>
+    </results>
+  </test-suite>
+</test-results>
