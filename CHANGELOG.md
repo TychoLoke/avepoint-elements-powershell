@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.7.6] - 2026-03-31
+
+### Changed
+
+- Embedded the `AvePoint.Elements` module files into `ElementsShell.exe`
+- Updated the launcher so the standalone executable prefers the embedded module and no longer depends on the repository layout next to the binary
+
 ## [0.7.5] - 2026-03-31
 
 ### Added

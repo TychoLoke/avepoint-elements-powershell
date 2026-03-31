@@ -8,7 +8,7 @@ It is designed to be more than a thin REST wrapper. The module focuses on practi
 
 This repository is in active public development.
 
-- Current version: `0.7.5`
+- Current version: `0.7.6`
 - License: MIT
 - PowerShell: `7.0+`
 - Support target: cross-platform where AvePoint API access is available
@@ -122,6 +122,7 @@ Windows release packaging now includes:
 - `ElementsShell-win-x64-<version>.zip`
 - `ElementsShell-<version>-sha256.txt`
 - embedded version metadata and a generated app icon
+- embedded module files so the standalone `.exe` can run without the repository beside it
 
 ## Authentication Example
 
@@ -289,6 +290,7 @@ This project uses semantic versioning.
 - `0.7.3` release-attached `.exe` packaging
 - `0.7.4` fixed GitHub Actions packaging execution
 - `0.7.5` production-grade shell packaging assets
+- `0.7.6` standalone executable embeds the module
 - `1.0.0` first stable public release
 
 Each release is tracked in `CHANGELOG.md` and published with a git tag.

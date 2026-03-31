@@ -20,10 +20,18 @@ $manifestPath = Join-Path -Path $PSScriptRoot -ChildPath '../src/AvePoint.Elemen
 $manifest = Import-PowerShellDataFile -Path $manifestPath
 $version = [string] $manifest.ModuleVersion
 $iconPath = Join-Path -Path $PSScriptRoot -ChildPath '../app/ElementsShell.ico'
+$moduleRoot = Join-Path -Path $PSScriptRoot -ChildPath '../src/AvePoint.Elements'
 
 & (Join-Path -Path $PSScriptRoot -ChildPath 'New-ElementsShellIcon.ps1') -OutputPath $iconPath
 
-Invoke-PS2EXE -InputFile $scriptPath -OutputFile $resolvedOutput -Title 'Elements Shell' -Product 'AvePoint Elements PowerShell' -Description 'Interactive shell for the AvePoint Elements PowerShell toolkit' -Company 'Open Source' -Copyright 'Copyright (c) 2026 Tycho Loke' -Trademark 'AvePoint Elements PowerShell' -Version $version -iconFile $iconPath -NoConsole:$false
+$embedFiles = @{}
+foreach ($file in Get-ChildItem -Path $moduleRoot -Recurse -File) {
+    $relativePath = $file.FullName.Substring($moduleRoot.Length).TrimStart('\', '/')
+    $targetPath = '.\embedded\src\AvePoint.Elements\' + ($relativePath -replace '/', '\')
+    $embedFiles[$targetPath] = $file.FullName
+}
+
+Invoke-PS2EXE -InputFile $scriptPath -OutputFile $resolvedOutput -Title 'Elements Shell' -Product 'AvePoint Elements PowerShell' -Description 'Interactive shell for the AvePoint Elements PowerShell toolkit' -Company 'Open Source' -Copyright 'Copyright (c) 2026 Tycho Loke' -Trademark 'AvePoint Elements PowerShell' -Version $version -iconFile $iconPath -embedFiles $embedFiles -NoConsole:$false
 
 $zipPath = Join-Path -Path $outputDirectory -ChildPath ("ElementsShell-win-x64-{0}.zip" -f $version)
 if (Test-Path $zipPath) {
