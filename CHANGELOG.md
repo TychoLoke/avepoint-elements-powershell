@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.5.0] - 2026-03-31
+
+### Added
+
+- User management coverage with `Get-AvptSecurityUserOverview`, `Get-AvptUser`, and `Get-AvptUsers`
+- Workspace reporting coverage with `Get-AvptWorkspaceOverview`, `Get-AvptWorkspaceCompliance`, `Get-AvptWorkspaceDataSecurityPosture`, and `Get-AvptWorkspaceDataProtectionStatistic`
+- Interactive user selection for `Get-AvptUser` so operators can browse live tenant users instead of copying IDs
+
+### Changed
+
+- Added default display property sets for key output types so common cmdlets render cleaner summary views by default
+- User and workspace cmdlets now add summary properties such as status labels, compliance rate, exposure totals, and protection alert totals
+
 ## [0.4.1] - 2026-03-31
 
 ### Added

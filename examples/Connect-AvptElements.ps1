@@ -35,3 +35,5 @@ Get-AvptRiskRule -CustomerId '00000000-0000-0000-0000-000000000000' -TenantId '1
 # Friendly selection without copying IDs.
 Get-AvptBackupOverview
 Get-AvptProductOverview
+Get-AvptUser
+Get-AvptWorkspaceOverview

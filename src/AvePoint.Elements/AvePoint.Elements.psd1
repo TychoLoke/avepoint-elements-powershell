@@ -1,6 +1,6 @@
 @{
     RootModule           = 'AvePoint.Elements.psm1'
-    ModuleVersion        = '0.4.1'
+    ModuleVersion        = '0.5.0'
     GUID                 = '7fbe5f68-bb17-4a67-81d5-8ad3884d783f'
     Author               = 'Tycho Loke'
     CompanyName          = 'Open Source'
@@ -25,8 +25,15 @@
         'Get-AvptScanProfile'
         'Get-AvptScanProfileChange'
         'Get-AvptScanProfileDetail'
+        'Get-AvptSecurityUserOverview'
         'Get-AvptScopeBundle'
         'Get-AvptTenantSeat'
+        'Get-AvptUser'
+        'Get-AvptUsers'
+        'Get-AvptWorkspaceCompliance'
+        'Get-AvptWorkspaceDataProtectionStatistic'
+        'Get-AvptWorkspaceDataSecurityPosture'
+        'Get-AvptWorkspaceOverview'
         'Invoke-AvptTenantMonitorAction'
         'New-AvptBaseline'
         'Test-AvptScopeSet'
@@ -40,7 +47,7 @@
             Tags         = @('AvePoint', 'Elements', 'MSP', 'Automation', 'PowerShell')
             ProjectUri   = 'https://github.com/TychoLoke/avepoint-elements-powershell'
             LicenseUri   = 'https://github.com/TychoLoke/avepoint-elements-powershell/blob/main/LICENSE'
-            ReleaseNotes = 'Add interactive selectors for customers, tenants, baselines, scan profiles, and product types to reduce copy/paste usage.'
+            ReleaseNotes = 'Add user and workspace operational cmdlets plus default display shaping for a more operator-friendly shell experience.'
         }
     }
 }

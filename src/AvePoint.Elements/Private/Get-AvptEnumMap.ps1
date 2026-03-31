@@ -138,5 +138,16 @@ function Get-AvptEnumMap {
             0 = 'Disabled'
             1 = 'Enabled'
         }
+        UserStatus = @{
+            0 = 'MfaDisabled'
+            1 = 'SignInBlocked'
+            2 = 'PasswordExpired'
+            3 = 'HighRisk'
+            4 = 'MediumRisk'
+            5 = 'Compliance'
+            6 = 'Inactive'
+            7 = 'PendingDeletion'
+            8 = 'TestUser'
+        }
     }
 }

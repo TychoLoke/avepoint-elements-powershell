@@ -15,6 +15,8 @@ foreach ($scriptPath in @(Get-ChildItem -Path $publicPath -Filter '*.ps1' -Error
     . $scriptPath.FullName
 }
 
+Initialize-AvptTypeData
+
 $publicFunctions = Get-ChildItem -Path $publicPath -Filter '*.ps1' -ErrorAction SilentlyContinue |
     Sort-Object BaseName |
     Select-Object -ExpandProperty BaseName

@@ -8,7 +8,7 @@ It is designed to be more than a thin REST wrapper. The module focuses on practi
 
 This repository is in active public development.
 
-- Current version: `0.4.1`
+- Current version: `0.5.0`
 - License: MIT
 - PowerShell: `7.0+`
 - Support target: cross-platform where AvePoint API access is available
@@ -85,9 +85,13 @@ PowerShell Gallery publishing will come after the module reaches a stable public
 
 For local development:
 
+```bash
+git clone https://github.com/TychoLoke/avepoint-elements-powershell.git
+cd avepoint-elements-powershell
+pwsh
+```
+
 ```powershell
-git clone git@github.com:TychoLoke/avepoint-elements-powershell.git
-Set-Location avepoint-elements-powershell
 Import-Module ./src/AvePoint.Elements/AvePoint.Elements.psd1 -Force
 ```
 
@@ -173,7 +177,7 @@ Get-AvptRiskHitItem
 Get-AvptProductOverview
 ```
 
-Current implemented authentication commands:
+Current implemented commands:
 
 - `Connect-AvptElements`
 - `Disconnect-AvptElements`
@@ -195,8 +199,21 @@ Current implemented authentication commands:
 - `Get-AvptScanProfile`
 - `Get-AvptScanProfileDetail`
 - `Get-AvptScanProfileChange`
+- `Get-AvptSecurityUserOverview`
+- `Get-AvptUser`
+- `Get-AvptUsers`
+- `Get-AvptWorkspaceOverview`
+- `Get-AvptWorkspaceCompliance`
+- `Get-AvptWorkspaceDataSecurityPosture`
+- `Get-AvptWorkspaceDataProtectionStatistic`
 - `Test-AvptScopeSet`
 - `Test-AvptElementsConnection`
+
+The module now leans into an operator workflow:
+
+- connect once
+- omit IDs when you want guided selection from live data
+- get cleaner default output without building `Invoke-RestMethod` plumbing, pagination, or response shaping yourself
 
 ## Repository Layout
 

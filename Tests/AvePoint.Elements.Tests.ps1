@@ -27,7 +27,14 @@ Describe 'AvePoint.Elements module manifest' {
             'Get-AvptScanProfileChange'
             'Get-AvptScanProfileDetail'
             'Get-AvptScopeBundle'
+            'Get-AvptSecurityUserOverview'
             'Get-AvptTenantSeat'
+            'Get-AvptUser'
+            'Get-AvptUsers'
+            'Get-AvptWorkspaceCompliance'
+            'Get-AvptWorkspaceDataProtectionStatistic'
+            'Get-AvptWorkspaceDataSecurityPosture'
+            'Get-AvptWorkspaceOverview'
             'Invoke-AvptTenantMonitorAction'
             'New-AvptBaseline'
             'Test-AvptElementsConnection'
@@ -311,6 +318,112 @@ Describe 'Read-only cmdlets' {
 
             $result = New-AvptBaseline -Name 'Baseline A' -Color 0 -CustomerId 'customer-1' -TenantId 'tenant-1' -Confirm:$false
             $result.baselineId | Should -Be 'baseline-1'
+        }
+    }
+
+    It 'uses the User bundle for security user overview' {
+        InModuleScope AvePoint.Elements {
+            Mock Resolve-AvptTenantSelection {
+                [pscustomobject]@{
+                    CustomerId = 'customer-1'
+                    TenantId   = 'tenant-1'
+                }
+            }
+
+            Mock Invoke-AvptPagedOperation {
+                @(
+                    [pscustomobject]@{
+                        id = 'user-1'
+                        displayName = 'Alex Admin'
+                        userPrincipalName = 'alex@example.com'
+                        mail = 'alex@example.com'
+                        company = 'Contoso'
+                        department = 'IT'
+                        status = @(0, 1)
+                    }
+                )
+            } -ParameterFilter { $ScopeBundle -eq 'User' -and $Path -like '*/overview/security/users' }
+
+            $result = @(Get-AvptSecurityUserOverview -CustomerId 'customer-1' -TenantId 'tenant-1')
+            $result[0].StatusNames | Should -Be 'MfaDisabled, SignInBlocked'
+            $result[0].PSObject.TypeNames[0] | Should -Be 'AvePoint.Elements.SecurityUserOverview'
+        }
+    }
+
+    It 'allows interactive user selection for user detail' {
+        InModuleScope AvePoint.Elements {
+            Mock Resolve-AvptUserSelection {
+                [pscustomobject]@{
+                    CustomerId = 'customer-1'
+                    TenantId   = 'tenant-1'
+                    UserId     = 'user-1'
+                }
+            }
+
+            Mock Invoke-AvptWebRequest {
+                [pscustomobject]@{
+                    id = 'user-1'
+                    displayName = 'Alex Admin'
+                    loginName = 'alex@example.com'
+                    mail = 'alex@example.com'
+                    jobTitle = 'Administrator'
+                    department = 'IT'
+                    usageLocation = 'US'
+                    alternateEmailAddress = @('alex.alt@example.com')
+                    status = @(5)
+                }
+            } -ParameterFilter { $ScopeBundle -eq 'User' -and $Path -like '*/users/user-1' }
+
+            $result = Get-AvptUser
+            $result.StatusNames | Should -Be 'Compliance'
+            $result.AlternateEmailCount | Should -Be 1
+        }
+    }
+
+    It 'uses the Workspace bundle for workspace overview' {
+        InModuleScope AvePoint.Elements {
+            Mock Resolve-AvptTenantSelection {
+                [pscustomobject]@{
+                    CustomerId = 'customer-1'
+                    TenantId   = 'tenant-1'
+                }
+            }
+
+            Mock Invoke-AvptWebRequest {
+                [pscustomobject]@{
+                    workspaces = 20
+                    activeWorkspaces = 10
+                    orphanedWorkspaces = 4
+                    workspacesWithGuestUsers = 5
+                    reachingStorageLimitWorkspaces = 1
+                }
+            } -ParameterFilter { $ScopeBundle -eq 'Workspace' -and $Path -like '*/overview/workspace' }
+
+            $result = Get-AvptWorkspaceOverview -CustomerId 'customer-1' -TenantId 'tenant-1'
+            $result.GuestWorkspaceRate | Should -Be 25
+            $result.OrphanedWorkspaceRate | Should -Be 20
+        }
+    }
+
+    It 'calculates workspace compliance rate' {
+        InModuleScope AvePoint.Elements {
+            Mock Resolve-AvptTenantSelection {
+                [pscustomobject]@{
+                    CustomerId = 'customer-1'
+                    TenantId   = 'tenant-1'
+                }
+            }
+
+            Mock Invoke-AvptWebRequest {
+                [pscustomobject]@{
+                    workspacesInCompliance = 75
+                    workspacesOutOfCompliance = 25
+                }
+            } -ParameterFilter { $ScopeBundle -eq 'Workspace' -and $Path -like '*/overview/data-protection/compliance-rate' }
+
+            $result = Get-AvptWorkspaceCompliance -CustomerId 'customer-1' -TenantId 'tenant-1'
+            $result.ComplianceRate | Should -Be 75
+            $result.TotalWorkspacesEvaluated | Should -Be 100
         }
     }
 }
