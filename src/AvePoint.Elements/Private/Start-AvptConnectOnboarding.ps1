@@ -6,11 +6,15 @@ function Start-AvptConnectOnboarding {
 
     Show-AvptBanner
 
+    Write-Host '[Session Setup]' -ForegroundColor Red
     $environment = Read-AvptEnvironmentSelection
     Write-Host ''
-    Write-Host "Environment: $environment" -ForegroundColor Green
+    Write-Host " Selected environment: $environment" -ForegroundColor Cyan
 
     $tenantName = Read-Host 'Optional tenant or partner label'
+
+    Write-Host ''
+    Write-Host '[Authentication]' -ForegroundColor Red
     $authMode = Read-AvptAuthSelection
 
     $result = [ordered]@{
@@ -18,6 +22,8 @@ function Start-AvptConnectOnboarding {
         TenantName  = if ([string]::IsNullOrWhiteSpace($tenantName)) { $null } else { $tenantName }
     }
 
+    Write-Host ''
+    Write-Host '[Authorization]' -ForegroundColor Red
     $bundleMode = Read-Host 'Use named scope bundles for Common, Baseline, User, Risk, and Workspace? (Y/n)'
     if ([string]::IsNullOrWhiteSpace($bundleMode) -or $bundleMode -match '^(y|yes)$') {
         $result.ScopeBundle = Read-AvptScopeBundleSelection

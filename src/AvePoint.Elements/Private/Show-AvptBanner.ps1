@@ -3,22 +3,23 @@ function Show-AvptBanner {
     param()
 
     $lines = @(
-        '  ________    _______   ________  ___      ___  _______   ________   _________   ________      '
-        ' |\   ____\  |\  ___ \ |\   ____\|\  \    /  /||\  ___ \ |\   ___  \|\___   ___\|\   ____\     '
-        ' \ \  \___|  \ \   __/|\ \  \___|\ \  \  /  / /\ \   __/|\ \  \\ \  \|___ \  \_|\ \  \___|_    '
-        '  \ \  \  ___ \ \  \_|/_\ \  \    \ \  \/  / /  \ \  \_|/_\ \  \\ \  \   \ \  \  \ \_____  \   '
-        '   \ \  \|\  \\ \  \_|\ \ \  \____ \ \    / /    \ \  \_|\ \ \  \\ \  \   \ \  \  \|____|\  \  '
-        '    \ \_______\\ \_______\\ \_______\\ \__/ /      \ \_______\\ \__\\ \__\   \ \__\   ____\_\  \ '
-        '     \|_______| \|_______| \|_______| \|__|/        \|_______| \|__| \|__|    \|__|  |\_________\'
-        '                                                                                         \|_________|'
+        '==============================================================================================='
+        '  _______   __       ________  __       __  ________  __    __  _________   ________         '
+        ' / ____/ | / /      / ____/ / / /      /  |/  / __ \\/ /   / / / /_  __/  / ____/ /         '
+        '/ __/ /  |/ /______/ __/ / / / /______/ /|_/ / /_/ / /   / /_/ / / /    / /   / /          '
+        '/ /___/ /|  /_____/ /___/ /_/ /_____/ /  / / ____/ /___/ __  / / /    / /___/ /___         '
+        '/_____/_/ |_/     /_____/\\____/     /_/  /_/_/   /_____/_/ /_/ /_/     \\____/_____/        '
+        '==============================================================================================='
     )
 
     Write-Host ''
-    foreach ($line in $lines) {
-        Write-Host $line -ForegroundColor Cyan
+    for ($index = 0; $index -lt $lines.Count; $index++) {
+        $color = if ($index -in 0, ($lines.Count - 1)) { 'DarkRed' } else { 'Blue' }
+        Write-Host $lines[$index] -ForegroundColor $color
     }
 
-    Write-Host ' Elements Shell' -ForegroundColor Yellow
-    Write-Host ' MSP operations toolkit for the AvePoint Elements API' -ForegroundColor DarkCyan
+    Write-Host ' ELEMENTS SHELL' -ForegroundColor Red
+    Write-Host ' AvePoint Elements PowerShell Toolkit for MSP Operations' -ForegroundColor Cyan
+    Write-Host ' Secure multi-scope session onboarding for the AvePoint Elements API' -ForegroundColor DarkBlue
     Write-Host ''
 }
