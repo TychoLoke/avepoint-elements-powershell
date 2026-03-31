@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.7.3] - 2026-03-31
+
+### Changed
+
+- Updated the Windows packaging workflow so tagged releases attach `ElementsShell.exe` as a GitHub release asset
+- Kept artifact upload in place for troubleshooting while adding direct release distribution for the binary
+
 ## [0.7.2] - 2026-03-31
 
 ### Added
