@@ -1,6 +1,6 @@
 @{
     RootModule           = 'AvePoint.Elements.psm1'
-    ModuleVersion        = '0.7.3'
+    ModuleVersion        = '0.7.4'
     GUID                 = '7fbe5f68-bb17-4a67-81d5-8ad3884d783f'
     Author               = 'Tycho Loke'
     CompanyName          = 'Open Source'
@@ -52,7 +52,7 @@
             Tags         = @('AvePoint', 'Elements', 'MSP', 'Automation', 'PowerShell')
             ProjectUri   = 'https://github.com/TychoLoke/avepoint-elements-powershell'
             LicenseUri   = 'https://github.com/TychoLoke/avepoint-elements-powershell/blob/main/LICENSE'
-            ReleaseNotes = 'Attach ElementsShell.exe to tagged GitHub releases via the Windows packaging workflow.'
+            ReleaseNotes = 'Fix GitHub Actions runner setup so tagged releases can build and attach ElementsShell.exe successfully.'
         }
     }
 }

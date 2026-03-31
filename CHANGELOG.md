@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.7.4] - 2026-03-31
+
+### Changed
+
+- Removed the broken PowerShell setup action from GitHub workflows and now rely on the built-in `pwsh` available on GitHub runners
+- Unblocked the Windows packaging workflow so `ElementsShell.exe` can be built and attached on tagged releases
+
 ## [0.7.3] - 2026-03-31
 
 ### Changed

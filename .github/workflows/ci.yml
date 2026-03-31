@@ -14,9 +14,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup PowerShell
-        uses: PowerShell/PowerShell-For-GitHub-Actions@v2
-
       - name: Install Pester
         shell: pwsh
         run: |
@@ -26,4 +23,3 @@ jobs:
         shell: pwsh
         run: |
           Invoke-Pester -Path ./Tests -CI
-

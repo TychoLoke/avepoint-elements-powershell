@@ -17,9 +17,6 @@ jobs:
       - name: Checkout
         uses: actions/checkout@v4
 
-      - name: Setup PowerShell
-        uses: PowerShell/PowerShell-For-GitHub-Actions@v2
-
       - name: Build ElementsShell.exe
         shell: pwsh
         run: |
