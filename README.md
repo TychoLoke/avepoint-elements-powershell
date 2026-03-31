@@ -8,7 +8,7 @@ It is designed to be more than a thin REST wrapper. The module focuses on practi
 
 This repository is in active public development.
 
-- Current version: `0.2.0`
+- Current version: `0.2.1`
 - License: MIT
 - PowerShell: `7.0+`
 - Support target: cross-platform where AvePoint API access is available
@@ -103,10 +103,24 @@ Connect-AvptElements `
     -Environment Commercial `
     -Credential $credential `
     -TenantName 'contoso-demo' `
-    -Scope 'your.scope.value'
+    -Scope @(
+        'elements.customers.read.all'
+        'elements.license.read.all'
+    )
 ```
 
-Certificate-based authentication will also be supported without storing secrets in the repository.
+Or use the built-in interactive menu:
+
+```powershell
+Connect-AvptElements -Environment Commercial -Credential $credential -UseScopeMenu
+```
+
+To list the built-in permission catalog:
+
+```powershell
+Get-AvptPermissionScope
+Get-AvptPermissionScope -AccessLevel Read
+```
 
 ## Examples
 
@@ -121,6 +135,7 @@ Current implemented authentication commands:
 
 - `Connect-AvptElements`
 - `Disconnect-AvptElements`
+- `Get-AvptPermissionScope`
 - `Test-AvptElementsConnection`
 
 ## Repository Layout

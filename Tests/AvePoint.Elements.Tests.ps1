@@ -12,8 +12,22 @@ Describe 'AvePoint.Elements module manifest' {
         (Get-Command -Module AvePoint.Elements).Name | Should -Be @(
             'Connect-AvptElements'
             'Disconnect-AvptElements'
+            'Get-AvptPermissionScope'
             'Test-AvptElementsConnection'
         )
+    }
+}
+
+Describe 'Get-AvptPermissionScope' {
+    It 'returns the built-in permission catalog' {
+        $result = Get-AvptPermissionScope
+        $result.Count | Should -Be 15
+        ($result.Scope -contains 'elements.customers.read.all') | Should -BeTrue
+    }
+
+    It 'filters read-only permissions' {
+        $result = Get-AvptPermissionScope -AccessLevel Read
+        ($result.AccessLevel | Select-Object -Unique) | Should -Be 'Read'
     }
 }
 

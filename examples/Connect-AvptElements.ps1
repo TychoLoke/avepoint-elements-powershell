@@ -5,4 +5,13 @@ Connect-AvptElements `
     -Environment Commercial `
     -Credential $credential `
     -TenantName 'contoso-demo' `
-    -Scope 'your.scope.value'
+    -Scope @(
+        'elements.customers.read.all'
+        'elements.license.read.all'
+    )
+
+# Or use the built-in scope menu.
+Connect-AvptElements `
+    -Environment Commercial `
+    -Credential $credential `
+    -UseScopeMenu
