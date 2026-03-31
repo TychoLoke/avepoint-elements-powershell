@@ -53,6 +53,7 @@ $quickstartPath = Join-Path -Path $outputDirectory -ChildPath ("ElementsShell-qu
     '- The standalone EXE is intended to work by itself.'
     '- If Windows SmartScreen or your browser blocks it, use the ZIP package instead and extract it first.'
     '- Do not run the EXE directly from inside the ZIP preview window.'
+    '- If startup fails, check ElementsShell-startup.log next to the EXE.'
     ''
     'Files in this package:'
     '- ElementsShell.exe'

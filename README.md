@@ -8,7 +8,7 @@ It is designed to be more than a thin REST wrapper. The module focuses on practi
 
 This repository is in active public development.
 
-- Current version: `0.8.1`
+- Current version: `0.8.2`
 - License: MIT
 - PowerShell: `7.0+`
 - Support target: cross-platform where AvePoint API access is available
@@ -135,6 +135,7 @@ Notes:
 
 - Do not run the EXE from inside the ZIP preview window.
 - The standalone `.exe` should work on its own as of `0.7.6+`, but the ZIP package is the preferred download because it includes a quickstart file and avoids common browser/ZIP confusion.
+- If startup fails, check `ElementsShell-startup.log` next to the EXE.
 
 ## Authentication Example
 
@@ -307,6 +308,7 @@ This project uses semantic versioning.
 - `0.7.8` Node 24 workflow readiness
 - `0.8.0` ZIP-first release guidance and GitHub CLI publishing
 - `0.8.1` fixed GitHub CLI release authentication
+- `0.8.2` EXE startup diagnostics and persistent error screen
 - `1.0.0` first stable public release
 
 Each release is tracked in `CHANGELOG.md` and published with a git tag.

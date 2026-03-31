@@ -1,6 +1,6 @@
 @{
     RootModule           = 'AvePoint.Elements.psm1'
-    ModuleVersion        = '0.8.1'
+    ModuleVersion        = '0.8.2'
     GUID                 = '7fbe5f68-bb17-4a67-81d5-8ad3884d783f'
     Author               = 'Tycho Loke'
     CompanyName          = 'Open Source'
@@ -52,7 +52,7 @@
             Tags         = @('AvePoint', 'Elements', 'MSP', 'Automation', 'PowerShell')
             ProjectUri   = 'https://github.com/TychoLoke/avepoint-elements-powershell'
             LicenseUri   = 'https://github.com/TychoLoke/avepoint-elements-powershell/blob/main/LICENSE'
-            ReleaseNotes = 'Fix GitHub CLI authentication in the release workflow so tagged builds can publish assets and release notes without the third-party release action.'
+            ReleaseNotes = 'Keep the standalone shell window open on startup failure and write a startup log beside the EXE for troubleshooting.'
         }
     }
 }

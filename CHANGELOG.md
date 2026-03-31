@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.8.2] - 2026-03-31
+
+### Changed
+
+- Added standalone startup diagnostics to `ElementsShell.exe`
+- The EXE now keeps the console open on startup failure and writes `ElementsShell-startup.log` beside the binary
+- The packaged quickstart text now tells users where to look if startup fails
+
 ## [0.8.1] - 2026-03-31
 
 ### Changed
