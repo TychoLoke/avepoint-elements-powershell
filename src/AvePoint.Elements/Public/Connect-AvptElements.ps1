@@ -128,7 +128,9 @@ function Connect-AvptElements {
         $guidedSession = Start-AvptConnectOnboarding -ReadOnlyScopeMenu:$ReadOnlyScopeMenu
 
         $Environment = $guidedSession.Environment
-        $Scope = $guidedSession.Scope
+        if ($guidedSession.PSObject.Properties['Scope'] -and $guidedSession.Scope) {
+            $Scope = $guidedSession.Scope
+        }
         if ($guidedSession.PSObject.Properties['ScopeBundle'] -and $guidedSession.ScopeBundle) {
             $ScopeBundle = $guidedSession.ScopeBundle
         }
