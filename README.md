@@ -8,7 +8,7 @@ It is designed to be more than a thin REST wrapper. The module focuses on practi
 
 This repository is in active public development.
 
-- Current version: `0.8.0`
+- Current version: `0.8.1`
 - License: MIT
 - PowerShell: `7.0+`
 - Support target: cross-platform where AvePoint API access is available
@@ -306,6 +306,7 @@ This project uses semantic versioning.
 - `0.7.7` automated release note generation
 - `0.7.8` Node 24 workflow readiness
 - `0.8.0` ZIP-first release guidance and GitHub CLI publishing
+- `0.8.1` fixed GitHub CLI release authentication
 - `1.0.0` first stable public release
 
 Each release is tracked in `CHANGELOG.md` and published with a git tag.

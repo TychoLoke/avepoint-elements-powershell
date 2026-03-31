@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.8.1] - 2026-03-31
+
+### Changed
+
+- Fixed `GH_TOKEN` wiring for the GitHub CLI release-publishing step
+- Restored fully first-party release publishing for packaged Windows shell assets
+
 ## [0.8.0] - 2026-03-31
 
 ### Added

@@ -1,6 +1,6 @@
 @{
     RootModule           = 'AvePoint.Elements.psm1'
-    ModuleVersion        = '0.8.0'
+    ModuleVersion        = '0.8.1'
     GUID                 = '7fbe5f68-bb17-4a67-81d5-8ad3884d783f'
     Author               = 'Tycho Loke'
     CompanyName          = 'Open Source'
@@ -52,7 +52,7 @@
             Tags         = @('AvePoint', 'Elements', 'MSP', 'Automation', 'PowerShell')
             ProjectUri   = 'https://github.com/TychoLoke/avepoint-elements-powershell'
             LicenseUri   = 'https://github.com/TychoLoke/avepoint-elements-powershell/blob/main/LICENSE'
-            ReleaseNotes = 'Publish a quickstart-guided ZIP package and switch release publishing to GitHub CLI so Windows shell releases are clearer and fully first-party.'
+            ReleaseNotes = 'Fix GitHub CLI authentication in the release workflow so tagged builds can publish assets and release notes without the third-party release action.'
         }
     }
 }
