@@ -39,13 +39,24 @@ jobs:
             dist/ElementsShell.exe
             dist/ElementsShell-win-x64-*.zip
             dist/ElementsShell-*-sha256.txt
+            dist/ElementsShell-quickstart-*.txt
 
-      - name: Attach ElementsShell.exe to release
+      - name: Publish release assets
         if: startsWith(github.ref, 'refs/tags/')
-        uses: softprops/action-gh-release@v2
-        with:
-          generate_release_notes: true
-          files: |
-            dist/ElementsShell.exe
-            dist/ElementsShell-win-x64-*.zip
-            dist/ElementsShell-*-sha256.txt
+        shell: pwsh
+        run: |
+          $tag = $env:GITHUB_REF_NAME
+          $files = @(
+            'dist/ElementsShell.exe'
+            'dist/ElementsShell-win-x64-*.zip'
+            'dist/ElementsShell-*-sha256.txt'
+            'dist/ElementsShell-quickstart-*.txt'
+          )
+
+          $existing = gh release view $tag --json tagName --jq .tagName 2>$null
+          if ($LASTEXITCODE -ne 0 -or -not $existing) {
+            gh release create $tag $files --title $tag --generate-notes
+          }
+          else {
+            gh release upload $tag $files --clobber
+          }

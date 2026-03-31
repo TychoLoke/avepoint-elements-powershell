@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.8.0] - 2026-03-31
+
+### Added
+
+- Quickstart text file for Windows shell downloads
+- ZIP package now includes `ElementsShell.exe` plus quickstart instructions
+
+### Changed
+
+- Replaced the third-party GitHub release action with GitHub CLI publishing in the packaging workflow
+- Clarified the recommended download path: use the ZIP package, extract it, and run `ElementsShell.exe` from the extracted folder
+
 ## [0.7.9] - 2026-03-31
 
 ### Changed

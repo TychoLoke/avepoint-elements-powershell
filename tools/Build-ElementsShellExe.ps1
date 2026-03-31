@@ -37,7 +37,30 @@ $zipPath = Join-Path -Path $outputDirectory -ChildPath ("ElementsShell-win-x64-{
 if (Test-Path $zipPath) {
     Remove-Item -Path $zipPath -Force
 }
-Compress-Archive -Path $resolvedOutput -DestinationPath $zipPath -CompressionLevel Optimal
+
+$quickstartPath = Join-Path -Path $outputDirectory -ChildPath ("ElementsShell-quickstart-{0}.txt" -f $version)
+@(
+    'Elements Shell Quickstart'
+    ''
+    ('Version: {0}' -f $version)
+    ''
+    'Recommended install path:'
+    '1. Download the ZIP package for this release.'
+    '2. Extract the ZIP to a normal writable folder such as Desktop or Downloads.'
+    '3. Run ElementsShell.exe from the extracted folder.'
+    ''
+    'Standalone EXE note:'
+    '- The standalone EXE is intended to work by itself.'
+    '- If Windows SmartScreen or your browser blocks it, use the ZIP package instead and extract it first.'
+    '- Do not run the EXE directly from inside the ZIP preview window.'
+    ''
+    'Files in this package:'
+    '- ElementsShell.exe'
+    '- This quickstart text file'
+    '- Release checksum file is published separately on GitHub'
+) | Set-Content -Path $quickstartPath -Encoding UTF8
+
+Compress-Archive -Path @($resolvedOutput, $quickstartPath) -DestinationPath $zipPath -CompressionLevel Optimal
 
 $checksumPath = Join-Path -Path $outputDirectory -ChildPath ("ElementsShell-{0}-sha256.txt" -f $version)
 $exeHash = Get-FileHash -Path $resolvedOutput -Algorithm SHA256
@@ -48,5 +71,6 @@ $zipHash = Get-FileHash -Path $zipPath -Algorithm SHA256
 ) | Set-Content -Path $checksumPath -Encoding ASCII
 
 Write-Host ("Created executable at {0}" -f $resolvedOutput)
+Write-Host ("Created quickstart file at {0}" -f $quickstartPath)
 Write-Host ("Created zip at {0}" -f $zipPath)
 Write-Host ("Created checksum file at {0}" -f $checksumPath)

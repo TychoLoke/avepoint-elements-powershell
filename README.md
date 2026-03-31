@@ -8,7 +8,7 @@ It is designed to be more than a thin REST wrapper. The module focuses on practi
 
 This repository is in active public development.
 
-- Current version: `0.7.8`
+- Current version: `0.8.0`
 - License: MIT
 - PowerShell: `7.0+`
 - Support target: cross-platform where AvePoint API access is available
@@ -121,8 +121,20 @@ Windows release packaging now includes:
 - `ElementsShell.exe`
 - `ElementsShell-win-x64-<version>.zip`
 - `ElementsShell-<version>-sha256.txt`
+- `ElementsShell-quickstart-<version>.txt`
 - embedded version metadata and a generated app icon
 - embedded module files so the standalone `.exe` can run without the repository beside it
+
+Recommended Windows download flow:
+
+1. Download `ElementsShell-win-x64-<version>.zip` from the release.
+2. Extract it to a normal folder such as `Downloads` or `Desktop`.
+3. Run `ElementsShell.exe` from the extracted folder.
+
+Notes:
+
+- Do not run the EXE from inside the ZIP preview window.
+- The standalone `.exe` should work on its own as of `0.7.6+`, but the ZIP package is the preferred download because it includes a quickstart file and avoids common browser/ZIP confusion.
 
 ## Authentication Example
 
@@ -293,6 +305,7 @@ This project uses semantic versioning.
 - `0.7.6` standalone executable embeds the module
 - `0.7.7` automated release note generation
 - `0.7.8` Node 24 workflow readiness
+- `0.8.0` ZIP-first release guidance and GitHub CLI publishing
 - `1.0.0` first stable public release
 
 Each release is tracked in `CHANGELOG.md` and published with a git tag.
