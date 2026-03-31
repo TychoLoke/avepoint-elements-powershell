@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.3.0] - 2026-03-31
+
+### Added
+
+- Read-only customer retrieval via `Get-AvptCustomer`
+- Customer service retrieval via `Get-AvptCustomerService`
+- Tenant seat visibility via `Get-AvptTenantSeat`
+- AvePoint product overview retrieval via `Get-AvptProductOverview`
+- Backup overview and backup job retrieval via `Get-AvptBackupOverview` and `Get-AvptBackupJob`
+- Scan profile retrieval, detail, and daily change cmdlets
+- Shared metadata-based pagination helper for Elements endpoints that use `pageIndex` and `pageSize`
+
 ## [0.2.4] - 2026-03-31
 
 ### Added

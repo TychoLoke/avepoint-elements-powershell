@@ -8,7 +8,7 @@ It is designed to be more than a thin REST wrapper. The module focuses on practi
 
 This repository is in active public development.
 
-- Current version: `0.2.4`
+- Current version: `0.3.0`
 - License: MIT
 - PowerShell: `7.0+`
 - Support target: cross-platform where AvePoint API access is available
@@ -157,6 +157,9 @@ Examples will be expanded as the cmdlet surface grows.
 ```powershell
 Test-AvptElementsConnection
 Disconnect-AvptElements
+Get-AvptCustomer -All
+Get-AvptCustomerService -CustomerId '00000000-0000-0000-0000-000000000000'
+Get-AvptProductOverview -CustomerId '00000000-0000-0000-0000-000000000000' -ProductType 2048
 ```
 
 Current implemented authentication commands:
@@ -165,6 +168,15 @@ Current implemented authentication commands:
 - `Disconnect-AvptElements`
 - `Get-AvptPermissionScope`
 - `Get-AvptScopeBundle`
+- `Get-AvptCustomer`
+- `Get-AvptCustomerService`
+- `Get-AvptTenantSeat`
+- `Get-AvptProductOverview`
+- `Get-AvptBackupOverview`
+- `Get-AvptBackupJob`
+- `Get-AvptScanProfile`
+- `Get-AvptScanProfileDetail`
+- `Get-AvptScanProfileChange`
 - `Test-AvptScopeSet`
 - `Test-AvptElementsConnection`
 

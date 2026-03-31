@@ -24,3 +24,8 @@ Connect-AvptElements `
 
 # Or run the full guided onboarding flow.
 Connect-AvptElements
+
+# Example read-only operations.
+Get-AvptCustomer -All
+Get-AvptBackupOverview -CustomerId '00000000-0000-0000-0000-000000000000'
+Get-AvptScanProfile -CustomerId '00000000-0000-0000-0000-000000000000'

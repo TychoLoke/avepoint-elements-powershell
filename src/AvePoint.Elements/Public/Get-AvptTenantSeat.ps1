@@ -1,0 +1,40 @@
+function Get-AvptTenantSeat {
+    <#
+    .SYNOPSIS
+    Retrieves assigned and available user seats for customer tenants.
+    #>
+    [CmdletBinding()]
+    param(
+        [Parameter(Mandatory)]
+        [string] $CustomerId,
+
+        [Parameter(Mandatory)]
+        [ValidateSet(0, 1, 2, 3)]
+        [int] $Type,
+
+        [string[]] $TenantId,
+
+        [ValidateRange(1, 100)]
+        [int] $PageSize = 50,
+
+        [switch] $All,
+        [switch] $Raw
+    )
+
+    $path = "/partner/external/v3/general/customers/$CustomerId/3rd-party-products/type/$Type/tenants/batch"
+    $items = Invoke-AvptPagedOperation -Method Post -Path $path -Body @{
+        tenantIds = $TenantId
+    } -PageSize $PageSize -All:$All -ScopeBundle 'Common'
+
+    if ($Raw) {
+        return $items
+    }
+
+    $maps = Get-AvptEnumMap
+    foreach ($item in $items) {
+        ConvertTo-AvptFriendlyObject -InputObject $item -TypeName 'AvePoint.Elements.TenantSeat' -EnumMap @{
+            Type = $maps.TenantType
+        }
+    }
+}
+

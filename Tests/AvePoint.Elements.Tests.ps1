@@ -12,8 +12,17 @@ Describe 'AvePoint.Elements module manifest' {
         (Get-Command -Module AvePoint.Elements).Name | Should -Be @(
             'Connect-AvptElements'
             'Disconnect-AvptElements'
+            'Get-AvptBackupJob'
+            'Get-AvptBackupOverview'
+            'Get-AvptCustomer'
+            'Get-AvptCustomerService'
             'Get-AvptPermissionScope'
+            'Get-AvptProductOverview'
+            'Get-AvptScanProfile'
+            'Get-AvptScanProfileChange'
+            'Get-AvptScanProfileDetail'
             'Get-AvptScopeBundle'
+            'Get-AvptTenantSeat'
             'Test-AvptElementsConnection'
             'Test-AvptScopeSet'
         )
@@ -178,6 +187,48 @@ Describe 'Test-AvptScopeSet' {
             $result.Success | Should -BeTrue
             $result.RequestedScopeCount | Should -Be 2
             $result.GrantedScopeCount | Should -Be 2
+        }
+    }
+}
+
+Describe 'Read-only cmdlets' {
+    It 'uses the Common bundle for customer retrieval' {
+        InModuleScope AvePoint.Elements {
+            Mock Invoke-AvptPagedOperation {
+                @(
+                    [pscustomobject]@{
+                        id = 'customer-1'
+                        organization = 'Contoso'
+                        ownerEmail = 'owner@example.com'
+                        jobStatus = 0
+                        countryOrRegion = 'United States'
+                        managementMode = 1
+                        tenants = @()
+                    }
+                )
+            } -ParameterFilter { $ScopeBundle -eq 'Common' -and $Path -eq '/partner/external/v3/general/customers/batch' }
+
+            $result = @(Get-AvptCustomer)
+            $result[0].ManagementModeName | Should -Be 'PartnerManaged'
+        }
+    }
+
+    It 'uses the Common bundle for backup jobs' {
+        InModuleScope AvePoint.Elements {
+            Mock Invoke-AvptPagedOperation {
+                @(
+                    [pscustomobject]@{
+                        jobType = 7
+                        jobModule = 304
+                        status = 2
+                        jobId = 'job-1'
+                    }
+                )
+            } -ParameterFilter { $ScopeBundle -eq 'Common' -and $Path -like '*/avpt-products/jobs/batch' }
+
+            $result = @(Get-AvptBackupJob -CustomerId 'customer-1')
+            $result[0].JobTypeName | Should -Be 'Microsoft365'
+            $result[0].StatusName | Should -Be 'Finished'
         }
     }
 }
