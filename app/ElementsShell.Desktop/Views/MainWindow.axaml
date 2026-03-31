@@ -1,0 +1,336 @@
+<Window xmlns="https://github.com/avaloniaui"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:vm="using:ElementsShell.Desktop.ViewModels"
+        xmlns:models="using:ElementsShell.Desktop.Models"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        mc:Ignorable="d" d:DesignWidth="1540" d:DesignHeight="960"
+        x:Class="ElementsShell.Desktop.Views.MainWindow"
+        x:DataType="vm:MainWindowViewModel"
+        Icon="/Assets/avalonia-logo.ico"
+        Width="1540"
+        Height="960"
+        MinWidth="1280"
+        MinHeight="820"
+        Background="#07111F"
+        Title="{Binding WindowTitle}">
+
+    <Design.DataContext>
+        <vm:MainWindowViewModel/>
+    </Design.DataContext>
+
+    <Window.Styles>
+        <Style Selector="Border.surface">
+            <Setter Property="CornerRadius" Value="22" />
+            <Setter Property="Padding" Value="22" />
+            <Setter Property="Background">
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#13233A" Offset="0" />
+                    <GradientStop Color="#0D1728" Offset="1" />
+                </LinearGradientBrush>
+            </Setter>
+        </Style>
+        <Style Selector="Border.sidebarPanel">
+            <Setter Property="CornerRadius" Value="28" />
+            <Setter Property="Padding" Value="24" />
+            <Setter Property="Background">
+                <LinearGradientBrush StartPoint="0,0" EndPoint="0,1">
+                    <GradientStop Color="#0B1E36" Offset="0" />
+                    <GradientStop Color="#091421" Offset="1" />
+                </LinearGradientBrush>
+            </Setter>
+        </Style>
+        <Style Selector="Button.nav">
+            <Setter Property="Padding" Value="16,14" />
+            <Setter Property="HorizontalContentAlignment" Value="Left" />
+            <Setter Property="Background" Value="#12243B" />
+            <Setter Property="Foreground" Value="#EEF4FF" />
+            <Setter Property="BorderBrush" Value="#223A59" />
+            <Setter Property="CornerRadius" Value="18" />
+            <Setter Property="FontSize" Value="15" />
+        </Style>
+        <Style Selector="Button.primaryAction">
+            <Setter Property="Padding" Value="18,12" />
+            <Setter Property="Foreground" Value="White" />
+            <Setter Property="Background" Value="#0F7BFF" />
+            <Setter Property="BorderBrush" Value="#0F7BFF" />
+            <Setter Property="CornerRadius" Value="16" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style Selector="Button.secondaryAction">
+            <Setter Property="Padding" Value="18,12" />
+            <Setter Property="Foreground" Value="#EEF4FF" />
+            <Setter Property="Background" Value="#1A2E49" />
+            <Setter Property="BorderBrush" Value="#2A486F" />
+            <Setter Property="CornerRadius" Value="16" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
+        <Style Selector="TextBlock.pageTitle">
+            <Setter Property="FontSize" Value="34" />
+            <Setter Property="FontWeight" Value="Bold" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style Selector="TextBlock.sectionTitle">
+            <Setter Property="FontSize" Value="20" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="Foreground" Value="White" />
+        </Style>
+        <Style Selector="TextBlock.muted">
+            <Setter Property="Foreground" Value="#9CB2CB" />
+        </Style>
+    </Window.Styles>
+
+    <Grid ColumnDefinitions="310,*" Margin="22">
+        <Border Classes="sidebarPanel" Margin="0,0,20,0">
+            <Grid RowDefinitions="Auto,Auto,Auto,*,Auto">
+                <StackPanel Spacing="10">
+                    <Border CornerRadius="18" Padding="14" Background="#D7263D" Width="82">
+                        <TextBlock Text="ES" HorizontalAlignment="Center" FontSize="26" FontWeight="Bold" Foreground="White" />
+                    </Border>
+                    <StackPanel Spacing="4">
+                        <TextBlock Text="Elements Shell" FontSize="28" FontWeight="Bold" Foreground="White" />
+                        <TextBlock Text="Professional desktop workspace for AvePoint Elements operations." TextWrapping="Wrap" Classes="muted" />
+                    </StackPanel>
+                </StackPanel>
+
+                <Border Grid.Row="1" Margin="0,26,0,20" Padding="16" CornerRadius="18" Background="#12243B" BorderBrush="#244668" BorderThickness="1">
+                    <StackPanel Spacing="8">
+                        <TextBlock Text="Session" FontWeight="SemiBold" Foreground="White" />
+                        <TextBlock Text="{Binding ConnectionBadge}" Foreground="#67E8F9" FontWeight="Bold" />
+                        <TextBlock Text="{Binding Environment}" Foreground="#EEF4FF" />
+                        <TextBlock Text="{Binding TenantLabel}" Classes="muted" />
+                    </StackPanel>
+                </Border>
+
+                <StackPanel Grid.Row="2" Spacing="10">
+                    <ItemsControl ItemsSource="{Binding NavigationItems}">
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate x:DataType="models:NavigationItem">
+                                <Button Classes="nav"
+                                        Margin="0,0,0,10"
+                                        Command="{Binding $parent[Window].DataContext.SelectSectionCommand}"
+                                        CommandParameter="{Binding Title}">
+                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                                        <Border Width="44" Height="44" CornerRadius="14" Background="#0F7BFF">
+                                            <TextBlock Text="{Binding Glyph}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontWeight="Bold" />
+                                        </Border>
+                                        <StackPanel>
+                                            <TextBlock Text="{Binding Title}" Foreground="White" FontWeight="SemiBold" />
+                                            <TextBlock Text="{Binding Subtitle}" Classes="muted" />
+                                        </StackPanel>
+                                    </Grid>
+                                </Button>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+                </StackPanel>
+
+                <Border Grid.Row="4" Background="#0C1828" CornerRadius="18" Padding="18" BorderBrush="#213854" BorderThickness="1">
+                    <StackPanel Spacing="10">
+                        <TextBlock Text="Operator" FontWeight="SemiBold" Foreground="White" />
+                        <TextBlock Text="{Binding OperatorName}" Foreground="#EEF4FF" />
+                        <TextBlock Text="{Binding FilteredNavigationSummary}" TextWrapping="Wrap" Classes="muted" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <Grid Grid.Column="1" RowDefinitions="Auto,Auto,*">
+            <Border Classes="surface" Margin="0,0,0,20">
+                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="20">
+                    <StackPanel Spacing="8">
+                        <TextBlock Classes="pageTitle" Text="Operate Elements Like a Product, Not a REST Project" />
+                        <TextBlock Text="{Binding OverviewHeadline}" TextWrapping="Wrap" FontSize="16" Classes="muted" />
+                        <TextBlock Text="{Binding StatusMessage}" Foreground="#67E8F9" FontWeight="SemiBold" />
+                    </StackPanel>
+                    <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Top">
+                        <Button Classes="secondaryAction" Command="{Binding DisconnectCommand}" Content="Disconnect" />
+                        <Button Classes="primaryAction" Command="{Binding ConnectCommand}" Content="Connect Session" />
+                    </StackPanel>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Row="1" ColumnDefinitions="1.4*,1*" ColumnSpacing="20" Margin="0,0,0,20">
+                <Border Classes="surface">
+                    <StackPanel Spacing="18">
+                        <TextBlock Classes="sectionTitle" Text="Connection Workspace" />
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="14">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Environment" FontWeight="SemiBold" Foreground="White" />
+                                <ComboBox SelectedItem="{Binding Environment}">
+                                    <x:String>Commercial</x:String>
+                                    <x:String>Government</x:String>
+                                    <x:String>Aos2</x:String>
+                                    <x:String>FedRAMP</x:String>
+                                </ComboBox>
+                            </StackPanel>
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Tenant or Partner Label" FontWeight="SemiBold" Foreground="White" />
+                                <TextBox Text="{Binding TenantLabel}" Watermark="Contoso MSP" />
+                            </StackPanel>
+                        </Grid>
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Scope Bundles" FontWeight="SemiBold" Foreground="White" />
+                            <TextBox Text="{Binding SelectedBundleSummary}" AcceptsReturn="True" Height="70" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <TextBlock Text="Bundle-aware authentication is designed to split Common, Baseline, User, Risk, and Workspace access into maintainable sessions." TextWrapping="Wrap" Classes="muted" />
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1" Classes="surface">
+                    <StackPanel Spacing="18">
+                        <TextBlock Classes="sectionTitle" Text="Live Context" />
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="Selected customer" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="{Binding SelectedCustomer}" FontSize="22" Foreground="White" />
+                        </StackPanel>
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="Selected tenant" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="{Binding SelectedTenant}" FontSize="18" Foreground="#D7E7FF" />
+                        </StackPanel>
+                        <Button Classes="secondaryAction" Command="{Binding LoadMockCustomerCommand}" Content="Load Demo Context" HorizontalAlignment="Left" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+
+            <Grid Grid.Row="2" ColumnDefinitions="1.4*,1*" ColumnSpacing="20">
+                <Grid RowDefinitions="Auto,Auto,Auto,*">
+                    <Border Classes="surface" Margin="0,0,0,20">
+                        <StackPanel Spacing="18">
+                            <TextBlock Classes="sectionTitle" Text="Platform Snapshot" />
+                            <ItemsControl ItemsSource="{Binding MetricCards}">
+                                <ItemsControl.ItemsPanel>
+                                    <ItemsPanelTemplate>
+                                        <WrapPanel Orientation="Horizontal" />
+                                    </ItemsPanelTemplate>
+                                </ItemsControl.ItemsPanel>
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="models:MetricCard">
+                                        <Border Width="240" Margin="0,0,14,14" CornerRadius="20" Padding="18" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
+                                            <StackPanel Spacing="10">
+                                                <Border Height="6" CornerRadius="999" Background="{Binding AccentHex}" />
+                                                <TextBlock Text="{Binding Title}" Foreground="#AAC0D9" />
+                                                <TextBlock Text="{Binding Value}" FontSize="30" FontWeight="Bold" Foreground="White" />
+                                                <TextBlock Text="{Binding Delta}" Foreground="#67E8F9" />
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="1" Classes="surface" Margin="0,0,0,20" IsVisible="{Binding IsOverviewSelected}">
+                        <StackPanel Spacing="16">
+                            <TextBlock Classes="sectionTitle" Text="Quick Start Workflows" />
+                            <ItemsControl ItemsSource="{Binding WorkflowItems}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="models:WorkflowItem">
+                                        <Border Margin="0,0,0,12" Padding="18" CornerRadius="18" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
+                                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                                                <StackPanel Spacing="6">
+                                                    <TextBlock Text="{Binding Title}" FontSize="18" FontWeight="SemiBold" Foreground="White" />
+                                                    <TextBlock Text="{Binding Detail}" TextWrapping="Wrap" Classes="muted" />
+                                                    <TextBlock Text="{Binding ScopeBundle}" Foreground="#67E8F9" />
+                                                </StackPanel>
+                                                <Button Classes="secondaryAction"
+                                                        Command="{Binding $parent[Window].DataContext.OpenWorkflowCommand}"
+                                                        CommandParameter="{Binding Title}"
+                                                        Content="Open"
+                                                        VerticalAlignment="Center" />
+                                            </Grid>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="2" Classes="surface" Margin="0,0,0,20" IsVisible="{Binding IsCustomersSelected}">
+                        <StackPanel Spacing="16">
+                            <TextBlock Classes="sectionTitle" Text="Customer Workspace" />
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <TextBox Text="{Binding SearchText}" Watermark="Search customer or tenant context" />
+                                <Button Classes="primaryAction" Command="{Binding ApplySearchCommand}" Content="Search" />
+                            </Grid>
+                            <ItemsControl ItemsSource="{Binding TopCustomerHighlights}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Margin="0,0,0,10" Padding="16" CornerRadius="16" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
+                                            <TextBlock Text="{Binding .}" Foreground="#EEF4FF" />
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="3" Classes="surface" IsVisible="{Binding IsOperationsSelected}">
+                        <StackPanel Spacing="16">
+                            <TextBlock Classes="sectionTitle" Text="Operations Workspace" />
+                            <ItemsControl ItemsSource="{Binding OperationsHighlights}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate>
+                                        <Border Margin="0,0,0,10" Padding="16" CornerRadius="16" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
+                                            <TextBlock Text="{Binding .}" TextWrapping="Wrap" Foreground="#EEF4FF" />
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                <Button Classes="secondaryAction" Command="{Binding GenerateReportCommand}" CommandParameter="Baseline Drift Summary" Content="Baseline Summary" />
+                                <Button Classes="secondaryAction" Command="{Binding GenerateReportCommand}" CommandParameter="Backup Posture Summary" Content="Backup Summary" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="3" Classes="surface" IsVisible="{Binding IsReportsSelected}">
+                        <StackPanel Spacing="16">
+                            <TextBlock Classes="sectionTitle" Text="Reporting Workspace" />
+                            <TextBlock Text="Use desktop workflows to move from customer context to actionable summaries without copying raw identifiers." TextWrapping="Wrap" Classes="muted" />
+                            <StackPanel Orientation="Horizontal" Spacing="12">
+                                <Button Classes="primaryAction" Command="{Binding GenerateReportCommand}" CommandParameter="Executive MSP Overview" Content="Executive Overview" />
+                                <Button Classes="secondaryAction" Command="{Binding GenerateReportCommand}" CommandParameter="Workspace Compliance" Content="Workspace Compliance" />
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+
+                <Grid Grid.Column="1" RowDefinitions="Auto,*" RowSpacing="20">
+                    <Border Classes="surface">
+                        <StackPanel Spacing="14">
+                            <TextBlock Classes="sectionTitle" Text="What This App Solves" />
+                            <TextBlock Text="Connect once. Pick a workflow. Operate the platform with clean output instead of hand-built REST plumbing." TextWrapping="Wrap" Classes="muted" />
+                            <TextBlock Text="The desktop shell is the operator surface for the same public-safe PowerShell module that already handles auth, retries, pagination, and shaping." TextWrapping="Wrap" Foreground="#EEF4FF" />
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="1" Classes="surface">
+                        <StackPanel Spacing="16">
+                            <TextBlock Classes="sectionTitle" Text="Recent Activity" />
+                            <ItemsControl ItemsSource="{Binding ActivityItems}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="models:ActivityItem">
+                                        <Border Margin="0,0,0,12" Padding="16" CornerRadius="16" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
+                                            <StackPanel Spacing="6">
+                                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                                    <TextBlock Text="{Binding Title}" Foreground="White" FontWeight="SemiBold" />
+                                                    <Border Padding="10,4" CornerRadius="999" Background="#1C3553">
+                                                        <TextBlock Text="{Binding Status}" Foreground="#67E8F9" />
+                                                    </Border>
+                                                </Grid>
+                                                <TextBlock Text="{Binding Detail}" TextWrapping="Wrap" Classes="muted" />
+                                                <TextBlock Text="{Binding Timestamp}" Foreground="#8CA4BF" />
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Grid>
+        </Grid>
+    </Grid>
+
+</Window>

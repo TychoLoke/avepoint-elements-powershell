@@ -8,7 +8,7 @@ It is designed to be more than a thin REST wrapper. The module focuses on practi
 
 This repository is in active public development.
 
-- Current version: `0.8.2`
+- Current version: `0.9.0`
 - License: MIT
 - PowerShell: `7.0+`
 - Support target: cross-platform where AvePoint API access is available
@@ -99,6 +99,41 @@ To launch the app-style shell wrapper:
 
 ```powershell
 Start-AvptElementsShell
+```
+
+## Desktop App
+
+The repository now also includes a real desktop application shell built with Avalonia:
+
+- project: `app/ElementsShell.Desktop`
+- target: `.NET 8`
+- experience: dashboard-style operator workspace for AvePoint Elements
+
+The desktop app is meant to become the professional operator surface on top of the same public-safe module foundation. It is designed around:
+
+- a dedicated connection workspace
+- customer and tenant context
+- workflow-driven operations
+- reporting and activity panels
+- a more application-like experience than a plain terminal menu
+
+Run it locally from source:
+
+```bash
+export PATH="$HOME/.dotnet:$PATH"
+dotnet run --project app/ElementsShell.Desktop/ElementsShell.Desktop.csproj
+```
+
+Publish it from PowerShell:
+
+```powershell
+pwsh ./tools/Build-ElementsShellDesktop.ps1
+```
+
+Publish it for a specific runtime:
+
+```powershell
+pwsh ./tools/Build-ElementsShellDesktop.ps1 -Runtime win-x64
 ```
 
 The shell now presents:

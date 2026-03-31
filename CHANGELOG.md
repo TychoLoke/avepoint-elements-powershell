@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.9.0] - 2026-03-31
+
+### Added
+
+- First Avalonia-based desktop application shell in `app/ElementsShell.Desktop`
+- Professional desktop dashboard with navigation, connection workspace, workflow cards, reporting panels, and recent activity
+- `tools/Build-ElementsShellDesktop.ps1` for publishing the desktop app from the repository
+
+### Changed
+
+- Moved the desktop app project onto `.NET 8` so it builds cleanly with the current SDK toolchain
+- Added `.gitignore` coverage for desktop build output directories
+- Expanded the README with desktop app run and publish instructions
+
 ## [0.8.2] - 2026-03-31
 
 ### Changed

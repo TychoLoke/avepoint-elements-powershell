@@ -9,6 +9,8 @@ testResults.xml
 coverage.xml
 coverage.json
 artifacts/
+app/**/bin/
+app/**/obj/
 
 # Dependencies
 PSModules/
