@@ -8,7 +8,7 @@ It is designed to be more than a thin REST wrapper. The module focuses on practi
 
 This repository is in active public development.
 
-- Current version: `0.7.0`
+- Current version: `0.7.1`
 - License: MIT
 - PowerShell: `7.0+`
 - Support target: cross-platform where AvePoint API access is available
@@ -100,6 +100,13 @@ To launch the app-style shell wrapper:
 ```powershell
 Start-AvptElementsShell
 ```
+
+The shell now presents:
+
+- a dashboard-style home screen
+- session status panels
+- grouped operational actions
+- titled result screens with return-to-dashboard flow
 
 The repository also includes:
 
@@ -268,6 +275,7 @@ This project uses semantic versioning.
 - `0.5.0` broader operational coverage
 - `0.6.0` onboarding and summary workflow improvements
 - `0.7.0` interactive shell wrapper and Windows `.exe` packaging path
+- `0.7.1` dashboard-style shell polish
 - `1.0.0` first stable public release
 
 Each release is tracked in `CHANGELOG.md` and published with a git tag.

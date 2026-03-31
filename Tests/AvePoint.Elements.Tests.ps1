@@ -647,6 +647,7 @@ Describe 'Start-AvptElementsShell' {
     It 'can start and exit without connecting when SkipConnect is used' {
         InModuleScope AvePoint.Elements {
             Mock Show-AvptBanner {}
+            Mock Show-AvptShellDashboard {}
             Mock Test-AvptElementsConnection { $false }
             Mock Read-AvptChoice { 'Exit' }
 

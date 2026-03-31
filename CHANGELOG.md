@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.7.1] - 2026-03-31
+
+### Changed
+
+- Upgraded `Start-AvptElementsShell` from a plain menu loop to a dashboard-style console experience
+- Added session panels, workflow hints, result headers, and return-to-dashboard pauses so the shell feels more like an application
+- Improved the visual structure of shell output without changing the underlying cmdlet model
+
 ## [0.7.0] - 2026-03-31
 
 ### Added

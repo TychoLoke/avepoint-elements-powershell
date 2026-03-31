@@ -4,8 +4,12 @@ function Show-AvptShellResult {
         [Parameter(Mandatory)]
         [object] $InputObject,
 
-        [switch] $AsList
+        [switch] $AsList,
+
+        [string] $Title = 'Result'
     )
+
+    Show-AvptShellPanel -Title $Title -Lines @()
 
     if ($null -eq $InputObject) {
         Write-Host 'No data returned.' -ForegroundColor DarkYellow
