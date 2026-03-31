@@ -8,7 +8,7 @@ It is designed to be more than a thin REST wrapper. The module focuses on practi
 
 This repository is in active public development.
 
-- Current version: `0.7.1`
+- Current version: `0.7.2`
 - License: MIT
 - PowerShell: `7.0+`
 - Support target: cross-platform where AvePoint API access is available
@@ -107,6 +107,8 @@ The shell now presents:
 - session status panels
 - grouped operational actions
 - titled result screens with return-to-dashboard flow
+- customer and tenant drill-down centers
+- CSV and JSON export directly from result screens
 
 The repository also includes:
 
@@ -276,6 +278,7 @@ This project uses semantic versioning.
 - `0.6.0` onboarding and summary workflow improvements
 - `0.7.0` interactive shell wrapper and Windows `.exe` packaging path
 - `0.7.1` dashboard-style shell polish
+- `0.7.2` shell drill-down centers and export actions
 - `1.0.0` first stable public release
 
 Each release is tracked in `CHANGELOG.md` and published with a git tag.

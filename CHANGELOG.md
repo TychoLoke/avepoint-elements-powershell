@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.7.2] - 2026-03-31
+
+### Added
+
+- Customer Center and Tenant Center drill-down menus inside `Start-AvptElementsShell`
+- Built-in CSV and JSON export actions from shell result screens
+
+### Changed
+
+- Shifted the shell from flat top-level actions toward workflow-driven navigation
+- Result views can now stay open for export without dropping back to the dashboard immediately
+
 ## [0.7.1] - 2026-03-31
 
 ### Changed

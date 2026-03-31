@@ -654,4 +654,23 @@ Describe 'Start-AvptElementsShell' {
             { Start-AvptElementsShell -SkipConnect } | Should -Not -Throw
         }
     }
+
+    It 'can enter and leave the customer center' {
+        InModuleScope AvePoint.Elements {
+            Mock Show-AvptBanner {}
+            Mock Show-AvptShellDashboard {}
+            Mock Show-AvptShellPanel {}
+            Mock Test-AvptElementsConnection { $false }
+            Mock Invoke-AvptCustomerShellCenter {}
+
+            $script:callIndex = 0
+            Mock Read-AvptChoice {
+                $script:callIndex++
+                if ($script:callIndex -eq 1) { 'CustomerCenter' } else { 'Exit' }
+            }
+
+            { Start-AvptElementsShell -SkipConnect } | Should -Not -Throw
+            Should -Invoke Invoke-AvptCustomerShellCenter -Times 1
+        }
+    }
 }

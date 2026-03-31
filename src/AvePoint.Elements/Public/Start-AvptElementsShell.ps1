@@ -34,14 +34,14 @@ function Start-AvptElementsShell {
                 Value = 'Status'
             }
             [pscustomobject]@{
-                Label = 'Customer: summary'
-                Description = 'Open a customer operational summary with services and backup totals.'
-                Value = 'CustomerSummary'
+                Label = 'Customer center'
+                Description = 'Open customer workflows, summaries, services, and backup views.'
+                Value = 'CustomerCenter'
             }
             [pscustomobject]@{
-                Label = 'Tenant: summary'
-                Description = 'Open a tenant operational summary across users, workspace, and protection.'
-                Value = 'TenantSummary'
+                Label = 'Tenant center'
+                Description = 'Open tenant workflows, security views, and workspace posture.'
+                Value = 'TenantCenter'
             }
             [pscustomobject]@{
                 Label = 'Browse: customers'
@@ -83,32 +83,25 @@ function Start-AvptElementsShell {
                 Wait-AvptShellContinue
             }
             'Status' {
-                Show-AvptShellResult -InputObject (Test-AvptElementsConnection) -AsList -Title 'Connection Status'
-                Wait-AvptShellContinue
+                Invoke-AvptShellResultAction -InputObject (Test-AvptElementsConnection) -AsList -Title 'Connection Status'
             }
-            'CustomerSummary' {
-                Show-AvptShellResult -InputObject (Get-AvptCustomerSummary) -AsList -Title 'Customer Summary'
-                Wait-AvptShellContinue
+            'CustomerCenter' {
+                Invoke-AvptCustomerShellCenter
             }
-            'TenantSummary' {
-                Show-AvptShellResult -InputObject (Get-AvptTenantSummary) -AsList -Title 'Tenant Summary'
-                Wait-AvptShellContinue
+            'TenantCenter' {
+                Invoke-AvptTenantShellCenter
             }
             'Customers' {
-                Show-AvptShellResult -InputObject (Get-AvptCustomer -All) -Title 'Customers'
-                Wait-AvptShellContinue
+                Invoke-AvptShellResultAction -InputObject (Get-AvptCustomer -All) -Title 'Customers'
             }
             'Users' {
-                Show-AvptShellResult -InputObject (Get-AvptSecurityUserOverview -All) -Title 'Security Users'
-                Wait-AvptShellContinue
+                Invoke-AvptShellResultAction -InputObject (Get-AvptSecurityUserOverview -All) -Title 'Security Users'
             }
             'Workspace' {
-                Show-AvptShellResult -InputObject (Get-AvptWorkspaceOverview) -AsList -Title 'Workspace Overview'
-                Wait-AvptShellContinue
+                Invoke-AvptShellResultAction -InputObject (Get-AvptWorkspaceOverview) -AsList -Title 'Workspace Overview'
             }
             'Backup' {
-                Show-AvptShellResult -InputObject (Get-AvptBackupOverview) -Title 'Backup Overview'
-                Wait-AvptShellContinue
+                Invoke-AvptShellResultAction -InputObject (Get-AvptBackupOverview) -Title 'Backup Overview'
             }
             'NewCustomer' {
                 Show-AvptShellPanel -Title 'New Customer Preview' -Lines @(
