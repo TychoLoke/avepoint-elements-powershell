@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.7.5] - 2026-03-31
+
+### Added
+
+- Generated application icon for `ElementsShell.exe`
+- Automatic zip packaging and SHA-256 checksum generation for Windows shell releases
+- Signing placeholder step in the Windows packaging workflow for future Authenticode integration
+
+### Changed
+
+- The packaging script now embeds richer version metadata into `ElementsShell.exe`
+- Tagged releases now distribute the `.exe`, `.zip`, and checksum assets together
+
 ## [0.7.4] - 2026-03-31
 
 ### Changed

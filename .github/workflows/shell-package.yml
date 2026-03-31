@@ -22,14 +22,26 @@ jobs:
         run: |
           ./tools/Build-ElementsShellExe.ps1
 
+      - name: Signing placeholder
+        if: ${{ false }}
+        shell: pwsh
+        run: |
+          Write-Host "Placeholder for future Authenticode signing."
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
           name: ElementsShell
-          path: dist/ElementsShell.exe
+          path: |
+            dist/ElementsShell.exe
+            dist/ElementsShell-win-x64-*.zip
+            dist/ElementsShell-*-sha256.txt
 
       - name: Attach ElementsShell.exe to release
         if: startsWith(github.ref, 'refs/tags/')
         uses: softprops/action-gh-release@v2
         with:
-          files: dist/ElementsShell.exe
+          files: |
+            dist/ElementsShell.exe
+            dist/ElementsShell-win-x64-*.zip
+            dist/ElementsShell-*-sha256.txt

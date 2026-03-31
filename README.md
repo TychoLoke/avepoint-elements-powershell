@@ -8,7 +8,7 @@ It is designed to be more than a thin REST wrapper. The module focuses on practi
 
 This repository is in active public development.
 
-- Current version: `0.7.3`
+- Current version: `0.7.5`
 - License: MIT
 - PowerShell: `7.0+`
 - Support target: cross-platform where AvePoint API access is available
@@ -113,8 +113,15 @@ The shell now presents:
 The repository also includes:
 
 - `app/ElementsShell.ps1` as the launcher entry point
-- `tools/Build-ElementsShellExe.ps1` to package a Windows `.exe`
+- `tools/Build-ElementsShellExe.ps1` to package a Windows `.exe`, `.zip`, and checksum file
 - `.github/workflows/shell-package.yml` to build the wrapper in GitHub Actions on Windows and attach `ElementsShell.exe` to tagged releases
+
+Windows release packaging now includes:
+
+- `ElementsShell.exe`
+- `ElementsShell-win-x64-<version>.zip`
+- `ElementsShell-<version>-sha256.txt`
+- embedded version metadata and a generated app icon
 
 ## Authentication Example
 
@@ -280,6 +287,8 @@ This project uses semantic versioning.
 - `0.7.1` dashboard-style shell polish
 - `0.7.2` shell drill-down centers and export actions
 - `0.7.3` release-attached `.exe` packaging
+- `0.7.4` fixed GitHub Actions packaging execution
+- `0.7.5` production-grade shell packaging assets
 - `1.0.0` first stable public release
 
 Each release is tracked in `CHANGELOG.md` and published with a git tag.
