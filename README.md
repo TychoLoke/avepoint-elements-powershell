@@ -8,7 +8,7 @@ It is designed to be more than a thin REST wrapper. The module focuses on practi
 
 This repository is in active public development.
 
-- Current version: `0.2.2`
+- Current version: `0.2.3`
 - License: MIT
 - PowerShell: `7.0+`
 - Support target: cross-platform where AvePoint API access is available
@@ -128,6 +128,18 @@ Get-AvptPermissionScope
 Get-AvptPermissionScope -AccessLevel Read
 ```
 
+To test whether a scope combination can successfully obtain a token:
+
+```powershell
+Test-AvptScopeSet `
+    -Environment Commercial `
+    -Credential $credential `
+    -Scope @(
+        'elements.customers.read.all'
+        'elements.license.read.all'
+    )
+```
+
 ## Examples
 
 Examples will be expanded as the cmdlet surface grows.
@@ -142,6 +154,7 @@ Current implemented authentication commands:
 - `Connect-AvptElements`
 - `Disconnect-AvptElements`
 - `Get-AvptPermissionScope`
+- `Test-AvptScopeSet`
 - `Test-AvptElementsConnection`
 
 ## Repository Layout

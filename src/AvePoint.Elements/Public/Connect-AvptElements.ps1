@@ -167,6 +167,11 @@ function Connect-AvptElements {
         throw 'Authentication details are required. Provide -Credential or certificate-based parameters, or run Connect-AvptElements with no arguments for guided onboarding.'
     }
 
+    $requestedScopeString = $Scope -join ' '
+    if ($requestedScopeString.Length -gt 300) {
+        Write-Warning "Requested scope string length is $($requestedScopeString.Length) characters. Live Commercial endpoint testing on 2026-03-31 showed invalid_scope responses once combined scope strings exceeded roughly 300 characters."
+    }
+
     $environmentConfig = Get-AvptEnvironmentConfig -Environment $Environment
     $state = Get-AvptModuleState
 
@@ -211,14 +216,18 @@ function Connect-AvptElements {
 
     if ($PassThru) {
         [pscustomobject]@{
-            Environment = $state.Connection.Environment
-            BaseUri     = $state.Connection.BaseUri
-            TokenUri    = $state.Connection.TokenUri
-            ClientId    = $state.Connection.ClientId
-            AuthType    = $state.Connection.AuthType
-            Scope       = $state.Connection.Scope
-            TenantName  = $state.Connection.TenantName
-            ExpiresAt   = $state.Token.ExpiresAt
+            Environment          = $state.Connection.Environment
+            BaseUri              = $state.Connection.BaseUri
+            TokenUri             = $state.Connection.TokenUri
+            ClientId             = $state.Connection.ClientId
+            AuthType             = $state.Connection.AuthType
+            RequestedScope       = $Scope
+            RequestedScopeCount  = $Scope.Count
+            RequestedScopeLength = $requestedScopeString.Length
+            GrantedScope         = $state.Token.Scope
+            GrantedScopeCount    = $state.Token.Scope.Count
+            TenantName           = $state.Connection.TenantName
+            ExpiresAt            = $state.Token.ExpiresAt
         }
     }
     else {
@@ -226,7 +235,10 @@ function Connect-AvptElements {
         Write-Host 'Connected to AvePoint Elements.' -ForegroundColor Green
         Write-Host (" Environment : {0}" -f $state.Connection.Environment) -ForegroundColor DarkGray
         Write-Host (" Auth Type   : {0}" -f $state.Connection.AuthType) -ForegroundColor DarkGray
-        Write-Host (" Scopes      : {0}" -f (($state.Connection.Scope | Sort-Object) -join ', ')) -ForegroundColor DarkGray
+        Write-Host (" Requested   : {0}" -f (($Scope | Sort-Object) -join ', ')) -ForegroundColor DarkGray
+        Write-Host (" Scope Count : {0}" -f $Scope.Count) -ForegroundColor DarkGray
+        Write-Host (" Scope Chars : {0}" -f $requestedScopeString.Length) -ForegroundColor DarkGray
+        Write-Host (" Granted     : {0}" -f (($state.Token.Scope | Sort-Object) -join ', ')) -ForegroundColor DarkGray
         if ($state.Connection.TenantName) {
             Write-Host (" Label       : {0}" -f $state.Connection.TenantName) -ForegroundColor DarkGray
         }

@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.2.3] - 2026-03-31
+
+### Added
+
+- `Test-AvptScopeSet` for validating token issuance against specific scope combinations
+- Requested scope count and scope-string length diagnostics in connection output
+
+### Changed
+
+- `Connect-AvptElements` now shows requested scopes separately from granted scopes
+- `Connect-AvptElements` warns when the requested scope string exceeds 300 characters based on live Commercial endpoint testing from 2026-03-31
+
 ## [0.2.2] - 2026-03-31
 
 ### Added

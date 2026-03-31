@@ -14,6 +14,7 @@ Describe 'AvePoint.Elements module manifest' {
             'Disconnect-AvptElements'
             'Get-AvptPermissionScope'
             'Test-AvptElementsConnection'
+            'Test-AvptScopeSet'
         )
     }
 }
@@ -81,7 +82,7 @@ Describe 'Connect-AvptElements' {
 
             $session.ClientId | Should -Be 'client-id'
             $session.TenantName | Should -Be 'contoso-demo'
-            $session.Scope | Should -Contain 'elements.customers.read.all'
+            $session.GrantedScope | Should -Contain 'elements.customers.read.all'
         }
     }
 }
@@ -118,6 +119,30 @@ Describe 'Test-AvptElementsConnection' {
             }
 
             Test-AvptElementsConnection -Quiet | Should -BeTrue
+        }
+    }
+}
+
+Describe 'Test-AvptScopeSet' {
+    It 'returns granted scope diagnostics on success' {
+        InModuleScope AvePoint.Elements {
+            Mock Request-AvptAccessToken {
+                [pscustomobject]@{
+                    AccessToken = 'token-value'
+                    ExpiresAt   = [DateTimeOffset]::UtcNow.AddHours(1)
+                    Scope       = @('elements.customers.read.all', 'elements.license.read.all')
+                    TokenType   = 'Bearer'
+                }
+            }
+
+            $secret = ConvertTo-SecureString 'sample-secret' -AsPlainText -Force
+            $credential = [pscredential]::new('client-id', $secret)
+
+            $result = Test-AvptScopeSet -Credential $credential -Scope @('elements.customers.read.all', 'elements.license.read.all')
+
+            $result.Success | Should -BeTrue
+            $result.RequestedScopeCount | Should -Be 2
+            $result.GrantedScopeCount | Should -Be 2
         }
     }
 }
