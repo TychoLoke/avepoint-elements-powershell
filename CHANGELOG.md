@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.7.7] - 2026-03-31
+
+### Changed
+
+- Updated the release packaging workflow to generate or update GitHub release notes automatically on tagged builds
+- Reduced the manual release-publishing burden so tags behave more like self-publishing packaged releases
+
 ## [0.7.6] - 2026-03-31
 
 ### Changed
