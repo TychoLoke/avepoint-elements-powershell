@@ -13,9 +13,17 @@ Describe 'AvePoint.Elements module manifest' {
             'Connect-AvptElements'
             'Disconnect-AvptElements'
             'Get-AvptPermissionScope'
+            'Get-AvptScopeBundle'
             'Test-AvptElementsConnection'
             'Test-AvptScopeSet'
         )
+    }
+}
+
+Describe 'Get-AvptScopeBundle' {
+    It 'returns the built-in scope bundles' {
+        $result = Get-AvptScopeBundle
+        ($result.Name | Sort-Object) | Should -Be @('Baseline', 'Common', 'Risk', 'User', 'Workspace')
     }
 }
 
@@ -52,6 +60,31 @@ Describe 'Connect-AvptElements' {
             $session.ClientId | Should -Be 'client-id'
             $session.AuthType | Should -Be 'ClientSecret'
             (Get-AvptModuleState).Token.AccessToken | Should -Be 'token-value'
+        }
+    }
+
+    It 'initializes named scope bundles into the token cache' {
+        InModuleScope AvePoint.Elements {
+            Mock Request-AvptAccessToken {
+                [pscustomobject]@{
+                    AccessToken = ('token-' + (($Scope -join '|').GetHashCode()))
+                    ExpiresAt   = [DateTimeOffset]::UtcNow.AddHours(1)
+                    Scope       = @($Scope)
+                    TokenType   = 'Bearer'
+                }
+            }
+
+            $secret = ConvertTo-SecureString 'sample-secret' -AsPlainText -Force
+            $credential = [pscredential]::new('client-id', $secret)
+
+            $session = Connect-AvptElements -Credential $credential -ScopeBundle Common,Baseline,User,Risk,Workspace -PassThru
+
+            $session.ScopeBundle.Count | Should -Be 5
+            (Get-AvptModuleState).TokenCache['Common'] | Should -Not -BeNullOrEmpty
+            (Get-AvptModuleState).TokenCache['Baseline'] | Should -Not -BeNullOrEmpty
+            (Get-AvptModuleState).TokenCache['User'] | Should -Not -BeNullOrEmpty
+            (Get-AvptModuleState).TokenCache['Risk'] | Should -Not -BeNullOrEmpty
+            (Get-AvptModuleState).TokenCache['Workspace'] | Should -Not -BeNullOrEmpty
         }
     }
 
@@ -113,10 +146,12 @@ Describe 'Test-AvptElementsConnection' {
                 BaseUri     = 'https://graph.avepointonlineservices.com'
                 AuthType    = 'ClientSecret'
                 Scope       = @('elements.customers.read.all')
+                DefaultBundle = $null
             }
             $state.Token = [pscustomobject]@{
                 ExpiresAt = [DateTimeOffset]::UtcNow.AddHours(1)
             }
+            $state.TokenCache = @{}
 
             Test-AvptElementsConnection -Quiet | Should -BeTrue
         }

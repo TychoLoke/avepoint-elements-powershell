@@ -22,6 +22,7 @@ function Test-AvptElementsConnection {
     [CmdletBinding()]
     param(
         [string] $ProbePath,
+        [string] $ScopeBundle,
         [switch] $Quiet
     )
 
@@ -31,11 +32,11 @@ function Test-AvptElementsConnection {
             throw 'No AvePoint Elements connection is active.'
         }
 
-        $null = Get-AvptAccessToken
+        $null = Get-AvptAccessToken -BundleName $ScopeBundle
 
         $probeSucceeded = $false
         if ($ProbePath) {
-            $null = Invoke-AvptWebRequest -Method Get -Path $ProbePath
+            $null = Invoke-AvptWebRequest -Method Get -Path $ProbePath -ScopeBundle $ScopeBundle
             $probeSucceeded = $true
         }
 
@@ -44,8 +45,9 @@ function Test-AvptElementsConnection {
             Environment    = $state.Connection.Environment
             BaseUri        = $state.Connection.BaseUri
             AuthType       = $state.Connection.AuthType
-            Scope          = $state.Connection.Scope
-            ExpiresAt      = $state.Token.ExpiresAt
+            ScopeBundle    = $ScopeBundle
+            Scope          = if ($ScopeBundle) { $state.TokenCache[$ScopeBundle].Scope } else { $state.Connection.Scope }
+            ExpiresAt      = if ($ScopeBundle) { $state.TokenCache[$ScopeBundle].Token.ExpiresAt } else { $state.Token.ExpiresAt }
             ProbePath      = $ProbePath
             ProbeSucceeded = $probeSucceeded
         }
@@ -66,6 +68,7 @@ function Test-AvptElementsConnection {
             Environment    = $null
             BaseUri        = $null
             AuthType       = $null
+            ScopeBundle    = $ScopeBundle
             Scope          = @()
             ExpiresAt      = $null
             ProbePath      = $ProbePath

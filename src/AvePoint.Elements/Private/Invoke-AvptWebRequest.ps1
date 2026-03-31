@@ -16,6 +16,8 @@ function Invoke-AvptWebRequest {
 
         [int] $MaxRetryCount = 3,
 
+        [string] $ScopeBundle,
+
         [switch] $Raw,
 
         [switch] $AsJson
@@ -27,7 +29,7 @@ function Invoke-AvptWebRequest {
 
     while ($attempt -le $MaxRetryCount) {
         $attempt++
-        $token = Get-AvptAccessToken -ForceRefresh:($attempt -gt 1 -and $lastError -and $lastError.StatusCode -eq 401)
+        $token = Get-AvptAccessToken -BundleName $ScopeBundle -ForceRefresh:($attempt -gt 1 -and $lastError -and $lastError.StatusCode -eq 401)
 
         $requestHeaders = @{
             Authorization = "Bearer $token"
@@ -127,4 +129,3 @@ function Invoke-AvptWebRequest {
 
     throw "AvePoint Elements API request failed for '$uri'. $($lastError.Message)"
 }
-

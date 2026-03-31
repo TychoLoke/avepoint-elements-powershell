@@ -15,5 +15,5 @@ function Disconnect-AvptElements {
     $state = Get-AvptModuleState
     $state.Connection = $null
     $state.Token = $null
+    $state.TokenCache = @{}
 }
-

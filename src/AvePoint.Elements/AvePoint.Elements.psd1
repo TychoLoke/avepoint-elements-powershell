@@ -1,6 +1,6 @@
 @{
     RootModule           = 'AvePoint.Elements.psm1'
-    ModuleVersion        = '0.2.3'
+    ModuleVersion        = '0.2.4'
     GUID                 = '7fbe5f68-bb17-4a67-81d5-8ad3884d783f'
     Author               = 'Tycho Loke'
     CompanyName          = 'Open Source'
@@ -12,6 +12,7 @@
         'Connect-AvptElements'
         'Disconnect-AvptElements'
         'Get-AvptPermissionScope'
+        'Get-AvptScopeBundle'
         'Test-AvptScopeSet'
         'Test-AvptElementsConnection'
     )
@@ -23,7 +24,7 @@
             Tags         = @('AvePoint', 'Elements', 'MSP', 'Automation', 'PowerShell')
             ProjectUri   = 'https://github.com/TychoLoke/avepoint-elements-powershell'
             LicenseUri   = 'https://github.com/TychoLoke/avepoint-elements-powershell/blob/main/LICENSE'
-            ReleaseNotes = 'Add scope diagnostics and a scope-set validation cmdlet for troubleshooting invalid_scope responses.'
+            ReleaseNotes = 'Add named scope bundles and multi-token caching for Common, Baseline, User, Risk, and Workspace endpoint families.'
         }
     }
 }

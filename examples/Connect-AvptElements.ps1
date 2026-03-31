@@ -16,5 +16,11 @@ Connect-AvptElements `
     -Credential $credential `
     -UseScopeMenu
 
+# Or initialize separate tokens for all endpoint families.
+Connect-AvptElements `
+    -Environment Commercial `
+    -Credential $credential `
+    -ScopeBundle Common,Baseline,User,Risk,Workspace
+
 # Or run the full guided onboarding flow.
 Connect-AvptElements

@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.2.4] - 2026-03-31
+
+### Added
+
+- Named scope bundles for `Common`, `Baseline`, `User`, `Risk`, and `Workspace`
+- `Get-AvptScopeBundle` for bundle discovery
+- Multi-token cache initialization during `Connect-AvptElements` so one connection can cover all endpoint families without one oversized scope request
+
+### Changed
+
+- Guided onboarding now supports bundle-based connection setup
+- `Test-AvptElementsConnection` accepts `-ScopeBundle`
+
 ## [0.2.3] - 2026-03-31
 
 ### Added

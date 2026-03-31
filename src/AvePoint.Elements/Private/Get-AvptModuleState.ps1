@@ -6,9 +6,9 @@ function Get-AvptModuleState {
         $script:AvptState = @{
             Connection = $null
             Token      = $null
+            TokenCache = @{}
         }
     }
 
     $script:AvptState
 }
-

@@ -16,7 +16,14 @@ function Start-AvptConnectOnboarding {
     $result = [ordered]@{
         Environment = $environment
         TenantName  = if ([string]::IsNullOrWhiteSpace($tenantName)) { $null } else { $tenantName }
-        Scope       = Read-AvptPermissionSelection -ReadOnlyOnly:$ReadOnlyScopeMenu
+    }
+
+    $bundleMode = Read-Host 'Use named scope bundles for Common, Baseline, User, Risk, and Workspace? (Y/n)'
+    if ([string]::IsNullOrWhiteSpace($bundleMode) -or $bundleMode -match '^(y|yes)$') {
+        $result.ScopeBundle = Read-AvptScopeBundleSelection
+    }
+    else {
+        $result.Scope = Read-AvptPermissionSelection -ReadOnlyOnly:$ReadOnlyScopeMenu
     }
 
     switch ($authMode) {
@@ -44,4 +51,3 @@ function Start-AvptConnectOnboarding {
 
     [pscustomobject] $result
 }
-

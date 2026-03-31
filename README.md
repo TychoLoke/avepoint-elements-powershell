@@ -8,7 +8,7 @@ It is designed to be more than a thin REST wrapper. The module focuses on practi
 
 This repository is in active public development.
 
-- Current version: `0.2.3`
+- Current version: `0.2.4`
 - License: MIT
 - PowerShell: `7.0+`
 - Support target: cross-platform where AvePoint API access is available
@@ -121,11 +121,21 @@ Or run full guided onboarding:
 Connect-AvptElements
 ```
 
+To connect once and initialize separate cached tokens for all endpoint families:
+
+```powershell
+Connect-AvptElements `
+    -Environment Commercial `
+    -Credential $credential `
+    -ScopeBundle Common,Baseline,User,Risk,Workspace
+```
+
 To list the built-in permission catalog:
 
 ```powershell
 Get-AvptPermissionScope
 Get-AvptPermissionScope -AccessLevel Read
+Get-AvptScopeBundle
 ```
 
 To test whether a scope combination can successfully obtain a token:
@@ -154,6 +164,7 @@ Current implemented authentication commands:
 - `Connect-AvptElements`
 - `Disconnect-AvptElements`
 - `Get-AvptPermissionScope`
+- `Get-AvptScopeBundle`
 - `Test-AvptScopeSet`
 - `Test-AvptElementsConnection`
 

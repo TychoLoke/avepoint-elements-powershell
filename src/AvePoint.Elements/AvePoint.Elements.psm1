@@ -1,6 +1,7 @@
 $script:AvptState = @{
     Connection = $null
     Token      = $null
+    TokenCache = @{}
 }
 
 $publicPath = Join-Path -Path $PSScriptRoot -ChildPath 'Public'
