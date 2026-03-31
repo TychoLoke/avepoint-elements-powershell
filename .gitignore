@@ -37,3 +37,7 @@ local.settings.json
 
 # Logs
 *.log
+
+# Local reference exports
+AvePoint Graph API*.md
+AvePoint Graph API*.pdf
