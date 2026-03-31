@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.7.9] - 2026-03-31
+
+### Changed
+
+- Upgraded `actions/checkout` to `v6` and `actions/upload-artifact` to `v6`
+- Reduced GitHub Actions deprecation noise by moving official workflow dependencies onto newer Node 24-capable major versions
+
 ## [0.7.8] - 2026-03-31
 
 ### Changed
