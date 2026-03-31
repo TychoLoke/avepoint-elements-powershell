@@ -12,6 +12,10 @@ function Get-AvptCustomerService {
         [switch] $Raw
     )
 
+    if (-not $CustomerId) {
+        $CustomerId = @(Resolve-AvptCustomerSelection).CustomerId
+    }
+
     $items = Invoke-AvptPagedOperation -Method Post -Path '/partner/external/v3/general/customers/services/batch' -Body @{
         customerIds = $CustomerId
     } -PageSize $PageSize -All:$All -ScopeBundle 'Common'

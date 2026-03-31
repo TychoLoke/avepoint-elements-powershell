@@ -5,10 +5,8 @@ function Get-AvptTenantSeat {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)]
         [string] $CustomerId,
 
-        [Parameter(Mandatory)]
         [ValidateSet(0, 1, 2, 3)]
         [int] $Type,
 
@@ -20,6 +18,17 @@ function Get-AvptTenantSeat {
         [switch] $All,
         [switch] $Raw
     )
+
+    $CustomerId = (Resolve-AvptCustomerSelection -CustomerId $CustomerId).CustomerId
+    if (-not $PSBoundParameters.ContainsKey('Type')) {
+        $typeOptions = @(
+            [pscustomobject]@{ Label = 'Microsoft 365'; Description = 'Type 0'; Value = 0 }
+            [pscustomobject]@{ Label = 'Salesforce'; Description = 'Type 1'; Value = 1 }
+            [pscustomobject]@{ Label = 'Google'; Description = 'Type 2'; Value = 2 }
+            [pscustomobject]@{ Label = 'Dynamics 365'; Description = 'Type 3'; Value = 3 }
+        )
+        $Type = Read-AvptChoice -Title 'Choose a tenant type:' -Options $typeOptions -Prompt 'Tenant type number'
+    }
 
     $path = "/partner/external/v3/general/customers/$CustomerId/3rd-party-products/type/$Type/tenants/batch"
     $items = Invoke-AvptPagedOperation -Method Post -Path $path -Body @{
@@ -37,4 +46,3 @@ function Get-AvptTenantSeat {
         }
     }
 }
-

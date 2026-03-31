@@ -31,3 +31,7 @@ Get-AvptBackupOverview -CustomerId '00000000-0000-0000-0000-000000000000'
 Get-AvptScanProfile -CustomerId '00000000-0000-0000-0000-000000000000'
 Get-AvptBaseline -All
 Get-AvptRiskRule -CustomerId '00000000-0000-0000-0000-000000000000' -TenantId '11111111-1111-1111-1111-111111111111'
+
+# Friendly selection without copying IDs.
+Get-AvptBackupOverview
+Get-AvptProductOverview

@@ -1,7 +1,6 @@
 function Get-AvptBaselineReport {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)]
         [string] $BaselineId,
         [ValidateRange(1, 100)]
         [int] $PageSize = 50,
@@ -9,6 +8,7 @@ function Get-AvptBaselineReport {
         [switch] $Raw
     )
 
+    $BaselineId = (Resolve-AvptBaselineSelection -BaselineId $BaselineId).BaselineId
     $path = "/partner/external/v3/bm/baselines/$BaselineId/reports"
     $items = Invoke-AvptPagedOperation -Method Get -Path $path -PageSize $PageSize -All:$All -ScopeBundle 'Baseline'
 
@@ -18,4 +18,3 @@ function Get-AvptBaselineReport {
         ConvertTo-AvptFriendlyObject -InputObject $item -TypeName 'AvePoint.Elements.BaselineReport'
     }
 }
-

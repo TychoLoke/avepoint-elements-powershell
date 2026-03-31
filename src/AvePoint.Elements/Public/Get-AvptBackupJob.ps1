@@ -5,7 +5,6 @@ function Get-AvptBackupJob {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)]
         [string] $CustomerId,
 
         [int] $JobType,
@@ -18,6 +17,7 @@ function Get-AvptBackupJob {
         [switch] $Raw
     )
 
+    $CustomerId = (Resolve-AvptCustomerSelection -CustomerId $CustomerId).CustomerId
     $path = "/partner/external/v3/general/customers/$CustomerId/avpt-products/jobs/batch"
     $body = @{}
     if ($PSBoundParameters.ContainsKey('JobType')) { $body.jobType = $JobType }
@@ -37,4 +37,3 @@ function Get-AvptBackupJob {
         }
     }
 }
-

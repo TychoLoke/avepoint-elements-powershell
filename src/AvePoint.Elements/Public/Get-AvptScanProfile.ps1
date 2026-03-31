@@ -5,7 +5,6 @@ function Get-AvptScanProfile {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)]
         [string] $CustomerId,
 
         [string[]] $ScanProfileId,
@@ -17,6 +16,7 @@ function Get-AvptScanProfile {
         [switch] $Raw
     )
 
+    $CustomerId = (Resolve-AvptCustomerSelection -CustomerId $CustomerId).CustomerId
     $path = "/partner/external/v3/general/customers/$CustomerId/scan-profiles/batch"
     $items = Invoke-AvptPagedOperation -Method Post -Path $path -Body @{
         scanProfileIds = $ScanProfileId
@@ -33,4 +33,3 @@ function Get-AvptScanProfile {
         }
     }
 }
-

@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.4.1] - 2026-03-31
+
+### Added
+
+- Interactive selectors for customers, tenants, scan profiles, baselines, risk rules, and product types
+
+### Changed
+
+- Many cmdlets now let you choose required IDs from live data when parameters are omitted
+- Documentation and examples now show the friendlier picker-based workflow
+
 ## [0.4.0] - 2026-03-31
 
 ### Added

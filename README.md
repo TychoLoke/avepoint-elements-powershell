@@ -8,7 +8,7 @@ It is designed to be more than a thin REST wrapper. The module focuses on practi
 
 This repository is in active public development.
 
-- Current version: `0.4.0`
+- Current version: `0.4.1`
 - License: MIT
 - PowerShell: `7.0+`
 - Support target: cross-platform where AvePoint API access is available
@@ -162,6 +162,15 @@ Get-AvptCustomerService -CustomerId '00000000-0000-0000-0000-000000000000'
 Get-AvptProductOverview -CustomerId '00000000-0000-0000-0000-000000000000' -ProductType 2048
 Get-AvptBaseline -All
 Get-AvptRiskRule -CustomerId '00000000-0000-0000-0000-000000000000' -TenantId '11111111-1111-1111-1111-111111111111'
+```
+
+Many cmdlets can now guide you through live selection if you omit IDs:
+
+```powershell
+Get-AvptBackupOverview
+Get-AvptScanProfileDetail
+Get-AvptRiskHitItem
+Get-AvptProductOverview
 ```
 
 Current implemented authentication commands:

@@ -1,11 +1,8 @@
 function Get-AvptRiskHitItem {
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)]
         [string] $CustomerId,
-        [Parameter(Mandatory)]
         [string] $TenantId,
-        [Parameter(Mandatory)]
         [string] $RuleId,
         [ValidateRange(1, 100)]
         [int] $PageSize = 50,
@@ -13,7 +10,8 @@ function Get-AvptRiskHitItem {
         [switch] $Raw
     )
 
-    $path = "/partner/external/v3/rm/customers/$CustomerId/tenants/$TenantId/detection/rules/$RuleId/hit-items"
+    $context = Resolve-AvptRiskRuleSelection -CustomerId $CustomerId -TenantId $TenantId -RuleId $RuleId
+    $path = "/partner/external/v3/rm/customers/$($context.CustomerId)/tenants/$($context.TenantId)/detection/rules/$($context.RuleId)/hit-items"
     $items = Invoke-AvptPagedOperation -Method Get -Path $path -PageSize $PageSize -All:$All -ScopeBundle 'Risk' -MetadataProperty 'metaData'
 
     if ($Raw) { return $items }
@@ -29,4 +27,3 @@ function Get-AvptRiskHitItem {
         $hit
     }
 }
-

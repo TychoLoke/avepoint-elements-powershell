@@ -5,16 +5,15 @@ function Get-AvptScanProfileDetail {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)]
         [string] $CustomerId,
 
-        [Parameter(Mandatory)]
         [string] $ScanProfileId,
 
         [switch] $Raw
     )
 
-    $path = "/partner/external/v3/general/customers/$CustomerId/scan-profiles/$ScanProfileId"
+    $context = Resolve-AvptScanProfileSelection -CustomerId $CustomerId -ScanProfileId $ScanProfileId
+    $path = "/partner/external/v3/general/customers/$($context.CustomerId)/scan-profiles/$($context.ScanProfileId)"
     $item = Invoke-AvptWebRequest -Method Get -Path $path -ScopeBundle 'Common'
 
     if ($Raw) {
@@ -26,4 +25,3 @@ function Get-AvptScanProfileDetail {
         ScanMode = $maps.ScanMode
     }
 }
-

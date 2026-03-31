@@ -5,7 +5,6 @@ function Get-AvptBackupOverview {
     #>
     [CmdletBinding()]
     param(
-        [Parameter(Mandatory)]
         [string] $CustomerId,
 
         [ValidateRange(1, 100)]
@@ -15,6 +14,7 @@ function Get-AvptBackupOverview {
         [switch] $Raw
     )
 
+    $CustomerId = (Resolve-AvptCustomerSelection -CustomerId $CustomerId).CustomerId
     $path = "/partner/external/v3/general/customers/$CustomerId/cloud-backup-m365/overview"
     $items = Invoke-AvptPagedOperation -Method Get -Path $path -PageSize $PageSize -All:$All -ScopeBundle 'Common'
 
@@ -26,4 +26,3 @@ function Get-AvptBackupOverview {
         ConvertTo-AvptFriendlyObject -InputObject $item -TypeName 'AvePoint.Elements.BackupOverview'
     }
 }
-

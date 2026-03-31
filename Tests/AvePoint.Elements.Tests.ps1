@@ -221,6 +221,31 @@ Describe 'Read-only cmdlets' {
         }
     }
 
+    It 'allows interactive customer selection for backup overview' {
+        InModuleScope AvePoint.Elements {
+            Mock Resolve-AvptCustomerSelection {
+                [pscustomobject]@{
+                    CustomerId = 'customer-1'
+                    Customer   = $null
+                }
+            }
+
+            Mock Invoke-AvptPagedOperation {
+                @(
+                    [pscustomobject]@{
+                        customerId = 'customer-1'
+                        customer = 'owner@example.com'
+                        serviceType = 'Cloud Backup for Microsoft 365'
+                        serviceModule = 'Exchange Online'
+                    }
+                )
+            } -ParameterFilter { $ScopeBundle -eq 'Common' -and $Path -like '*/cloud-backup-m365/overview' }
+
+            $result = @(Get-AvptBackupOverview)
+            $result[0].customerId | Should -Be 'customer-1'
+        }
+    }
+
     It 'uses the Common bundle for backup jobs' {
         InModuleScope AvePoint.Elements {
             Mock Invoke-AvptPagedOperation {
