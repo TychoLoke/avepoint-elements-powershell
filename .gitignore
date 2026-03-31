@@ -5,6 +5,7 @@
 
 # Build and test output
 TestResults/
+testResults.xml
 coverage.xml
 coverage.json
 artifacts/
@@ -36,4 +37,3 @@ local.settings.json
 
 # Logs
 *.log
-
