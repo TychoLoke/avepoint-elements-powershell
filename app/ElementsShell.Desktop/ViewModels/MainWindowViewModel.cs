@@ -78,6 +78,9 @@ public partial class MainWindowViewModel : ViewModelBase
     [ObservableProperty]
     private CustomerSummaryResult? _currentCustomerSummary;
 
+    [ObservableProperty]
+    private TenantWorkspaceCard? _selectedTenantWorkspaceCard;
+
     public MainWindowViewModel()
     {
         _splashTimer = new DispatcherTimer
@@ -106,6 +109,7 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             new() { Title = "Load customer workspace", Detail = "Pull live partner customer context into the app and start from real data.", CommandLabel = "Load Customers", CommandParameter = "LoadCustomers", AccentHex = "#0F7BFF" },
             new() { Title = "Open customer summary", Detail = "Generate a shaped summary for the selected customer instead of reading raw API output.", CommandLabel = "Open Summary", CommandParameter = "LoadSummary", AccentHex = "#12B886" },
+            new() { Title = "Focus a tenant", Detail = "Switch the workspace into a tenant-specific context without copying names or IDs between commands.", CommandLabel = "Open Tenant Focus", CommandParameter = "TenantFocus", AccentHex = "#7C5CFC" },
             new() { Title = "Review operations", Detail = "Move into backup and baseline-oriented workflows from a single operator surface.", CommandLabel = "Open Operations", CommandParameter = "Operations", AccentHex = "#FFB020" }
         };
 
@@ -126,6 +130,8 @@ public partial class MainWindowViewModel : ViewModelBase
         RecentCustomers = new ObservableCollection<RecentCustomerItem>();
         SelectedCustomerTenants = new ObservableCollection<TenantChip>();
         SelectedCustomerStats = new ObservableCollection<CustomerWorkspaceStat>();
+        TenantWorkspaceCards = new ObservableCollection<TenantWorkspaceCard>();
+        ReportInsightCards = new ObservableCollection<ReportInsightCard>();
         DependencyChecks = new ObservableCollection<DependencyCheckItem>(_desktopClient.GetDependencyChecks());
         OnboardingSteps = new ObservableCollection<OnboardingStep>
         {
@@ -156,6 +162,10 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public ObservableCollection<CustomerWorkspaceStat> SelectedCustomerStats { get; }
 
+    public ObservableCollection<TenantWorkspaceCard> TenantWorkspaceCards { get; }
+
+    public ObservableCollection<ReportInsightCard> ReportInsightCards { get; }
+
     public ObservableCollection<DependencyCheckItem> DependencyChecks { get; }
 
     public ObservableCollection<OnboardingStep> OnboardingSteps { get; }
@@ -185,6 +195,14 @@ public partial class MainWindowViewModel : ViewModelBase
     public bool HasSelectedCustomerTenants => SelectedCustomerTenants.Count > 0;
 
     public bool HasSelectedCustomerStats => SelectedCustomerStats.Count > 0;
+
+    public bool HasTenantWorkspaceCards => TenantWorkspaceCards.Count > 0;
+
+    public bool HasNoTenantWorkspaceCards => TenantWorkspaceCards.Count == 0;
+
+    public bool HasSelectedTenantWorkspace => SelectedTenantWorkspaceCard is not null;
+
+    public bool HasReportInsights => ReportInsightCards.Count > 0;
 
     public bool IsConnected => ConnectionState == "Connected";
 
@@ -236,6 +254,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public string ContextDetail => CurrentCustomerSummary is not null
         ? $"Summary open for {CurrentCustomerSummary.Organization}"
+        : SelectedTenantWorkspaceCard is not null
+            ? $"Tenant focus active for {SelectedTenantWorkspaceCard.Name}"
         : SelectedCustomerRecord is not null
             ? $"Selected {SelectedCustomerRecord.Organization}"
             : "Start with connection, then load customers or reopen recent context.";
@@ -249,6 +269,13 @@ public partial class MainWindowViewModel : ViewModelBase
     public string SelectedCustomerStatus => SelectedCustomerRecord is null
         ? "No live customer context"
         : $"{SelectedCustomerRecord.ManagementModeName}  •  {SelectedCustomerRecord.JobStatusName}";
+
+    public string TenantFocusHeading => SelectedTenantWorkspaceCard?.Name ?? "No tenant focus selected";
+
+    public string TenantFocusDetail => SelectedTenantWorkspaceCard?.Subtitle
+        ?? "Choose a tenant from the selected customer to anchor operations and reporting around a concrete workspace.";
+
+    public string TenantFocusActionLabel => SelectedTenantWorkspaceCard?.ActionLabel ?? "Choose Tenant";
 
     public string SummaryHeadline => CurrentCustomerSummary is null
         ? "No customer summary loaded yet."
@@ -375,10 +402,25 @@ public partial class MainWindowViewModel : ViewModelBase
 
     partial void OnCurrentCustomerSummaryChanged(CustomerSummaryResult? value)
     {
+        BuildReportInsights(value);
         OnPropertyChanged(nameof(HasCustomerSummary));
+        OnPropertyChanged(nameof(HasReportInsights));
         OnPropertyChanged(nameof(SummaryHeadline));
         OnPropertyChanged(nameof(SummaryDetail));
         OnPropertyChanged(nameof(ContextBadge));
+        OnPropertyChanged(nameof(ContextDetail));
+    }
+
+    partial void OnSelectedTenantWorkspaceCardChanged(TenantWorkspaceCard? value)
+    {
+        if (value is not null) {
+            SelectedTenant = value.Name;
+        }
+
+        OnPropertyChanged(nameof(HasSelectedTenantWorkspace));
+        OnPropertyChanged(nameof(TenantFocusHeading));
+        OnPropertyChanged(nameof(TenantFocusDetail));
+        OnPropertyChanged(nameof(TenantFocusActionLabel));
         OnPropertyChanged(nameof(ContextDetail));
     }
 
@@ -400,11 +442,15 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         SelectedCustomerTenants.Clear();
         SelectedCustomerStats.Clear();
+        TenantWorkspaceCards.Clear();
+        SelectedTenantWorkspaceCard = null;
 
         if (value is null) {
             OnPropertyChanged(nameof(HasSelectedCustomer));
             OnPropertyChanged(nameof(HasSelectedCustomerTenants));
             OnPropertyChanged(nameof(HasSelectedCustomerStats));
+            OnPropertyChanged(nameof(HasTenantWorkspaceCards));
+            OnPropertyChanged(nameof(HasNoTenantWorkspaceCards));
             OnPropertyChanged(nameof(SelectedCustomerHeading));
             OnPropertyChanged(nameof(SelectedCustomerMeta));
             OnPropertyChanged(nameof(SelectedCustomerStatus));
@@ -416,7 +462,19 @@ public partial class MainWindowViewModel : ViewModelBase
         foreach (var tenant in value.TenantNames.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).Take(8))
         {
             SelectedCustomerTenants.Add(new TenantChip { Name = tenant });
+            TenantWorkspaceCards.Add(new TenantWorkspaceCard
+            {
+                Name = tenant,
+                Subtitle = $"{value.Organization}  •  {value.CountryOrRegion}  •  {value.ManagementModeName}",
+                AccentHex = TenantWorkspaceCards.Count % 2 == 0 ? "#0F7BFF" : "#12B886",
+                ActionLabel = "Focus Tenant"
+            });
         }
+
+        if (TenantWorkspaceCards.Count > 0) {
+            SelectedTenantWorkspaceCard = TenantWorkspaceCards[0];
+        }
+
         SelectedCustomerStats.Add(new CustomerWorkspaceStat
         {
             Label = "Tenants",
@@ -440,6 +498,8 @@ public partial class MainWindowViewModel : ViewModelBase
         OnPropertyChanged(nameof(HasSelectedCustomer));
         OnPropertyChanged(nameof(HasSelectedCustomerTenants));
         OnPropertyChanged(nameof(HasSelectedCustomerStats));
+        OnPropertyChanged(nameof(HasTenantWorkspaceCards));
+        OnPropertyChanged(nameof(HasNoTenantWorkspaceCards));
         OnPropertyChanged(nameof(SelectedCustomerHeading));
         OnPropertyChanged(nameof(SelectedCustomerMeta));
         OnPropertyChanged(nameof(SelectedCustomerStatus));
@@ -532,6 +592,12 @@ public partial class MainWindowViewModel : ViewModelBase
             case "Operations":
                 SelectedSection = "Operations";
                 StatusMessage = "Opened the operations workspace.";
+                break;
+            case "TenantFocus":
+                SelectedSection = "Customers";
+                StatusMessage = HasTenantWorkspaceCards
+                    ? "Select a tenant card to anchor the workspace."
+                    : "Choose a customer first to unlock tenant focus.";
                 break;
             default:
                 StatusMessage = "That dashboard action is not available yet.";
@@ -633,6 +699,19 @@ public partial class MainWindowViewModel : ViewModelBase
         SaveRecentCustomer(customer);
         SelectedSection = "Customers";
         StatusMessage = $"Customer context selected: {customer.Organization}";
+    }
+
+    [RelayCommand]
+    private void SelectTenantWorkspace(TenantWorkspaceCard? tenant)
+    {
+        if (tenant is null) {
+            return;
+        }
+
+        SelectedTenantWorkspaceCard = tenant;
+        SelectedTenant = tenant.Name;
+        StatusMessage = $"Tenant focus set to {tenant.Name}.";
+        AddActivity("Tenant workspace selected", $"Focused the workspace on tenant {tenant.Name}.", "Tenant");
     }
 
     [RelayCommand]
@@ -738,6 +817,43 @@ public partial class MainWindowViewModel : ViewModelBase
         SelectedSection = "Customers";
         StatusMessage = $"Restored recent customer context for {customer.Organization}.";
         AddActivity("Recent customer restored", $"Prepared context for {customer.Organization}.", "Recent");
+    }
+
+    private void BuildReportInsights(CustomerSummaryResult? summary)
+    {
+        ReportInsightCards.Clear();
+        if (summary is null) {
+            return;
+        }
+
+        ReportInsightCards.Add(new ReportInsightCard
+        {
+            Title = "Tenant Coverage",
+            Value = summary.TenantCount.ToString(),
+            Detail = "Distinct tenant contexts currently attached to this customer summary.",
+            AccentHex = "#0F7BFF"
+        });
+        ReportInsightCards.Add(new ReportInsightCard
+        {
+            Title = "Products",
+            Value = summary.ProductCount.ToString(),
+            Detail = "Services and products surfaced in the summary instead of raw payload objects.",
+            AccentHex = "#12B886"
+        });
+        ReportInsightCards.Add(new ReportInsightCard
+        {
+            Title = "Protected Objects",
+            Value = summary.ProtectedObjectCount.ToString(),
+            Detail = "Protected objects currently covered by backup-related services.",
+            AccentHex = "#FFB020"
+        });
+        ReportInsightCards.Add(new ReportInsightCard
+        {
+            Title = "AvePoint Storage",
+            Value = $"{summary.AvePointStorageGb:0.##} GB",
+            Detail = "Storage footprint kept in the operator summary for quick posture review.",
+            AccentHex = "#7C5CFC"
+        });
     }
 
     private DesktopConnectionSettings BuildConnectionSettings()

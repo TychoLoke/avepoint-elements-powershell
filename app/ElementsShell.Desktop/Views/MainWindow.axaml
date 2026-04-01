@@ -183,6 +183,25 @@
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="MinWidth" Value="160" />
         </Style>
+        <Style Selector="Border.focusCard">
+            <Setter Property="CornerRadius" Value="20" />
+            <Setter Property="Padding" Value="18" />
+            <Setter Property="Background" Value="#0D1727" />
+            <Setter Property="BorderBrush" Value="#28496C" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+        <Style Selector="Border.insightCard">
+            <Setter Property="CornerRadius" Value="20" />
+            <Setter Property="Padding" Value="18" />
+            <Setter Property="Background">
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#0F1A2B" Offset="0" />
+                    <GradientStop Color="#0B1522" Offset="1" />
+                </LinearGradientBrush>
+            </Setter>
+            <Setter Property="BorderBrush" Value="#264564" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
         <Style Selector="TextBlock.eyebrow">
             <Setter Property="Foreground" Value="#67E8F9" />
             <Setter Property="FontWeight" Value="SemiBold" />
@@ -533,7 +552,7 @@
                             <Border Grid.Row="1" Classes="surface" IsVisible="{Binding IsCustomersSelected}">
                                 <StackPanel Spacing="16">
                                     <Border Classes="heroCard">
-                                        <Grid RowDefinitions="Auto,Auto" RowSpacing="16">
+                                        <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="16">
                                             <Grid ColumnDefinitions="1.5*,0.9*" ColumnSpacing="18">
                                                 <StackPanel Spacing="10">
                                                     <TextBlock Classes="eyebrow" Text="Selected Customer" />
@@ -584,6 +603,55 @@
                                                     </DataTemplate>
                                                 </ItemsControl.ItemTemplate>
                                             </ItemsControl>
+
+                                            <Grid Grid.Row="2" ColumnDefinitions="1.3*,0.9*" ColumnSpacing="18" Margin="0,16,0,0">
+                                                <StackPanel Spacing="12">
+                                                    <TextBlock Classes="sectionTitle" Text="Tenant Focus" />
+                                                    <TextBlock Text="Move from customer context into a named tenant workspace without copying values into separate commands." TextWrapping="Wrap" Classes="muted" />
+                                                    <TextBlock Text="No tenant cards are available for this customer yet." IsVisible="{Binding HasNoTenantWorkspaceCards}" Classes="muted" />
+                                                    <ItemsControl ItemsSource="{Binding TenantWorkspaceCards}" IsVisible="{Binding HasTenantWorkspaceCards}">
+                                                        <ItemsControl.ItemsPanel>
+                                                            <ItemsPanelTemplate>
+                                                                <WrapPanel Orientation="Horizontal" />
+                                                            </ItemsPanelTemplate>
+                                                        </ItemsControl.ItemsPanel>
+                                                        <ItemsControl.ItemTemplate>
+                                                            <DataTemplate x:DataType="models:TenantWorkspaceCard">
+                                                                <Border Classes="focusCard" Width="250" Margin="0,0,12,12">
+                                                                    <StackPanel Spacing="12">
+                                                                        <Border Height="6" CornerRadius="999" Background="{Binding AccentHex}" />
+                                                                        <TextBlock Text="{Binding Name}" FontSize="18" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
+                                                                        <TextBlock Text="{Binding Subtitle}" Classes="muted" TextWrapping="Wrap" />
+                                                                        <Button Classes="secondaryAction"
+                                                                                Command="{Binding $parent[Window].DataContext.SelectTenantWorkspaceCommand}"
+                                                                                CommandParameter="{Binding .}"
+                                                                                Content="{Binding ActionLabel}"
+                                                                                HorizontalAlignment="Left" />
+                                                                    </StackPanel>
+                                                                </Border>
+                                                            </DataTemplate>
+                                                        </ItemsControl.ItemTemplate>
+                                                    </ItemsControl>
+                                                </StackPanel>
+
+                                                <Border Grid.Column="1" Classes="chromeCard">
+                                                    <StackPanel Spacing="10">
+                                                        <TextBlock Classes="eyebrow" Text="Active Tenant Focus" />
+                                                        <TextBlock Text="{Binding TenantFocusHeading}" FontSize="24" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
+                                                        <TextBlock Text="{Binding TenantFocusDetail}" Classes="muted" TextWrapping="Wrap" />
+                                                        <StackPanel Orientation="Horizontal" Spacing="10">
+                                                            <Button Classes="secondaryAction"
+                                                                    Command="{Binding RunDashboardActionCommand}"
+                                                                    CommandParameter="Operations"
+                                                                    Content="Open Operations" />
+                                                            <Button Classes="primaryAction"
+                                                                    Command="{Binding GenerateReportCommand}"
+                                                                    CommandParameter="Tenant Focus Snapshot"
+                                                                    Content="Open Report" />
+                                                        </StackPanel>
+                                                    </StackPanel>
+                                                </Border>
+                                            </Grid>
                                         </Grid>
                                     </Border>
                                     <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
@@ -636,6 +704,22 @@
                                 <StackPanel Spacing="16">
                                     <TextBlock Classes="sectionTitle" Text="Operations Workspace" />
                                     <TextBlock Text="Use the desktop shell as a controlled access layer for backup, baseline, and risk flows." TextWrapping="Wrap" Classes="muted" />
+                                    <Border Classes="heroCard">
+                                        <Grid ColumnDefinitions="1.2*,0.8*" ColumnSpacing="16">
+                                            <StackPanel Spacing="8">
+                                                <TextBlock Classes="eyebrow" Text="Current Operations Context" />
+                                                <TextBlock Text="{Binding TenantFocusHeading}" FontSize="24" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
+                                                <TextBlock Text="{Binding TenantFocusDetail}" Classes="muted" TextWrapping="Wrap" />
+                                            </StackPanel>
+                                            <Border Grid.Column="1" Classes="miniPanel">
+                                                <StackPanel Spacing="8">
+                                                    <TextBlock Classes="eyebrow" Text="Next Best Action" />
+                                                    <TextBlock Text="Open a summary before branching into deeper backup or baseline work." Foreground="White" TextWrapping="Wrap" />
+                                                    <Button Classes="secondaryAction" Command="{Binding LoadCustomerSummaryCommand}" Content="Refresh Customer Summary" HorizontalAlignment="Left" />
+                                                </StackPanel>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
                                     <Grid ColumnDefinitions="*,*" ColumnSpacing="14">
                                         <Border Classes="miniPanel">
                                             <StackPanel Spacing="8">
@@ -660,19 +744,38 @@
                                     <TextBlock Classes="sectionTitle" Text="Customer Summary" />
                                     <TextBlock Text="{Binding SummaryHeadline}" FontSize="20" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
                                     <TextBlock Text="{Binding SummaryDetail}" TextWrapping="Wrap" Classes="muted" />
-                                    <Grid ColumnDefinitions="*,*" ColumnSpacing="14" IsVisible="{Binding HasCustomerSummary}">
-                                        <Border CornerRadius="16" Padding="16" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
+                                    <ItemsControl ItemsSource="{Binding ReportInsightCards}" IsVisible="{Binding HasReportInsights}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Horizontal" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="models:ReportInsightCard">
+                                                <Border Classes="insightCard" Width="240" Margin="0,0,14,14">
+                                                    <StackPanel Spacing="10">
+                                                        <Border Height="6" CornerRadius="999" Background="{Binding AccentHex}" />
+                                                        <TextBlock Text="{Binding Title}" Classes="eyebrow" />
+                                                        <TextBlock Text="{Binding Value}" FontSize="28" FontWeight="Bold" Foreground="White" TextWrapping="Wrap" />
+                                                        <TextBlock Text="{Binding Detail}" Classes="muted" TextWrapping="Wrap" />
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <Grid ColumnDefinitions="1.1*,0.9*" ColumnSpacing="14" IsVisible="{Binding HasCustomerSummary}">
+                                        <Border Classes="focusCard">
                                             <StackPanel Spacing="8">
-                                                <TextBlock Text="Services" Foreground="#AAC0D9" />
+                                                <TextBlock Classes="eyebrow" Text="Service Footprint" />
                                                 <TextBlock Text="{Binding CurrentCustomerSummary.ServiceNames}" TextWrapping="Wrap" Foreground="White" />
-                                                <TextBlock Text="{Binding CurrentCustomerSummary.ProductCount}" FontSize="28" FontWeight="Bold" Foreground="#67E8F9" />
+                                                <TextBlock Text="The app keeps this shaped as an operator summary instead of raw arrays or nested JSON." Classes="muted" TextWrapping="Wrap" />
                                             </StackPanel>
                                         </Border>
-                                        <Border Grid.Column="1" CornerRadius="16" Padding="16" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
+                                        <Border Grid.Column="1" Classes="focusCard">
                                             <StackPanel Spacing="8">
-                                                <TextBlock Text="Backup Coverage" Foreground="#AAC0D9" />
-                                                <TextBlock Text="{Binding CurrentCustomerSummary.BackupModuleCount}" FontSize="28" FontWeight="Bold" Foreground="#67E8F9" />
+                                                <TextBlock Classes="eyebrow" Text="Tenant Narrative" />
                                                 <TextBlock Text="{Binding CurrentCustomerSummary.TenantNames}" TextWrapping="Wrap" Foreground="White" />
+                                                <TextBlock Text="Use this surface as the reporting bridge between customer scope and tenant-specific follow-up." Classes="muted" TextWrapping="Wrap" />
                                             </StackPanel>
                                         </Border>
                                     </Grid>

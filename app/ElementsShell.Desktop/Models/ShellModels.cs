@@ -105,6 +105,28 @@ public sealed class CustomerWorkspaceStat
     public required string Detail { get; init; }
 }
 
+public sealed class TenantWorkspaceCard
+{
+    public string Name { get; init; } = string.Empty;
+
+    public string Subtitle { get; init; } = string.Empty;
+
+    public string AccentHex { get; init; } = "#0F7BFF";
+
+    public string ActionLabel { get; init; } = "Use Tenant";
+}
+
+public sealed class ReportInsightCard
+{
+    public required string Title { get; init; }
+
+    public required string Value { get; init; }
+
+    public required string Detail { get; init; }
+
+    public string AccentHex { get; init; } = "#0F7BFF";
+}
+
 public sealed class DesktopConnectionSettings
 {
     public required string Environment { get; init; }
