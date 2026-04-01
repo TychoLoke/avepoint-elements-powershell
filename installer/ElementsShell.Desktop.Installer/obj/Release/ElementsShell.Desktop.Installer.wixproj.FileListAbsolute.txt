@@ -1,1 +1,0 @@
-/home/tycho/projects/avepoint-elements-powershell/installer/ElementsShell.Desktop.Installer/obj/Release/ElementsShell.Desktop.Installer.wixproj.CoreCompileInputs.cache

@@ -12,6 +12,8 @@ artifacts/
 dist/
 app/**/bin/
 app/**/obj/
+installer/**/bin/
+installer/**/obj/
 
 # Dependencies
 PSModules/
