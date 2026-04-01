@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.12.0] - 2026-04-01
+
+### Changed
+
+- Split the desktop app into a real disconnected login/setup experience and a separate connected operational workspace
+- Removed the old overlay-driven onboarding model so the product now behaves more like a dedicated desktop application
+- Reframed the connected shell around clearer home, customer, operations, and summary surfaces instead of stacked utility panels
+
 ## [0.11.8] - 2026-04-01
 
 ### Changed

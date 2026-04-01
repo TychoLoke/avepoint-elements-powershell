@@ -167,6 +167,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public bool IsConnected => ConnectionState == "Connected";
 
+    public bool NeedsConnection => !IsConnected;
+
     public string AppVersion => Assembly.GetExecutingAssembly().GetName().Version is { } version
         ? $"v{version.Major}.{version.Minor}.{version.Build}"
         : "desktop";
@@ -299,6 +301,7 @@ public partial class MainWindowViewModel : ViewModelBase
         OnPropertyChanged(nameof(WindowTitle));
         OnPropertyChanged(nameof(PrimaryActionLabel));
         OnPropertyChanged(nameof(IsConnected));
+        OnPropertyChanged(nameof(NeedsConnection));
         OnPropertyChanged(nameof(SessionDescriptor));
         OnPropertyChanged(nameof(OnboardingConnectionHeadline));
         OnPropertyChanged(nameof(OnboardingConnectionDetail));
@@ -415,6 +418,8 @@ public partial class MainWindowViewModel : ViewModelBase
         await ConnectAsync();
 
         if (IsConnected) {
+            IsOnboardingVisible = false;
+            SelectedSection = "Overview";
             StatusMessage = "Connected. Continue into the workspace or load customers next.";
         }
     }

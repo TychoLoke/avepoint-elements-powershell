@@ -168,400 +168,451 @@
             <Ellipse Width="360" Height="360" Canvas.Right="80" Canvas.Top="70" Fill="#15D7263D" />
             <Ellipse Width="320" Height="320" Canvas.Right="260" Canvas.Bottom="-120" Fill="#150FB884" />
         </Canvas>
-        <Grid ColumnDefinitions="340,*" Margin="22">
-            <Border Classes="sidebarPanel" Margin="0,0,20,0">
-                <Grid RowDefinitions="Auto,Auto,Auto,*,Auto">
-                    <StackPanel Spacing="10">
-                        <Border Classes="brandCard">
-                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
-                                <Border CornerRadius="18" Padding="14" Background="#FFFFFF18" Width="82">
-                                    <TextBlock Text="ES" HorizontalAlignment="Center" FontSize="26" FontWeight="Bold" Foreground="White" />
-                                </Border>
-                                <StackPanel Spacing="4" VerticalAlignment="Center">
-                                    <TextBlock Text="Elements Shell" FontSize="24" FontWeight="Bold" Foreground="White" />
-                                    <TextBlock Text="Desktop edition" Foreground="#FFE8EC" />
+        <Grid Margin="22" IsVisible="{Binding NeedsConnection}">
+            <Grid ColumnDefinitions="1.05*,0.95*" ColumnSpacing="22">
+                <Border Classes="heroCard">
+                    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="22">
+                        <StackPanel Spacing="16">
+                            <Border Classes="brandCard" HorizontalAlignment="Left">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                                    <Border CornerRadius="18" Padding="14" Background="#FFFFFF18" Width="82">
+                                        <TextBlock Text="ES" HorizontalAlignment="Center" FontSize="26" FontWeight="Bold" Foreground="White" />
+                                    </Border>
+                                    <StackPanel Spacing="4" VerticalAlignment="Center">
+                                        <TextBlock Text="Elements Shell" FontSize="26" FontWeight="Bold" Foreground="White" />
+                                        <TextBlock Text="Desktop edition" Foreground="#FFE8EC" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                            <StackPanel Spacing="8">
+                                <TextBlock Classes="eyebrow" Text="Desktop Workspace" />
+                                <TextBlock Classes="pageTitle" Text="Operate AvePoint Elements like a real product" TextWrapping="Wrap" />
+                                <TextBlock Text="A dedicated desktop workspace for MSP operations, designed to replace raw REST calls, copied identifiers, and fragile scripts with a calmer, guided workflow." TextWrapping="Wrap" Foreground="#CFE3FF" FontSize="16" />
+                                <TextBlock Text="{Binding AppVersion}" Classes="muted" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <Grid Grid.Row="1" ColumnDefinitions="*,*" ColumnSpacing="16">
+                            <Border Classes="miniPanel">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Classes="eyebrow" Text="Runtime Status" />
+                                    <TextBlock Text="{Binding ReadinessHeadline}" FontWeight="SemiBold" Foreground="White" />
+                                    <TextBlock Text="{Binding DependencySummary}" Classes="muted" TextWrapping="Wrap" />
                                 </StackPanel>
-                            </Grid>
-                        </Border>
-                        <StackPanel Spacing="4">
-                            <TextBlock Text="Professional desktop workspace for AvePoint Elements operations." TextWrapping="Wrap" Classes="muted" />
-                            <TextBlock Text="{Binding AppVersion}" Classes="muted" />
-                        </StackPanel>
-                    </StackPanel>
-
-                    <Border Grid.Row="1" Margin="0,26,0,20" Classes="miniPanel">
-                        <StackPanel Spacing="8">
-                            <TextBlock Classes="eyebrow" Text="Session" />
-                            <TextBlock Text="{Binding ConnectionBadge}" Foreground="#67E8F9" FontWeight="Bold" />
-                            <TextBlock Text="{Binding SessionDescriptor}" Foreground="#EEF4FF" TextWrapping="Wrap" />
-                            <Button Classes="secondaryAction" Command="{Binding StartOnboardingCommand}" Content="Open Onboarding" HorizontalAlignment="Left" />
-                        </StackPanel>
-                    </Border>
-
-                    <StackPanel Grid.Row="2" Spacing="10">
-                        <ItemsControl ItemsSource="{Binding NavigationItems}">
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate x:DataType="models:NavigationItem">
-                                    <Button Classes="nav"
-                                            Margin="0,0,0,10"
-                                            Command="{Binding $parent[Window].DataContext.SelectSectionCommand}"
-                                            CommandParameter="{Binding Title}">
-                                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
-                                            <Border Width="44" Height="44" CornerRadius="14" Background="#0F7BFF">
-                                                <TextBlock Text="{Binding Glyph}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontWeight="Bold" />
-                                            </Border>
-                                            <StackPanel>
-                                                <TextBlock Text="{Binding Title}" Foreground="White" FontWeight="SemiBold" />
-                                                <TextBlock Text="{Binding Subtitle}" Classes="muted" />
-                                            </StackPanel>
-                                        </Grid>
-                                    </Button>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-                    </StackPanel>
-
-                    <Border Grid.Row="4" Classes="miniPanel">
-                        <StackPanel Spacing="10">
-                            <TextBlock Classes="eyebrow" Text="Operator" />
-                            <TextBlock Text="{Binding OperatorName}" Foreground="#EEF4FF" />
-                            <TextBlock Text="The desktop app runs the embedded PowerShell module and keeps credentials in memory only." TextWrapping="Wrap" Classes="muted" />
-                        </StackPanel>
-                    </Border>
-                </Grid>
-            </Border>
-
-            <Grid Grid.Column="1" RowDefinitions="Auto,Auto,*">
-            <Border Classes="heroCard" Margin="0,0,0,20">
-                <Grid ColumnDefinitions="1.6*,0.95*" ColumnSpacing="18">
-                    <StackPanel Spacing="10">
-                        <TextBlock Classes="eyebrow" Text="{Binding SectionLabel}" />
-                        <TextBlock Classes="pageTitle" Text="{Binding SectionHeadline}" TextWrapping="Wrap" />
-                        <TextBlock Text="{Binding SectionDescription}" TextWrapping="Wrap" FontSize="16" Foreground="#CFE3FF" />
-                        <StackPanel Orientation="Horizontal" Spacing="10">
-                            <Border Classes="badge">
-                                <TextBlock Classes="badgeText" Text="Desktop App" />
                             </Border>
-                            <Border Classes="badge">
-                                <TextBlock Classes="badgeText" Text="Self-contained" />
+                            <Border Grid.Column="1" Classes="miniPanel">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Classes="eyebrow" Text="Why This Exists" />
+                                    <TextBlock Text="Connect once" Foreground="White" FontWeight="SemiBold" />
+                                    <TextBlock Text="Work from shaped customer context, not API payloads." Classes="muted" TextWrapping="Wrap" />
+                                    <TextBlock Text="Keep the PowerShell module underneath, but make the experience feel application-grade." Classes="muted" TextWrapping="Wrap" />
+                                </StackPanel>
                             </Border>
-                            <Border Classes="badge">
-                                <TextBlock Classes="badgeText" Text="MSI Ready" />
+                        </Grid>
+
+                        <StackPanel Grid.Row="2" Spacing="16">
+                            <Border Classes="stepCard">
+                                <StackPanel Spacing="14">
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                        <TextBlock Text="{Binding OnboardingProgressLabel}" Foreground="#67E8F9" FontWeight="SemiBold" />
+                                        <TextBlock Text="{Binding CurrentOnboardingStep.Number}" Foreground="#8CA4BF" />
+                                    </Grid>
+                                    <ProgressBar Value="{Binding OnboardingProgressValue}" Maximum="100" Height="8" />
+                                    <TextBlock Text="{Binding OnboardingStudioHeadline}" FontSize="24" FontWeight="SemiBold" Foreground="White" />
+                                    <TextBlock Text="{Binding OnboardingStudioDetail}" TextWrapping="Wrap" Classes="muted" />
+                                </StackPanel>
                             </Border>
-                            <Border Classes="badge">
-                                <TextBlock Classes="badgeText" Text="{Binding ContextBadge}" />
-                            </Border>
-                        </StackPanel>
-                        <TextBlock Text="{Binding StatusMessage}" Foreground="#67E8F9" FontWeight="SemiBold" TextWrapping="Wrap" />
-                    </StackPanel>
-
-                    <StackPanel Grid.Column="1" Spacing="12">
-                        <Border Classes="chromeCard">
-                            <StackPanel Spacing="8">
-                                <TextBlock Classes="eyebrow" Text="Workspace Pulse" />
-                                <TextBlock Text="{Binding WorkspacePulse}" FontSize="20" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
-                                <TextBlock Text="{Binding ContextDetail}" Classes="muted" TextWrapping="Wrap" />
-                            </StackPanel>
-                        </Border>
-                        <StackPanel Orientation="Horizontal" Spacing="12">
-                            <Button Classes="secondaryAction" Command="{Binding DisconnectCommand}" Content="Disconnect" />
-                            <Button Classes="primaryAction" Command="{Binding ConnectCommand}" Content="{Binding PrimaryActionLabel}" />
-                        </StackPanel>
-                    </StackPanel>
-                </Grid>
-            </Border>
-
-            <Grid Grid.Row="1" ColumnDefinitions="1.5*,1*" ColumnSpacing="20" Margin="0,0,0,20">
-                <Border Classes="surface">
-                    <StackPanel Spacing="18">
-                        <StackPanel Spacing="4">
-                            <TextBlock Classes="sectionTitle" Text="Connection Workspace" />
-                            <TextBlock Text="The same session details from onboarding stay visible here so the app feels continuous once you enter the workspace." Classes="muted" TextWrapping="Wrap" />
-                        </StackPanel>
-                        <StackPanel Spacing="12">
-                            <StackPanel Spacing="8">
-                                <TextBlock Text="Environment" FontWeight="SemiBold" Foreground="White" />
-                                <ComboBox SelectedItem="{Binding Environment}">
-                                    <x:String>Commercial</x:String>
-                                    <x:String>Government</x:String>
-                                    <x:String>Aos2</x:String>
-                                    <x:String>FedRAMP</x:String>
-                                </ComboBox>
-                            </StackPanel>
-                            <StackPanel Spacing="8">
-                                <TextBlock Text="Tenant or Partner Label" FontWeight="SemiBold" Foreground="White" />
-                                <TextBox Text="{Binding TenantLabel}" Watermark="Contoso MSP" />
-                            </StackPanel>
-                            <StackPanel Spacing="8">
-                                <TextBlock Text="Client ID" FontWeight="SemiBold" Foreground="White" />
-                                <TextBox Text="{Binding ClientId}" Watermark="App registration client ID" />
-                            </StackPanel>
-                            <StackPanel Spacing="8">
-                                <TextBlock Text="Client Secret" FontWeight="SemiBold" Foreground="White" />
-                                <TextBox Text="{Binding ClientSecret}" PasswordChar="●" Watermark="Stored in memory only" />
-                            </StackPanel>
-                        </StackPanel>
-                        <StackPanel Spacing="8">
-                            <TextBlock Text="Scope Bundles" FontWeight="SemiBold" Foreground="White" />
-                            <TextBox Text="{Binding SelectedBundleSummary}" AcceptsReturn="True" Height="70" TextWrapping="Wrap" IsReadOnly="True" />
-                        </StackPanel>
-                        <StackPanel Orientation="Horizontal" Spacing="12">
-                            <Button Classes="secondaryAction" Command="{Binding LoadCustomersCommand}" Content="Load Customers" />
-                            <Button Classes="secondaryAction" Command="{Binding LoadCustomerSummaryCommand}" Content="Load Summary" />
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-
-                <Border Grid.Column="1" Classes="surface">
-                    <StackPanel Spacing="18">
-                        <StackPanel Spacing="4">
-                            <TextBlock Classes="sectionTitle" Text="Live Context" />
-                            <TextBlock Text="Current desktop operator context from the active workflow." Classes="muted" TextWrapping="Wrap" />
-                        </StackPanel>
-                        <StackPanel Spacing="10">
-                            <TextBlock Text="Selected customer" FontWeight="SemiBold" Foreground="White" />
-                            <TextBlock Text="{Binding SelectedCustomer}" FontSize="22" Foreground="White" TextWrapping="Wrap" />
-                        </StackPanel>
-                        <StackPanel Spacing="10">
-                            <TextBlock Text="Selected tenant" FontWeight="SemiBold" Foreground="White" />
-                            <TextBlock Text="{Binding SelectedTenant}" FontSize="18" Foreground="#D7E7FF" TextWrapping="Wrap" />
-                        </StackPanel>
-                        <TextBlock Text="The desktop app reconnects with the in-memory profile for each live workflow so operators do not need to rebuild headers, auth, or pagination logic." TextWrapping="Wrap" Classes="muted" />
-                        <Button Classes="secondaryAction" Command="{Binding RefreshDependenciesCommand}" Content="Run Preflight Check" HorizontalAlignment="Left" />
-                    </StackPanel>
-                </Border>
-            </Grid>
-
-            <Grid Grid.Row="2" ColumnDefinitions="1.45*,1*" ColumnSpacing="20">
-                <Grid RowDefinitions="Auto,Auto,Auto,*">
-                    <Border Classes="surface" Margin="0,0,0,20">
-                        <StackPanel Spacing="18">
-                            <StackPanel Spacing="4">
-                                <TextBlock Classes="sectionTitle" Text="Platform Snapshot" />
-                                <TextBlock Text="A cleaner desktop summary surface for high-signal operational status." Classes="muted" TextWrapping="Wrap" />
-                            </StackPanel>
-                            <ItemsControl ItemsSource="{Binding MetricCards}">
+                            <ItemsControl ItemsSource="{Binding OnboardingSteps}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>
-                                        <WrapPanel Orientation="Horizontal" />
+                                        <StackPanel Orientation="Horizontal" Spacing="12" />
                                     </ItemsPanelTemplate>
                                 </ItemsControl.ItemsPanel>
                                 <ItemsControl.ItemTemplate>
-                                    <DataTemplate x:DataType="models:MetricCard">
-                                        <Border Width="240" Margin="0,0,14,14" CornerRadius="20" Padding="18" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
-                                            <StackPanel Spacing="10">
-                                                <Border Height="6" CornerRadius="999" Background="{Binding AccentHex}" />
-                                                <TextBlock Text="{Binding Title}" Foreground="#AAC0D9" />
-                                                <TextBlock Text="{Binding Value}" FontSize="30" FontWeight="Bold" Foreground="White" />
-                                                <TextBlock Text="{Binding Delta}" Foreground="#67E8F9" TextWrapping="Wrap" />
+                                    <DataTemplate x:DataType="models:OnboardingStep">
+                                        <Border Classes="stepCard" Width="180">
+                                            <StackPanel Spacing="8">
+                                                <Border Width="42" Height="42" CornerRadius="14" Background="#0F7BFF">
+                                                    <TextBlock Text="{Binding Number}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" />
+                                                </Border>
+                                                <TextBlock Text="{Binding Title}" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
+                                                <TextBlock Text="{Binding Detail}" Classes="muted" TextWrapping="Wrap" MaxHeight="72" />
                                             </StackPanel>
                                         </Border>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
                         </StackPanel>
-                    </Border>
+                    </Grid>
+                </Border>
 
-                    <Border Grid.Row="1" Classes="surface" Margin="0,0,0,20">
-                        <StackPanel Spacing="16">
-                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
-                                <StackPanel Spacing="4">
-                                    <TextBlock Classes="sectionTitle" Text="Recent Customer Context" />
-                                    <TextBlock Text="Jump back into live customer work without hunting for IDs again." Classes="muted" TextWrapping="Wrap" />
+                <Border Grid.Column="1" Classes="glassPanel">
+                    <StackPanel Spacing="18">
+                        <StackPanel Spacing="6">
+                            <TextBlock Classes="eyebrow" Text="Secure Setup" />
+                            <TextBlock Text="{Binding OnboardingConnectionHeadline}" FontSize="28" FontWeight="Bold" Foreground="White" />
+                            <TextBlock Text="{Binding OnboardingConnectionDetail}" Classes="muted" TextWrapping="Wrap" />
+                        </StackPanel>
+
+                        <Border Classes="formCard">
+                            <StackPanel Spacing="14">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="Environment" FontWeight="SemiBold" Foreground="White" />
+                                    <ComboBox SelectedItem="{Binding Environment}">
+                                        <x:String>Commercial</x:String>
+                                        <x:String>Government</x:String>
+                                        <x:String>Aos2</x:String>
+                                        <x:String>FedRAMP</x:String>
+                                    </ComboBox>
                                 </StackPanel>
-                                <Button Classes="secondaryAction" Command="{Binding LoadCustomersCommand}" Content="Refresh Live List" />
-                            </Grid>
-                            <TextBlock Text="No recent customer context yet. Select a customer or load a summary to pin it here." IsVisible="{Binding HasNoRecentCustomers}" Classes="muted" />
-                            <ScrollViewer HorizontalScrollBarVisibility="Auto"
-                                          VerticalScrollBarVisibility="Disabled"
-                                          IsVisible="{Binding HasRecentCustomers}">
-                                <ItemsControl ItemsSource="{Binding RecentCustomers}">
-                                    <ItemsControl.ItemsPanel>
-                                        <ItemsPanelTemplate>
-                                            <StackPanel Orientation="Horizontal" Spacing="12" />
-                                        </ItemsPanelTemplate>
-                                    </ItemsControl.ItemsPanel>
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate x:DataType="models:RecentCustomerItem">
-                                            <Border Classes="recentCard" Margin="0,0,12,0">
-                                                <StackPanel Spacing="8">
-                                                    <TextBlock Text="{Binding Organization}" FontSize="18" FontWeight="SemiBold" Foreground="White" />
-                                                    <TextBlock Text="{Binding OwnerEmail}" Foreground="#D7E7FF" />
-                                                    <TextBlock Text="{Binding TenantNames}" TextWrapping="Wrap" Classes="muted" MaxWidth="260" />
-                                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
-                                                        <Border Classes="badge">
-                                                            <TextBlock Classes="badgeText" Text="{Binding TenantCount}" />
-                                                        </Border>
-                                                        <TextBlock Text="{Binding LastAccessedLabel}" Classes="muted" VerticalAlignment="Center" />
-                                                    </Grid>
-                                                    <Button Classes="secondaryAction"
-                                                            Command="{Binding $parent[Window].DataContext.SelectRecentCustomerCommand}"
-                                                            CommandParameter="{Binding .}"
-                                                            Content="Open Context"
-                                                            HorizontalAlignment="Left" />
-                                                </StackPanel>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </ScrollViewer>
-                        </StackPanel>
-                    </Border>
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="Tenant or Partner Label" FontWeight="SemiBold" Foreground="White" />
+                                    <TextBox Text="{Binding TenantLabel}" Watermark="Contoso MSP" />
+                                </StackPanel>
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="Client ID" FontWeight="SemiBold" Foreground="White" />
+                                    <TextBox Text="{Binding ClientId}" Watermark="Elements portal application client ID" />
+                                </StackPanel>
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="Client Secret" FontWeight="SemiBold" Foreground="White" />
+                                    <TextBox Text="{Binding ClientSecret}" PasswordChar="●" Watermark="Elements portal application client secret" />
+                                </StackPanel>
+                                <Button Classes="primaryAction"
+                                        Command="{Binding ConnectFromOnboardingCommand}"
+                                        Content="{Binding OnboardingConnectionButtonLabel}"
+                                        IsEnabled="{Binding CanConnectFromOnboarding}" />
+                            </StackPanel>
+                        </Border>
 
-                    <Border Grid.Row="2" Classes="surface" Margin="0,0,0,20" IsVisible="{Binding IsOverviewSelected}">
-                        <StackPanel Spacing="16">
-                            <TextBlock Classes="sectionTitle" Text="Quick Start Workflows" />
-                            <ItemsControl ItemsSource="{Binding WorkflowItems}">
+                        <Border Classes="miniPanel">
+                            <StackPanel Spacing="8">
+                                <TextBlock Classes="eyebrow" Text="Portal Guidance" />
+                                <TextBlock Text="Use the app registration from your AvePoint Elements portal." FontWeight="SemiBold" Foreground="White" />
+                                <TextBlock Text="Credentials stay in memory only for the active desktop session." Classes="muted" />
+                                <TextBlock Text="After connection, the app switches into the full operational workspace." Classes="muted" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Grid>
+
+        <Grid Margin="22" IsVisible="{Binding IsConnected}">
+            <Grid ColumnDefinitions="340,*">
+                <Border Classes="sidebarPanel" Margin="0,0,20,0">
+                    <Grid RowDefinitions="Auto,Auto,Auto,*,Auto">
+                        <StackPanel Spacing="10">
+                            <Border Classes="brandCard">
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                                    <Border CornerRadius="18" Padding="14" Background="#FFFFFF18" Width="82">
+                                        <TextBlock Text="ES" HorizontalAlignment="Center" FontSize="26" FontWeight="Bold" Foreground="White" />
+                                    </Border>
+                                    <StackPanel Spacing="4" VerticalAlignment="Center">
+                                        <TextBlock Text="Elements Shell" FontSize="24" FontWeight="Bold" Foreground="White" />
+                                        <TextBlock Text="Connected workspace" Foreground="#FFE8EC" />
+                                    </StackPanel>
+                                </Grid>
+                            </Border>
+                            <StackPanel Spacing="4">
+                                <TextBlock Text="{Binding SectionDescription}" TextWrapping="Wrap" Classes="muted" />
+                                <TextBlock Text="{Binding AppVersion}" Classes="muted" />
+                            </StackPanel>
+                        </StackPanel>
+
+                        <Border Grid.Row="1" Margin="0,26,0,20" Classes="miniPanel">
+                            <StackPanel Spacing="8">
+                                <TextBlock Classes="eyebrow" Text="Session" />
+                                <TextBlock Text="{Binding ConnectionBadge}" Foreground="#67E8F9" FontWeight="Bold" />
+                                <TextBlock Text="{Binding SessionDescriptor}" Foreground="#EEF4FF" TextWrapping="Wrap" />
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <Button Classes="secondaryAction" Command="{Binding $parent[Window].DataContext.SelectSectionCommand}" CommandParameter="Overview" Content="Home" />
+                                    <Button Classes="secondaryAction" Command="{Binding DisconnectCommand}" Content="Disconnect" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Border>
+
+                        <StackPanel Grid.Row="2" Spacing="10">
+                            <ItemsControl ItemsSource="{Binding NavigationItems}">
                                 <ItemsControl.ItemTemplate>
-                                    <DataTemplate x:DataType="models:WorkflowItem">
-                                        <Border Margin="0,0,0,12" Padding="18" CornerRadius="18" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
-                                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
-                                                <StackPanel Spacing="6">
-                                                    <TextBlock Text="{Binding Title}" FontSize="18" FontWeight="SemiBold" Foreground="White" />
-                                                    <TextBlock Text="{Binding Detail}" TextWrapping="Wrap" Classes="muted" />
-                                                    <TextBlock Text="{Binding ScopeBundle}" Foreground="#67E8F9" />
+                                    <DataTemplate x:DataType="models:NavigationItem">
+                                        <Button Classes="nav"
+                                                Margin="0,0,0,10"
+                                                Command="{Binding $parent[Window].DataContext.SelectSectionCommand}"
+                                                CommandParameter="{Binding Title}">
+                                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                                                <Border Width="44" Height="44" CornerRadius="14" Background="#0F7BFF">
+                                                    <TextBlock Text="{Binding Glyph}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontWeight="Bold" />
+                                                </Border>
+                                                <StackPanel>
+                                                    <TextBlock Text="{Binding Title}" Foreground="White" FontWeight="SemiBold" />
+                                                    <TextBlock Text="{Binding Subtitle}" Classes="muted" />
                                                 </StackPanel>
-                                                <Button Classes="secondaryAction"
-                                                        Command="{Binding $parent[Window].DataContext.OpenWorkflowCommand}"
-                                                        CommandParameter="{Binding Title}"
-                                                        Content="Open"
-                                                        VerticalAlignment="Center" />
                                             </Grid>
-                                        </Border>
+                                        </Button>
                                     </DataTemplate>
                                 </ItemsControl.ItemTemplate>
                             </ItemsControl>
                         </StackPanel>
-                    </Border>
 
-                    <Border Grid.Row="3" Classes="surface" IsVisible="{Binding IsCustomersSelected}">
-                        <StackPanel Spacing="16">
-                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
-                                <TextBox Text="{Binding SearchText}" Watermark="Search loaded customers by org, email, or tenant" />
-                                <Button Classes="secondaryAction" Command="{Binding ApplySearchCommand}" Content="Select" />
-                                <Button Classes="primaryAction" Command="{Binding LoadCustomersCommand}" Content="Refresh" />
-                            </Grid>
-                            <TextBlock Classes="sectionTitle" Text="Customer Workspace" />
-                            <TextBlock Text="Load real partner customers into the app, then choose one for drill-down work." TextWrapping="Wrap" Classes="muted" />
-                            <TextBlock Text="No customers loaded yet." IsVisible="{Binding HasNoCustomers}" Classes="muted" />
-                            <ScrollViewer MaxHeight="380">
-                                <ItemsControl ItemsSource="{Binding Customers}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate x:DataType="models:CustomerRecord">
-                                            <Border Margin="0,0,0,12" Padding="18" CornerRadius="18" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
-                                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
-                                                    <StackPanel Spacing="6">
-                                                        <TextBlock Text="{Binding Organization}" FontSize="18" FontWeight="SemiBold" Foreground="White" />
-                                                        <TextBlock Text="{Binding OwnerEmail}" Foreground="#D7E7FF" />
-                                                        <TextBlock Text="{Binding TenantNames}" TextWrapping="Wrap" Classes="muted" />
-                                                        <TextBlock Text="{Binding JobStatusName}" Foreground="#67E8F9" />
-                                                    </StackPanel>
-                                                    <StackPanel Spacing="10" VerticalAlignment="Center">
-                                                        <TextBlock Text="{Binding TenantCount}" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="White" />
-                                                        <Button Classes="secondaryAction"
-                                                                Command="{Binding $parent[Window].DataContext.SelectCustomerCommand}"
-                                                                CommandParameter="{Binding .}"
-                                                                Content="Select" />
-                                                    </StackPanel>
-                                                </Grid>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </ScrollViewer>
-                        </StackPanel>
-                    </Border>
-
-                    <Border Grid.Row="3" Classes="surface" IsVisible="{Binding IsOperationsSelected}">
-                        <StackPanel Spacing="16">
-                            <TextBlock Classes="sectionTitle" Text="Operations Workspace" />
-                            <TextBlock Text="This desktop layer is now wired for live module execution. Customer workflows are active first, with broader backup, baseline, and risk workflows next." TextWrapping="Wrap" Classes="muted" />
-                            <StackPanel Orientation="Horizontal" Spacing="12">
-                                <Button Classes="secondaryAction" Command="{Binding GenerateReportCommand}" CommandParameter="Backup Posture Summary" Content="Backup Summary" />
-                                <Button Classes="secondaryAction" Command="{Binding GenerateReportCommand}" CommandParameter="Baseline Drift Summary" Content="Baseline Summary" />
-                            </StackPanel>
-                        </StackPanel>
-                    </Border>
-
-                    <Border Grid.Row="3" Classes="surface" IsVisible="{Binding IsReportsSelected}">
-                        <StackPanel Spacing="16">
-                            <TextBlock Classes="sectionTitle" Text="Customer Summary" />
-                            <TextBlock Text="{Binding SummaryHeadline}" FontSize="20" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
-                            <TextBlock Text="{Binding SummaryDetail}" TextWrapping="Wrap" Classes="muted" />
-                            <Grid ColumnDefinitions="*,*" ColumnSpacing="14" IsVisible="{Binding HasCustomerSummary}">
-                                <Border CornerRadius="16" Padding="16" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
-                                    <StackPanel Spacing="8">
-                                        <TextBlock Text="Services" Foreground="#AAC0D9" />
-                                        <TextBlock Text="{Binding CurrentCustomerSummary.ServiceNames}" TextWrapping="Wrap" Foreground="White" />
-                                        <TextBlock Text="{Binding CurrentCustomerSummary.ProductCount}" FontSize="28" FontWeight="Bold" Foreground="#67E8F9" />
-                                    </StackPanel>
-                                </Border>
-                                <Border Grid.Column="1" CornerRadius="16" Padding="16" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
-                                    <StackPanel Spacing="8">
-                                        <TextBlock Text="Backup Coverage" Foreground="#AAC0D9" />
-                                        <TextBlock Text="{Binding CurrentCustomerSummary.BackupModuleCount}" FontSize="28" FontWeight="Bold" Foreground="#67E8F9" />
-                                        <TextBlock Text="{Binding CurrentCustomerSummary.TenantNames}" TextWrapping="Wrap" Foreground="White" />
-                                    </StackPanel>
-                                </Border>
-                            </Grid>
-                            <Button Classes="primaryAction" Command="{Binding LoadCustomerSummaryCommand}" Content="Refresh Summary" HorizontalAlignment="Left" />
-                        </StackPanel>
-                    </Border>
-                </Grid>
-
-                <Grid Grid.Column="1" RowDefinitions="Auto,*" RowSpacing="20">
-                    <Border Classes="surface">
-                        <StackPanel Spacing="14">
+                        <Border Grid.Row="4" Classes="miniPanel">
                             <StackPanel Spacing="10">
-                                <TextBlock Classes="sectionTitle" Text="Desktop Readiness" />
-                                <Button Classes="secondaryAction" Command="{Binding RefreshDependenciesCommand}" Content="Refresh" HorizontalAlignment="Left" />
+                                <TextBlock Classes="eyebrow" Text="Operator" />
+                                <TextBlock Text="{Binding OperatorName}" Foreground="#EEF4FF" />
+                                <TextBlock Text="The desktop app runs the embedded PowerShell module and keeps credentials in memory only." TextWrapping="Wrap" Classes="muted" />
                             </StackPanel>
-                            <TextBlock Text="{Binding DependencySummary}" TextWrapping="Wrap" Classes="muted" />
-                            <ItemsControl ItemsSource="{Binding DependencyChecks}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate x:DataType="models:DependencyCheckItem">
-                                        <Border Margin="0,0,0,10" Padding="14" CornerRadius="14" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
-                                            <StackPanel Spacing="4">
-                                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
-                                                    <TextBlock Text="{Binding Name}" Foreground="White" FontWeight="SemiBold" />
-                                                    <TextBlock Text="{Binding Status}" Foreground="#67E8F9" />
-                                                </Grid>
-                                                <TextBlock Text="{Binding Detail}" TextWrapping="Wrap" Classes="muted" />
+                        </Border>
+                    </Grid>
+                </Border>
+
+                <Grid Grid.Column="1" RowDefinitions="Auto,Auto,*">
+                    <Border Classes="heroCard" Margin="0,0,0,20">
+                        <Grid ColumnDefinitions="1.6*,0.95*" ColumnSpacing="18">
+                            <StackPanel Spacing="10">
+                                <TextBlock Classes="eyebrow" Text="{Binding SectionLabel}" />
+                                <TextBlock Classes="pageTitle" Text="{Binding SectionHeadline}" TextWrapping="Wrap" />
+                                <TextBlock Text="{Binding SectionDescription}" TextWrapping="Wrap" FontSize="16" Foreground="#CFE3FF" />
+                                <StackPanel Orientation="Horizontal" Spacing="10">
+                                    <Border Classes="badge"><TextBlock Classes="badgeText" Text="Desktop App" /></Border>
+                                    <Border Classes="badge"><TextBlock Classes="badgeText" Text="Connected" /></Border>
+                                    <Border Classes="badge"><TextBlock Classes="badgeText" Text="{Binding ContextBadge}" /></Border>
+                                </StackPanel>
+                                <TextBlock Text="{Binding StatusMessage}" Foreground="#67E8F9" FontWeight="SemiBold" TextWrapping="Wrap" />
+                            </StackPanel>
+
+                            <StackPanel Grid.Column="1" Spacing="12">
+                                <Border Classes="chromeCard">
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Classes="eyebrow" Text="Workspace Pulse" />
+                                        <TextBlock Text="{Binding WorkspacePulse}" FontSize="20" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
+                                        <TextBlock Text="{Binding ContextDetail}" Classes="muted" TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </Border>
+                                <StackPanel Orientation="Horizontal" Spacing="12">
+                                    <Button Classes="secondaryAction" Command="{Binding LoadCustomersCommand}" Content="Load Customers" />
+                                    <Button Classes="primaryAction" Command="{Binding LoadCustomerSummaryCommand}" Content="Open Summary" />
+                                </StackPanel>
+                            </StackPanel>
+                        </Grid>
+                    </Border>
+
+                    <Grid Grid.Row="1" ColumnDefinitions="1.2*,1*" ColumnSpacing="20" Margin="0,0,0,20">
+                        <Border Classes="surface">
+                            <StackPanel Spacing="16">
+                                <TextBlock Classes="sectionTitle" Text="Recent Customer Context" />
+                                <TextBlock Text="Reopen live customer work without hunting for identifiers." Classes="muted" TextWrapping="Wrap" />
+                                <TextBlock Text="No recent customer context yet. Load customers and open a customer summary to pin context here." IsVisible="{Binding HasNoRecentCustomers}" Classes="muted" />
+                                <ScrollViewer MaxHeight="250" IsVisible="{Binding HasRecentCustomers}">
+                                    <ItemsControl ItemsSource="{Binding RecentCustomers}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="models:RecentCustomerItem">
+                                                <Border Classes="recentCard" Margin="0,0,0,12">
+                                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="14">
+                                                        <StackPanel Spacing="6">
+                                                            <TextBlock Text="{Binding Organization}" FontSize="18" FontWeight="SemiBold" Foreground="White" />
+                                                            <TextBlock Text="{Binding OwnerEmail}" Foreground="#D7E7FF" />
+                                                            <TextBlock Text="{Binding TenantNames}" TextWrapping="Wrap" Classes="muted" />
+                                                            <TextBlock Text="{Binding LastAccessedLabel}" Classes="muted" />
+                                                        </StackPanel>
+                                                        <StackPanel Spacing="10" VerticalAlignment="Center">
+                                                            <TextBlock Text="{Binding TenantCount}" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="White" />
+                                                            <Button Classes="secondaryAction"
+                                                                    Command="{Binding $parent[Window].DataContext.SelectRecentCustomerCommand}"
+                                                                    CommandParameter="{Binding .}"
+                                                                    Content="Open" />
+                                                        </StackPanel>
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </StackPanel>
+                        </Border>
+
+                        <Border Grid.Column="1" Classes="surface">
+                            <StackPanel Spacing="16">
+                                <TextBlock Classes="sectionTitle" Text="Live Context" />
+                                <TextBlock Text="Current selected customer and tenant context for the active workspace." Classes="muted" TextWrapping="Wrap" />
+                                <Border Classes="miniPanel">
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Classes="eyebrow" Text="Selected Customer" />
+                                        <TextBlock Text="{Binding SelectedCustomer}" FontSize="22" Foreground="White" TextWrapping="Wrap" />
+                                        <TextBlock Text="{Binding SelectedTenant}" Foreground="#D7E7FF" TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </Border>
+                                <Border Classes="miniPanel">
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Classes="eyebrow" Text="Readiness" />
+                                        <TextBlock Text="{Binding ReadinessHeadline}" FontWeight="SemiBold" Foreground="White" />
+                                        <TextBlock Text="{Binding DependencySummary}" Classes="muted" TextWrapping="Wrap" />
+                                    </StackPanel>
+                                </Border>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
+
+                    <Grid Grid.Row="2" ColumnDefinitions="1.45*,1*" ColumnSpacing="20">
+                        <Grid RowDefinitions="Auto,*">
+                            <Border Classes="surface" Margin="0,0,0,20" IsVisible="{Binding IsOverviewSelected}">
+                                <StackPanel Spacing="18">
+                                    <TextBlock Classes="sectionTitle" Text="Home Dashboard" />
+                                    <ItemsControl ItemsSource="{Binding MetricCards}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Horizontal" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="models:MetricCard">
+                                                <Border Width="240" Margin="0,0,14,14" CornerRadius="20" Padding="18" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
+                                                    <StackPanel Spacing="10">
+                                                        <Border Height="6" CornerRadius="999" Background="{Binding AccentHex}" />
+                                                        <TextBlock Text="{Binding Title}" Foreground="#AAC0D9" />
+                                                        <TextBlock Text="{Binding Value}" FontSize="30" FontWeight="Bold" Foreground="White" />
+                                                        <TextBlock Text="{Binding Delta}" Foreground="#67E8F9" TextWrapping="Wrap" />
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                    <TextBlock Classes="sectionTitle" Text="Guided Workflows" />
+                                    <ItemsControl ItemsSource="{Binding WorkflowItems}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="models:WorkflowItem">
+                                                <Border Margin="0,0,0,12" Padding="18" CornerRadius="18" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
+                                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                                                        <StackPanel Spacing="6">
+                                                            <TextBlock Text="{Binding Title}" FontSize="18" FontWeight="SemiBold" Foreground="White" />
+                                                            <TextBlock Text="{Binding Detail}" TextWrapping="Wrap" Classes="muted" />
+                                                            <TextBlock Text="{Binding ScopeBundle}" Foreground="#67E8F9" />
+                                                        </StackPanel>
+                                                        <Button Classes="secondaryAction"
+                                                                Command="{Binding $parent[Window].DataContext.OpenWorkflowCommand}"
+                                                                CommandParameter="{Binding Title}"
+                                                                Content="Open"
+                                                                VerticalAlignment="Center" />
+                                                    </Grid>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Grid.Row="1" Classes="surface" IsVisible="{Binding IsCustomersSelected}">
+                                <StackPanel Spacing="16">
+                                    <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                                        <TextBox Text="{Binding SearchText}" Watermark="Search loaded customers by org, email, or tenant" />
+                                        <Button Classes="secondaryAction" Command="{Binding ApplySearchCommand}" Content="Select" />
+                                        <Button Classes="primaryAction" Command="{Binding LoadCustomersCommand}" Content="Refresh" />
+                                    </Grid>
+                                    <TextBlock Classes="sectionTitle" Text="Customer Workspace" />
+                                    <TextBlock Text="Load real partner customers into the app, then choose one for drill-down work." TextWrapping="Wrap" Classes="muted" />
+                                    <TextBlock Text="No customers loaded yet." IsVisible="{Binding HasNoCustomers}" Classes="muted" />
+                                    <ScrollViewer MaxHeight="430">
+                                        <ItemsControl ItemsSource="{Binding Customers}">
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate x:DataType="models:CustomerRecord">
+                                                    <Border Margin="0,0,0,12" Padding="18" CornerRadius="18" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
+                                                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                                                            <StackPanel Spacing="6">
+                                                                <TextBlock Text="{Binding Organization}" FontSize="18" FontWeight="SemiBold" Foreground="White" />
+                                                                <TextBlock Text="{Binding OwnerEmail}" Foreground="#D7E7FF" />
+                                                                <TextBlock Text="{Binding TenantNames}" TextWrapping="Wrap" Classes="muted" />
+                                                                <TextBlock Text="{Binding JobStatusName}" Foreground="#67E8F9" />
+                                                            </StackPanel>
+                                                            <StackPanel Spacing="10" VerticalAlignment="Center">
+                                                                <TextBlock Text="{Binding TenantCount}" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="White" />
+                                                                <Button Classes="secondaryAction"
+                                                                        Command="{Binding $parent[Window].DataContext.SelectCustomerCommand}"
+                                                                        CommandParameter="{Binding .}"
+                                                                        Content="Select" />
+                                                            </StackPanel>
+                                                        </Grid>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </ScrollViewer>
+                                </StackPanel>
+                            </Border>
+
+                            <Border Grid.Row="1" Classes="surface" IsVisible="{Binding IsOperationsSelected}">
+                                <StackPanel Spacing="16">
+                                    <TextBlock Classes="sectionTitle" Text="Operations Workspace" />
+                                    <TextBlock Text="Use the desktop shell as a controlled access layer for backup, baseline, and risk flows." TextWrapping="Wrap" Classes="muted" />
+                                    <Grid ColumnDefinitions="*,*" ColumnSpacing="14">
+                                        <Border Classes="miniPanel">
+                                            <StackPanel Spacing="8">
+                                                <TextBlock Classes="eyebrow" Text="Backup" />
+                                                <TextBlock Text="Generate backup posture summaries and operational drill-ins." Foreground="White" TextWrapping="Wrap" />
+                                                <Button Classes="secondaryAction" Command="{Binding GenerateReportCommand}" CommandParameter="Backup Posture Summary" Content="Open Backup Summary" HorizontalAlignment="Left" />
                                             </StackPanel>
                                         </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
-                        </StackPanel>
-                    </Border>
+                                        <Border Grid.Column="1" Classes="miniPanel">
+                                            <StackPanel Spacing="8">
+                                                <TextBlock Classes="eyebrow" Text="Baseline" />
+                                                <TextBlock Text="Review drift posture and baseline-oriented tenant workflows." Foreground="White" TextWrapping="Wrap" />
+                                                <Button Classes="secondaryAction" Command="{Binding GenerateReportCommand}" CommandParameter="Baseline Drift Summary" Content="Open Baseline Summary" HorizontalAlignment="Left" />
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+                                </StackPanel>
+                            </Border>
 
-                    <Border Grid.Row="1" Classes="surface">
-                        <StackPanel Spacing="16">
-                            <TextBlock Classes="sectionTitle" Text="Recent Activity" />
-                            <ScrollViewer MaxHeight="520">
-                                <ItemsControl ItemsSource="{Binding ActivityItems}">
-                                    <ItemsControl.ItemTemplate>
-                                        <DataTemplate x:DataType="models:ActivityItem">
-                                            <Border Margin="0,0,0,12" Padding="16" CornerRadius="16" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
-                                                <StackPanel Spacing="6">
-                                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                                                        <TextBlock Text="{Binding Title}" Foreground="White" FontWeight="SemiBold" />
-                                                        <Border Padding="10,4" CornerRadius="999" Background="#1C3553">
-                                                            <TextBlock Text="{Binding Status}" Foreground="#67E8F9" />
-                                                        </Border>
-                                                    </Grid>
-                                                    <TextBlock Text="{Binding Detail}" TextWrapping="Wrap" Classes="muted" />
-                                                    <TextBlock Text="{Binding Timestamp}" Foreground="#8CA4BF" />
-                                                </StackPanel>
-                                            </Border>
-                                        </DataTemplate>
-                                    </ItemsControl.ItemTemplate>
-                                </ItemsControl>
-                            </ScrollViewer>
-                        </StackPanel>
-                    </Border>
+                            <Border Grid.Row="1" Classes="surface" IsVisible="{Binding IsReportsSelected}">
+                                <StackPanel Spacing="16">
+                                    <TextBlock Classes="sectionTitle" Text="Customer Summary" />
+                                    <TextBlock Text="{Binding SummaryHeadline}" FontSize="20" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
+                                    <TextBlock Text="{Binding SummaryDetail}" TextWrapping="Wrap" Classes="muted" />
+                                    <Grid ColumnDefinitions="*,*" ColumnSpacing="14" IsVisible="{Binding HasCustomerSummary}">
+                                        <Border CornerRadius="16" Padding="16" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
+                                            <StackPanel Spacing="8">
+                                                <TextBlock Text="Services" Foreground="#AAC0D9" />
+                                                <TextBlock Text="{Binding CurrentCustomerSummary.ServiceNames}" TextWrapping="Wrap" Foreground="White" />
+                                                <TextBlock Text="{Binding CurrentCustomerSummary.ProductCount}" FontSize="28" FontWeight="Bold" Foreground="#67E8F9" />
+                                            </StackPanel>
+                                        </Border>
+                                        <Border Grid.Column="1" CornerRadius="16" Padding="16" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
+                                            <StackPanel Spacing="8">
+                                                <TextBlock Text="Backup Coverage" Foreground="#AAC0D9" />
+                                                <TextBlock Text="{Binding CurrentCustomerSummary.BackupModuleCount}" FontSize="28" FontWeight="Bold" Foreground="#67E8F9" />
+                                                <TextBlock Text="{Binding CurrentCustomerSummary.TenantNames}" TextWrapping="Wrap" Foreground="White" />
+                                            </StackPanel>
+                                        </Border>
+                                    </Grid>
+                                    <Button Classes="primaryAction" Command="{Binding LoadCustomerSummaryCommand}" Content="Refresh Summary" HorizontalAlignment="Left" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+
+                        <Border Grid.Column="1" Classes="surface">
+                            <StackPanel Spacing="16">
+                                <TextBlock Classes="sectionTitle" Text="Recent Activity" />
+                                <ScrollViewer MaxHeight="620">
+                                    <ItemsControl ItemsSource="{Binding ActivityItems}">
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="models:ActivityItem">
+                                                <Border Margin="0,0,0,12" Padding="16" CornerRadius="16" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
+                                                    <StackPanel Spacing="6">
+                                                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                                            <TextBlock Text="{Binding Title}" Foreground="White" FontWeight="SemiBold" />
+                                                            <Border Padding="10,4" CornerRadius="999" Background="#1C3553">
+                                                                <TextBlock Text="{Binding Status}" Foreground="#67E8F9" />
+                                                            </Border>
+                                                        </Grid>
+                                                        <TextBlock Text="{Binding Detail}" TextWrapping="Wrap" Classes="muted" />
+                                                        <TextBlock Text="{Binding Timestamp}" Foreground="#8CA4BF" />
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
+                                </ScrollViewer>
+                            </StackPanel>
+                        </Border>
+                    </Grid>
                 </Grid>
-            </Grid>
             </Grid>
         </Grid>
 
@@ -610,126 +661,5 @@
             </Grid>
         </Border>
 
-        <Border IsVisible="{Binding IsOnboardingVisible}"
-            Background="#D9050A12"
-            ZIndex="90">
-            <Border.Transitions>
-                <Transitions>
-                    <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
-                </Transitions>
-            </Border.Transitions>
-            <Grid Margin="36">
-                <Grid.ColumnDefinitions>
-                    <ColumnDefinition Width="1.15*" />
-                    <ColumnDefinition Width="0.85*" />
-                </Grid.ColumnDefinitions>
-
-                <Border Classes="heroCard" Margin="0,0,18,0">
-                    <StackPanel Spacing="18">
-                        <StackPanel Spacing="8">
-                            <TextBlock Text="Welcome to Elements Shell Desktop" FontSize="36" FontWeight="Bold" Foreground="White" />
-                            <TextBlock Text="{Binding WelcomeHeadline}" FontSize="17" Foreground="#CFE3FF" />
-                            <TextBlock Text="{Binding WelcomeDetail}" Classes="muted" TextWrapping="Wrap" />
-                        </StackPanel>
-
-                        <Border Classes="stepCard">
-                            <StackPanel Spacing="14">
-                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                                    <TextBlock Text="{Binding OnboardingProgressLabel}" Foreground="#67E8F9" FontWeight="SemiBold" />
-                                    <TextBlock Text="{Binding CurrentOnboardingStep.Number}" Foreground="#8CA4BF" />
-                                </Grid>
-                                <ProgressBar Value="{Binding OnboardingProgressValue}" Maximum="100" Height="8" />
-                                <TextBlock Text="{Binding OnboardingStudioHeadline}" FontSize="24" FontWeight="SemiBold" Foreground="White" />
-                                <TextBlock Text="{Binding OnboardingStudioDetail}" TextWrapping="Wrap" Classes="muted" />
-                            </StackPanel>
-                        </Border>
-
-                        <ItemsControl ItemsSource="{Binding OnboardingSteps}">
-                            <ItemsControl.ItemsPanel>
-                                <ItemsPanelTemplate>
-                                    <StackPanel Orientation="Horizontal" Spacing="12" />
-                                </ItemsPanelTemplate>
-                            </ItemsControl.ItemsPanel>
-                            <ItemsControl.ItemTemplate>
-                                <DataTemplate x:DataType="models:OnboardingStep">
-                                    <Border Classes="stepCard" Width="180">
-                                        <StackPanel Spacing="8">
-                                            <Border Width="42" Height="42" CornerRadius="14" Background="#0F7BFF">
-                                                <TextBlock Text="{Binding Number}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" />
-                                            </Border>
-                                            <TextBlock Text="{Binding Title}" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
-                                            <TextBlock Text="{Binding Detail}" Classes="muted" TextWrapping="Wrap" MaxHeight="72" />
-                                        </StackPanel>
-                                    </Border>
-                                </DataTemplate>
-                            </ItemsControl.ItemTemplate>
-                        </ItemsControl>
-
-                        <StackPanel Orientation="Horizontal" Spacing="12">
-                            <Button Classes="primaryAction" Command="{Binding AdvanceOnboardingCommand}" Content="{Binding OnboardingPrimaryActionLabel}" />
-                            <Button Classes="secondaryAction" Command="{Binding RewindOnboardingCommand}" Content="{Binding OnboardingSecondaryActionLabel}" />
-                            <Button Classes="secondaryAction" Command="{Binding RefreshDependenciesCommand}" Content="Check Readiness" />
-                        </StackPanel>
-                    </StackPanel>
-                </Border>
-
-                <Border Grid.Column="1" Classes="glassPanel">
-                    <StackPanel Spacing="16">
-                        <StackPanel Spacing="6">
-                            <TextBlock Classes="eyebrow" Text="Connection Setup" />
-                            <TextBlock Text="{Binding OnboardingConnectionHeadline}" FontSize="24" FontWeight="Bold" Foreground="White" />
-                            <TextBlock Text="{Binding OnboardingConnectionDetail}" TextWrapping="Wrap" Classes="muted" />
-                        </StackPanel>
-
-                        <Border Classes="formCard">
-                            <StackPanel Spacing="14">
-                                <StackPanel Spacing="8">
-                                    <TextBlock Text="Environment" FontWeight="SemiBold" Foreground="White" />
-                                    <ComboBox SelectedItem="{Binding Environment}">
-                                        <x:String>Commercial</x:String>
-                                        <x:String>Government</x:String>
-                                        <x:String>Aos2</x:String>
-                                        <x:String>FedRAMP</x:String>
-                                    </ComboBox>
-                                </StackPanel>
-                                <StackPanel Spacing="8">
-                                    <TextBlock Text="Tenant or Partner Label" FontWeight="SemiBold" Foreground="White" />
-                                    <TextBox Text="{Binding TenantLabel}" Watermark="Contoso MSP" />
-                                </StackPanel>
-                                <StackPanel Spacing="8">
-                                    <TextBlock Text="Client ID" FontWeight="SemiBold" Foreground="White" />
-                                    <TextBox Text="{Binding ClientId}" Watermark="Elements portal application client ID" />
-                                </StackPanel>
-                                <StackPanel Spacing="8">
-                                    <TextBlock Text="Client Secret" FontWeight="SemiBold" Foreground="White" />
-                                    <TextBox Text="{Binding ClientSecret}" PasswordChar="●" Watermark="Elements portal application client secret" />
-                                </StackPanel>
-                                <Button Classes="primaryAction"
-                                        Command="{Binding ConnectFromOnboardingCommand}"
-                                        Content="{Binding OnboardingConnectionButtonLabel}"
-                                        IsEnabled="{Binding CanConnectFromOnboarding}" />
-                            </StackPanel>
-                        </Border>
-
-                        <Border Classes="miniPanel">
-                            <StackPanel Spacing="10">
-                                <TextBlock Classes="eyebrow" Text="Runtime Status" />
-                                <TextBlock Text="{Binding ReadinessHeadline}" FontWeight="SemiBold" Foreground="White" />
-                                <TextBlock Text="{Binding DependencySummary}" TextWrapping="Wrap" Classes="muted" />
-                            </StackPanel>
-                        </Border>
-
-                        <Border Classes="stepCard">
-                            <StackPanel Spacing="8">
-                                <TextBlock Text="Portal Guidance" FontWeight="SemiBold" Foreground="White" />
-                                <TextBlock Text="Use the app registration from your AvePoint Elements portal." Foreground="#CFE3FF" TextWrapping="Wrap" />
-                                <TextBlock Text="Client credentials stay in memory only." Classes="muted" />
-                                <TextBlock Text="After connection, the app will use the bundle-aware session automatically." Classes="muted" TextWrapping="Wrap" />
-                            </StackPanel>
-                        </Border>
-                    </StackPanel>
-                </Border>
-            </Grid>
-        </Border>
     </Grid>
 </Window>
