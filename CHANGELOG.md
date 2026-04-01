@@ -4,6 +4,17 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.12.5] - 2026-04-01
+
+### Added
+
+- Added tenant-specific action cards in the desktop customer workspace so a selected tenant can drive focused snapshot, backup, and baseline workflows.
+- Added operations lane cards and a report narrative surface to make the connected shell feel more like a routed application workspace.
+
+### Changed
+
+- Refined the desktop operations and reports sections to be more product-like and less panel-driven.
+
 ## [0.12.4] - 2026-04-01
 
 ### Added

@@ -635,10 +635,11 @@
                                                 </StackPanel>
 
                                                 <Border Grid.Column="1" Classes="chromeCard">
-                                                    <StackPanel Spacing="10">
+                                                    <StackPanel Spacing="14">
                                                         <TextBlock Classes="eyebrow" Text="Active Tenant Focus" />
                                                         <TextBlock Text="{Binding TenantFocusHeading}" FontSize="24" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
                                                         <TextBlock Text="{Binding TenantFocusDetail}" Classes="muted" TextWrapping="Wrap" />
+                                                        <TextBlock Text="{Binding TenantFocusNarrative}" Foreground="#D7E7FF" TextWrapping="Wrap" />
                                                         <StackPanel Orientation="Horizontal" Spacing="10">
                                                             <Button Classes="secondaryAction"
                                                                     Command="{Binding RunDashboardActionCommand}"
@@ -649,6 +650,24 @@
                                                                     CommandParameter="Tenant Focus Snapshot"
                                                                     Content="Open Report" />
                                                         </StackPanel>
+                                                        <ItemsControl ItemsSource="{Binding TenantActionCards}" IsVisible="{Binding HasTenantActionCards}">
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate x:DataType="models:DashboardActionCard">
+                                                                    <Border Classes="focusCard" Margin="0,8,0,0">
+                                                                        <StackPanel Spacing="10">
+                                                                            <Border Height="5" CornerRadius="999" Background="{Binding AccentHex}" />
+                                                                            <TextBlock Text="{Binding Title}" FontSize="18" FontWeight="SemiBold" Foreground="White" />
+                                                                            <TextBlock Text="{Binding Detail}" Classes="muted" TextWrapping="Wrap" />
+                                                                            <Button Classes="secondaryAction"
+                                                                                    Command="{Binding $parent[Window].DataContext.RunDashboardActionCommand}"
+                                                                                    CommandParameter="{Binding CommandParameter}"
+                                                                                    Content="{Binding CommandLabel}"
+                                                                                    HorizontalAlignment="Left" />
+                                                                        </StackPanel>
+                                                                    </Border>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
                                                     </StackPanel>
                                                 </Border>
                                             </Grid>
@@ -720,22 +739,29 @@
                                             </Border>
                                         </Grid>
                                     </Border>
-                                    <Grid ColumnDefinitions="*,*" ColumnSpacing="14">
-                                        <Border Classes="miniPanel">
-                                            <StackPanel Spacing="8">
-                                                <TextBlock Classes="eyebrow" Text="Backup" />
-                                                <TextBlock Text="Generate backup posture summaries and operational drill-ins." Foreground="White" TextWrapping="Wrap" />
-                                                <Button Classes="secondaryAction" Command="{Binding GenerateReportCommand}" CommandParameter="Backup Posture Summary" Content="Open Backup Summary" HorizontalAlignment="Left" />
-                                            </StackPanel>
-                                        </Border>
-                                        <Border Grid.Column="1" Classes="miniPanel">
-                                            <StackPanel Spacing="8">
-                                                <TextBlock Classes="eyebrow" Text="Baseline" />
-                                                <TextBlock Text="Review drift posture and baseline-oriented tenant workflows." Foreground="White" TextWrapping="Wrap" />
-                                                <Button Classes="secondaryAction" Command="{Binding GenerateReportCommand}" CommandParameter="Baseline Drift Summary" Content="Open Baseline Summary" HorizontalAlignment="Left" />
-                                            </StackPanel>
-                                        </Border>
-                                    </Grid>
+                                    <ItemsControl ItemsSource="{Binding OperationsLaneCards}" IsVisible="{Binding HasOperationsLaneCards}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Horizontal" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="models:DashboardActionCard">
+                                                <Border Classes="dashboardActionCard" Width="258" Margin="0,0,14,14">
+                                                    <StackPanel Spacing="12">
+                                                        <Border Height="6" CornerRadius="999" Background="{Binding AccentHex}" />
+                                                        <TextBlock Text="{Binding Title}" FontSize="20" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
+                                                        <TextBlock Text="{Binding Detail}" Classes="muted" TextWrapping="Wrap" />
+                                                        <Button Classes="secondaryAction"
+                                                                Command="{Binding $parent[Window].DataContext.RunDashboardActionCommand}"
+                                                                CommandParameter="{Binding CommandParameter}"
+                                                                Content="{Binding CommandLabel}"
+                                                                HorizontalAlignment="Left" />
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
                                 </StackPanel>
                             </Border>
 
@@ -779,6 +805,28 @@
                                             </StackPanel>
                                         </Border>
                                     </Grid>
+                                    <Border Classes="heroCard" IsVisible="{Binding HasCustomerSummary}">
+                                        <Grid ColumnDefinitions="1.25*,0.75*" ColumnSpacing="16">
+                                            <StackPanel Spacing="8">
+                                                <TextBlock Classes="eyebrow" Text="Report Narrative" />
+                                                <TextBlock Text="{Binding ReportNarrativeHeadline}" FontSize="24" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
+                                                <TextBlock Text="{Binding ReportNarrativeDetail}" Foreground="#D7E7FF" TextWrapping="Wrap" />
+                                            </StackPanel>
+                                            <Border Grid.Column="1" Classes="miniPanel">
+                                                <StackPanel Spacing="8">
+                                                    <TextBlock Classes="eyebrow" Text="Follow-up" />
+                                                    <Button Classes="secondaryAction"
+                                                            Command="{Binding RunDashboardActionCommand}"
+                                                            CommandParameter="Operations"
+                                                            Content="Open Operations" />
+                                                    <Button Classes="primaryAction"
+                                                            Command="{Binding RunDashboardActionCommand}"
+                                                            CommandParameter="TenantFocus"
+                                                            Content="Reopen Tenant Focus" />
+                                                </StackPanel>
+                                            </Border>
+                                        </Grid>
+                                    </Border>
                                     <Button Classes="primaryAction" Command="{Binding LoadCustomerSummaryCommand}" Content="Refresh Summary" HorizontalAlignment="Left" />
                                 </StackPanel>
                             </Border>

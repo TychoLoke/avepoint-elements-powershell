@@ -132,6 +132,8 @@ public partial class MainWindowViewModel : ViewModelBase
         SelectedCustomerStats = new ObservableCollection<CustomerWorkspaceStat>();
         TenantWorkspaceCards = new ObservableCollection<TenantWorkspaceCard>();
         ReportInsightCards = new ObservableCollection<ReportInsightCard>();
+        TenantActionCards = new ObservableCollection<DashboardActionCard>();
+        OperationsLaneCards = new ObservableCollection<DashboardActionCard>();
         DependencyChecks = new ObservableCollection<DependencyCheckItem>(_desktopClient.GetDependencyChecks());
         OnboardingSteps = new ObservableCollection<OnboardingStep>
         {
@@ -140,6 +142,7 @@ public partial class MainWindowViewModel : ViewModelBase
             new() { Number = "03", Title = "Work from live data", Detail = "Load customers, pick a tenant context, and open shaped summaries instead of raw API output." }
         };
 
+        BuildOperationsLanes();
         ApplyPreferences(_preferencesStore.Load());
         _splashTimer.Start();
     }
@@ -165,6 +168,10 @@ public partial class MainWindowViewModel : ViewModelBase
     public ObservableCollection<TenantWorkspaceCard> TenantWorkspaceCards { get; }
 
     public ObservableCollection<ReportInsightCard> ReportInsightCards { get; }
+
+    public ObservableCollection<DashboardActionCard> TenantActionCards { get; }
+
+    public ObservableCollection<DashboardActionCard> OperationsLaneCards { get; }
 
     public ObservableCollection<DependencyCheckItem> DependencyChecks { get; }
 
@@ -203,6 +210,10 @@ public partial class MainWindowViewModel : ViewModelBase
     public bool HasSelectedTenantWorkspace => SelectedTenantWorkspaceCard is not null;
 
     public bool HasReportInsights => ReportInsightCards.Count > 0;
+
+    public bool HasTenantActionCards => TenantActionCards.Count > 0;
+
+    public bool HasOperationsLaneCards => OperationsLaneCards.Count > 0;
 
     public bool IsConnected => ConnectionState == "Connected";
 
@@ -277,6 +288,10 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public string TenantFocusActionLabel => SelectedTenantWorkspaceCard?.ActionLabel ?? "Choose Tenant";
 
+    public string TenantFocusNarrative => SelectedTenantWorkspaceCard is null
+        ? "Choose a tenant card to turn the workspace into a focused operational surface."
+        : $"The app is now centered on {SelectedTenantWorkspaceCard.Name}, so backup, baseline, and reporting actions can read like tenant workflows instead of disconnected API tasks.";
+
     public string SummaryHeadline => CurrentCustomerSummary is null
         ? "No customer summary loaded yet."
         : $"{CurrentCustomerSummary.Organization}  •  {CurrentCustomerSummary.TenantCount} tenants  •  {CurrentCustomerSummary.ProductCount} products";
@@ -284,6 +299,14 @@ public partial class MainWindowViewModel : ViewModelBase
     public string SummaryDetail => CurrentCustomerSummary is null
         ? "Connect and load a customer to turn the desktop shell into a live operational workspace."
         : $"Protected objects: {CurrentCustomerSummary.ProtectedObjectCount}  •  Scanned objects: {CurrentCustomerSummary.ScannedObjectCount}  •  AvePoint storage: {CurrentCustomerSummary.AvePointStorageGb} GB";
+
+    public string ReportNarrativeHeadline => CurrentCustomerSummary is null
+        ? "No reporting context open"
+        : $"Reporting narrative for {CurrentCustomerSummary.Organization}";
+
+    public string ReportNarrativeDetail => CurrentCustomerSummary is null
+        ? "Open a customer summary to turn the report center into a shaped operational narrative."
+        : $"This view compresses {CurrentCustomerSummary.ProductCount} products, {CurrentCustomerSummary.TenantCount} tenants, and {CurrentCustomerSummary.ProtectedObjectCount} protected objects into a cleaner operator summary.";
 
     public string DependencySummary =>
         string.Join("  •  ", DependencyChecks.Select(item => $"{item.Name}: {item.Status}"));
@@ -403,8 +426,11 @@ public partial class MainWindowViewModel : ViewModelBase
     partial void OnCurrentCustomerSummaryChanged(CustomerSummaryResult? value)
     {
         BuildReportInsights(value);
+        BuildOperationsLanes();
         OnPropertyChanged(nameof(HasCustomerSummary));
         OnPropertyChanged(nameof(HasReportInsights));
+        OnPropertyChanged(nameof(ReportNarrativeHeadline));
+        OnPropertyChanged(nameof(ReportNarrativeDetail));
         OnPropertyChanged(nameof(SummaryHeadline));
         OnPropertyChanged(nameof(SummaryDetail));
         OnPropertyChanged(nameof(ContextBadge));
@@ -417,10 +443,14 @@ public partial class MainWindowViewModel : ViewModelBase
             SelectedTenant = value.Name;
         }
 
+        BuildTenantActionCards(value);
+        BuildOperationsLanes();
         OnPropertyChanged(nameof(HasSelectedTenantWorkspace));
+        OnPropertyChanged(nameof(HasTenantActionCards));
         OnPropertyChanged(nameof(TenantFocusHeading));
         OnPropertyChanged(nameof(TenantFocusDetail));
         OnPropertyChanged(nameof(TenantFocusActionLabel));
+        OnPropertyChanged(nameof(TenantFocusNarrative));
         OnPropertyChanged(nameof(ContextDetail));
     }
 
@@ -443,6 +473,7 @@ public partial class MainWindowViewModel : ViewModelBase
         SelectedCustomerTenants.Clear();
         SelectedCustomerStats.Clear();
         TenantWorkspaceCards.Clear();
+        TenantActionCards.Clear();
         SelectedTenantWorkspaceCard = null;
 
         if (value is null) {
@@ -451,6 +482,7 @@ public partial class MainWindowViewModel : ViewModelBase
             OnPropertyChanged(nameof(HasSelectedCustomerStats));
             OnPropertyChanged(nameof(HasTenantWorkspaceCards));
             OnPropertyChanged(nameof(HasNoTenantWorkspaceCards));
+            OnPropertyChanged(nameof(HasTenantActionCards));
             OnPropertyChanged(nameof(SelectedCustomerHeading));
             OnPropertyChanged(nameof(SelectedCustomerMeta));
             OnPropertyChanged(nameof(SelectedCustomerStatus));
@@ -598,6 +630,22 @@ public partial class MainWindowViewModel : ViewModelBase
                 StatusMessage = HasTenantWorkspaceCards
                     ? "Select a tenant card to anchor the workspace."
                     : "Choose a customer first to unlock tenant focus.";
+                break;
+            case "BackupSummary":
+                SelectedSection = "Operations";
+                StatusMessage = "Prepared backup operations focus for the current tenant context.";
+                break;
+            case "BaselineSummary":
+                SelectedSection = "Operations";
+                StatusMessage = "Prepared baseline operations focus for the current tenant context.";
+                break;
+            case "RiskSummary":
+                SelectedSection = "Operations";
+                StatusMessage = "Prepared risk operations focus for the current tenant context.";
+                break;
+            case "OpenReports":
+                SelectedSection = "Reports";
+                StatusMessage = "Opened the report center.";
                 break;
             default:
                 StatusMessage = "That dashboard action is not available yet.";
@@ -819,6 +867,39 @@ public partial class MainWindowViewModel : ViewModelBase
         AddActivity("Recent customer restored", $"Prepared context for {customer.Organization}.", "Recent");
     }
 
+    private void BuildTenantActionCards(TenantWorkspaceCard? tenant)
+    {
+        TenantActionCards.Clear();
+        if (tenant is null) {
+            return;
+        }
+
+        TenantActionCards.Add(new DashboardActionCard
+        {
+            Title = "Tenant summary",
+            Detail = $"Open a shaped tenant-focused snapshot for {tenant.Name}.",
+            CommandLabel = "Open Snapshot",
+            CommandParameter = "Tenant Focus Snapshot",
+            AccentHex = "#0F7BFF"
+        });
+        TenantActionCards.Add(new DashboardActionCard
+        {
+            Title = "Backup posture",
+            Detail = "Move straight into backup-oriented reporting and operational review.",
+            CommandLabel = "Backup Focus",
+            CommandParameter = "BackupSummary",
+            AccentHex = "#12B886"
+        });
+        TenantActionCards.Add(new DashboardActionCard
+        {
+            Title = "Baseline drift",
+            Detail = "Use the selected tenant as the anchor for baseline and drift review.",
+            CommandLabel = "Baseline Focus",
+            CommandParameter = "BaselineSummary",
+            AccentHex = "#FFB020"
+        });
+    }
+
     private void BuildReportInsights(CustomerSummaryResult? summary)
     {
         ReportInsightCards.Clear();
@@ -852,6 +933,42 @@ public partial class MainWindowViewModel : ViewModelBase
             Title = "AvePoint Storage",
             Value = $"{summary.AvePointStorageGb:0.##} GB",
             Detail = "Storage footprint kept in the operator summary for quick posture review.",
+            AccentHex = "#7C5CFC"
+        });
+    }
+
+    private void BuildOperationsLanes()
+    {
+        OperationsLaneCards.Clear();
+
+        OperationsLaneCards.Add(new DashboardActionCard
+        {
+            Title = "Backup Lane",
+            Detail = SelectedTenantWorkspaceCard is null
+                ? "Select a tenant first, then pivot into backup posture and operational summaries."
+                : $"Review backup posture for {SelectedTenantWorkspaceCard.Name} from a focused workspace.",
+            CommandLabel = "Open Backup",
+            CommandParameter = "BackupSummary",
+            AccentHex = "#0F7BFF"
+        });
+        OperationsLaneCards.Add(new DashboardActionCard
+        {
+            Title = "Baseline Lane",
+            Detail = SelectedTenantWorkspaceCard is null
+                ? "Anchor baseline review around a tenant so the workflow reads like a real operations task."
+                : $"Use {SelectedTenantWorkspaceCard.Name} as the tenant context for baseline and drift review.",
+            CommandLabel = "Open Baseline",
+            CommandParameter = "BaselineSummary",
+            AccentHex = "#FFB020"
+        });
+        OperationsLaneCards.Add(new DashboardActionCard
+        {
+            Title = "Risk Lane",
+            Detail = CurrentCustomerSummary is null
+                ? "Open a customer summary first to build stronger reporting and risk context."
+                : $"Use the current customer summary to branch into risk and reporting actions for {CurrentCustomerSummary.Organization}.",
+            CommandLabel = "Open Risk",
+            CommandParameter = "RiskSummary",
             AccentHex = "#7C5CFC"
         });
     }
