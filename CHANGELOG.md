@@ -4,6 +4,18 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.12.7] - 2026-04-01
+
+### Added
+
+- Added desktop connection diagnostics logging so failed hosted PowerShell actions write to a local log file under LocalAppData.
+- Added a visible onboarding feedback panel so connection failures are shown directly in the setup screen instead of feeling silent.
+
+### Changed
+
+- Refined the onboarding layout and branding card to fix crowding and improve visual balance on the disconnected screen.
+- Verified the desktop app connection path against the live bundle-aware AvePoint Elements login flow.
+
 ## [0.12.6] - 2026-04-01
 
 ### Added

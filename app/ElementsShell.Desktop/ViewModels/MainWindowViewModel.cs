@@ -266,6 +266,8 @@ public partial class MainWindowViewModel : ViewModelBase
         ? $"{RecentCustomers.Count} recent customer contexts ready"
         : "No recent customer contexts saved yet";
 
+    public string DiagnosticLogPath => _desktopClient.GetDiagnosticLogPath();
+
     public string PrimaryActionLabel => ConnectionState == "Connected" ? "Reconnect Session" : "Connect Session";
 
     public string ContextBadge => CurrentCustomerSummary is not null
@@ -360,6 +362,24 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public string OnboardingConnectionButtonLabel => IsConnected ? "Connected" : "Connect and Continue";
 
+    public string OnboardingFeedbackTitle => IsConnected ? "Session ready" : "Connection feedback";
+
+    public string OnboardingFeedbackDetail => string.IsNullOrWhiteSpace(StatusMessage)
+        ? "The app will show live connection and runtime feedback here."
+        : StatusMessage;
+
+    public bool HasErrorStatus =>
+        !string.IsNullOrWhiteSpace(StatusMessage) &&
+        (
+            StatusMessage.Contains("error", StringComparison.OrdinalIgnoreCase) ||
+            StatusMessage.Contains("failed", StringComparison.OrdinalIgnoreCase) ||
+            StatusMessage.Contains("invalid", StringComparison.OrdinalIgnoreCase) ||
+            StatusMessage.Contains("exception", StringComparison.OrdinalIgnoreCase) ||
+            StatusMessage.Contains("could not", StringComparison.OrdinalIgnoreCase)
+        );
+
+    public string OnboardingFeedbackBadge => IsConnected ? "Connected" : HasErrorStatus ? "Needs Attention" : "Awaiting Session";
+
     public bool CanConnectFromOnboarding =>
         !IsBusy &&
         !IsConnected &&
@@ -406,7 +426,16 @@ public partial class MainWindowViewModel : ViewModelBase
         OnPropertyChanged(nameof(OnboardingConnectionHeadline));
         OnPropertyChanged(nameof(OnboardingConnectionDetail));
         OnPropertyChanged(nameof(OnboardingConnectionButtonLabel));
+        OnPropertyChanged(nameof(OnboardingFeedbackTitle));
+        OnPropertyChanged(nameof(OnboardingFeedbackBadge));
         OnPropertyChanged(nameof(CanConnectFromOnboarding));
+    }
+
+    partial void OnStatusMessageChanged(string value)
+    {
+        OnPropertyChanged(nameof(OnboardingFeedbackDetail));
+        OnPropertyChanged(nameof(HasErrorStatus));
+        OnPropertyChanged(nameof(OnboardingFeedbackBadge));
     }
 
     partial void OnEnvironmentChanged(string value)
@@ -587,6 +616,7 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             BusyTitle = "Connecting to Elements";
             BusyDetail = "Initializing secure bundle-aware session and validating the desktop runtime.";
+            StatusMessage = "Attempting secure desktop connection to AvePoint Elements.";
             var result = await _desktopClient.ConnectAsync(BuildConnectionSettings());
             ConnectionState = "Connected";
             SelectedBundleSummary = string.Join(", ", result.ScopeBundle);
@@ -1111,8 +1141,8 @@ public partial class MainWindowViewModel : ViewModelBase
             await action();
         }
         catch (Exception ex) {
-            StatusMessage = ex.Message;
-            AddActivity("Desktop command failed", ex.Message, "Error");
+            StatusMessage = $"Connection or desktop action failed: {ex.Message}";
+            AddActivity("Desktop command failed", $"{ex.Message}  •  Log: {DiagnosticLogPath}", "Error");
         }
         finally {
             IsBusy = false;

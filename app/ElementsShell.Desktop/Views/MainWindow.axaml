@@ -140,7 +140,7 @@
         </Style>
         <Style Selector="Border.brandCard">
             <Setter Property="CornerRadius" Value="24" />
-            <Setter Property="Padding" Value="18" />
+            <Setter Property="Padding" Value="20" />
             <Setter Property="Background">
                 <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
                     <GradientStop Color="#D7263D" Offset="0" />
@@ -223,18 +223,19 @@
             <Ellipse Width="320" Height="320" Canvas.Right="260" Canvas.Bottom="-120" Fill="#150FB884" />
         </Canvas>
         <Grid Margin="22" IsVisible="{Binding NeedsConnection}">
-            <Grid ColumnDefinitions="1.05*,0.95*" ColumnSpacing="22">
+            <Grid ColumnDefinitions="1.12*,0.88*" ColumnSpacing="22">
                 <Border Classes="heroCard">
                     <Grid RowDefinitions="Auto,Auto,*" RowSpacing="22">
                         <StackPanel Spacing="16">
                             <Border Classes="brandCard" HorizontalAlignment="Left">
-                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
-                                    <Border CornerRadius="18" Padding="14" Background="#FFFFFF18" Width="82">
-                                        <TextBlock Text="ES" HorizontalAlignment="Center" FontSize="26" FontWeight="Bold" Foreground="White" />
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+                                    <Border CornerRadius="20" Padding="0" Background="#FFFFFF18" Width="72" Height="72">
+                                        <TextBlock Text="ES" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="White" />
                                     </Border>
-                                    <StackPanel Spacing="4" VerticalAlignment="Center">
-                                        <TextBlock Text="Elements Shell" FontSize="26" FontWeight="Bold" Foreground="White" />
-                                        <TextBlock Text="Desktop edition" Foreground="#FFE8EC" />
+                                    <StackPanel Spacing="3" VerticalAlignment="Center">
+                                        <TextBlock Text="Elements Shell" FontSize="28" FontWeight="Bold" Foreground="White" />
+                                        <TextBlock Text="Desktop Edition" Foreground="#FFE8EC" FontWeight="SemiBold" />
+                                        <TextBlock Text="AvePoint Elements operator workspace" Foreground="#FFE8EC" Opacity="0.82" />
                                     </StackPanel>
                                 </Grid>
                             </Border>
@@ -301,14 +302,14 @@
                 </Border>
 
                 <Border Grid.Column="1" Classes="glassPanel">
-                    <StackPanel Spacing="18">
+                    <Grid RowDefinitions="Auto,Auto,*" RowSpacing="18">
                         <StackPanel Spacing="6">
                             <TextBlock Classes="eyebrow" Text="Secure Setup" />
                             <TextBlock Text="{Binding OnboardingConnectionHeadline}" FontSize="28" FontWeight="Bold" Foreground="White" />
                             <TextBlock Text="{Binding OnboardingConnectionDetail}" Classes="muted" TextWrapping="Wrap" />
                         </StackPanel>
 
-                        <Border Classes="formCard">
+                        <Border Grid.Row="1" Classes="formCard">
                             <StackPanel Spacing="14">
                                 <StackPanel Spacing="8">
                                     <TextBlock Text="Environment" FontWeight="SemiBold" Foreground="White" />
@@ -338,15 +339,29 @@
                             </StackPanel>
                         </Border>
 
-                        <Border Classes="miniPanel">
-                            <StackPanel Spacing="8">
-                                <TextBlock Classes="eyebrow" Text="Portal Guidance" />
-                                <TextBlock Text="Use the app registration from your AvePoint Elements portal." FontWeight="SemiBold" Foreground="White" />
-                                <TextBlock Text="Credentials stay in memory only for the active desktop session." Classes="muted" />
-                                <TextBlock Text="After connection, the app switches into the full operational workspace." Classes="muted" TextWrapping="Wrap" />
-                            </StackPanel>
-                        </Border>
-                    </StackPanel>
+                        <Grid Grid.Row="2" RowDefinitions="Auto,Auto" RowSpacing="14">
+                            <Border Classes="miniPanel">
+                                <StackPanel Spacing="8">
+                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                        <TextBlock Classes="eyebrow" Text="{Binding OnboardingFeedbackTitle}" />
+                                        <Border Classes="badge">
+                                            <TextBlock Classes="badgeText" Text="{Binding OnboardingFeedbackBadge}" />
+                                        </Border>
+                                    </Grid>
+                                    <TextBlock Text="{Binding OnboardingFeedbackDetail}" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
+                                    <TextBlock Text="{Binding DiagnosticLogPath}" Classes="muted" TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Border>
+                            <Border Grid.Row="1" Classes="miniPanel">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Classes="eyebrow" Text="Portal Guidance" />
+                                    <TextBlock Text="Use the app registration from your AvePoint Elements portal." FontWeight="SemiBold" Foreground="White" />
+                                    <TextBlock Text="Credentials stay in memory only for the active desktop session." Classes="muted" />
+                                    <TextBlock Text="After connection, the app switches into the full operational workspace." Classes="muted" TextWrapping="Wrap" />
+                                </StackPanel>
+                            </Border>
+                        </Grid>
+                    </Grid>
                 </Border>
             </Grid>
         </Grid>
@@ -357,13 +372,13 @@
                     <Grid RowDefinitions="Auto,Auto,Auto,*,Auto">
                         <StackPanel Spacing="10">
                             <Border Classes="brandCard">
-                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
-                                    <Border CornerRadius="18" Padding="14" Background="#FFFFFF18" Width="82">
-                                        <TextBlock Text="ES" HorizontalAlignment="Center" FontSize="26" FontWeight="Bold" Foreground="White" />
+                                <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+                                    <Border CornerRadius="20" Padding="0" Background="#FFFFFF18" Width="68" Height="68">
+                                        <TextBlock Text="ES" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="White" />
                                     </Border>
-                                    <StackPanel Spacing="4" VerticalAlignment="Center">
+                                    <StackPanel Spacing="3" VerticalAlignment="Center">
                                         <TextBlock Text="Elements Shell" FontSize="24" FontWeight="Bold" Foreground="White" />
-                                        <TextBlock Text="Connected workspace" Foreground="#FFE8EC" />
+                                        <TextBlock Text="Connected Workspace" Foreground="#FFE8EC" FontWeight="SemiBold" />
                                     </StackPanel>
                                 </Grid>
                             </Border>
