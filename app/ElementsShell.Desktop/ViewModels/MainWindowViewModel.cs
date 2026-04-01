@@ -170,6 +170,42 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public string OverviewHeadline => "A desktop operator layer for AvePoint Elements that runs the public PowerShell module underneath.";
 
+    public string SectionLabel => SelectedSection.ToUpperInvariant();
+
+    public string SectionHeadline => SelectedSection switch
+    {
+        "Customers" => "Customer operations without copied identifiers",
+        "Operations" => "Operational flows shaped for MSP execution",
+        "Reports" => "High-signal summaries instead of raw payloads",
+        _ => "Operate Elements like a calm, modern application"
+    };
+
+    public string SectionDescription => SelectedSection switch
+    {
+        "Customers" => "Load partner customers, reopen recent context, and step into service or tenant work from one place.",
+        "Operations" => "Use the desktop shell as the control surface for backup, baseline, risk, and day-to-day operational tasks.",
+        "Reports" => "Open shaped customer summaries and reporting views that read like operator output, not API response bodies.",
+        _ => "The desktop shell sits on top of the public PowerShell module so operators can connect once, run workflows, and stay in context."
+    };
+
+    public string WorkspacePulse => HasRecentCustomers
+        ? $"{RecentCustomers.Count} recent customer contexts ready"
+        : "No recent customer contexts saved yet";
+
+    public string PrimaryActionLabel => ConnectionState == "Connected" ? "Reconnect Session" : "Connect Session";
+
+    public string ContextBadge => CurrentCustomerSummary is not null
+        ? "Summary Live"
+        : SelectedCustomerRecord is not null
+            ? "Customer Context"
+            : "Workspace Ready";
+
+    public string ContextDetail => CurrentCustomerSummary is not null
+        ? $"Summary open for {CurrentCustomerSummary.Organization}"
+        : SelectedCustomerRecord is not null
+            ? $"Selected {SelectedCustomerRecord.Organization}"
+            : "Start with connection, then load customers or reopen recent context.";
+
     public string SummaryHeadline => CurrentCustomerSummary is null
         ? "No customer summary loaded yet."
         : $"{CurrentCustomerSummary.Organization}  •  {CurrentCustomerSummary.TenantCount} tenants  •  {CurrentCustomerSummary.ProductCount} products";
@@ -207,12 +243,16 @@ public partial class MainWindowViewModel : ViewModelBase
         OnPropertyChanged(nameof(IsCustomersSelected));
         OnPropertyChanged(nameof(IsOperationsSelected));
         OnPropertyChanged(nameof(IsReportsSelected));
+        OnPropertyChanged(nameof(SectionLabel));
+        OnPropertyChanged(nameof(SectionHeadline));
+        OnPropertyChanged(nameof(SectionDescription));
     }
 
     partial void OnConnectionStateChanged(string value)
     {
         OnPropertyChanged(nameof(ConnectionBadge));
         OnPropertyChanged(nameof(WindowTitle));
+        OnPropertyChanged(nameof(PrimaryActionLabel));
 
         if (value == "Connected") {
             IsOnboardingVisible = false;
@@ -244,6 +284,8 @@ public partial class MainWindowViewModel : ViewModelBase
         OnPropertyChanged(nameof(HasCustomerSummary));
         OnPropertyChanged(nameof(SummaryHeadline));
         OnPropertyChanged(nameof(SummaryDetail));
+        OnPropertyChanged(nameof(ContextBadge));
+        OnPropertyChanged(nameof(ContextDetail));
     }
 
     partial void OnOnboardingStepIndexChanged(int value)
@@ -266,6 +308,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
         SelectedCustomer = value.Organization;
         SelectedTenant = string.IsNullOrWhiteSpace(value.TenantNames) ? "No tenant names returned" : value.TenantNames;
+        OnPropertyChanged(nameof(ContextBadge));
+        OnPropertyChanged(nameof(ContextDetail));
     }
 
     [RelayCommand]
@@ -598,6 +642,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
         OnPropertyChanged(nameof(HasRecentCustomers));
         OnPropertyChanged(nameof(HasNoRecentCustomers));
+        OnPropertyChanged(nameof(WorkspacePulse));
     }
 
     private void SavePreferences()
@@ -652,6 +697,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
         OnPropertyChanged(nameof(HasRecentCustomers));
         OnPropertyChanged(nameof(HasNoRecentCustomers));
+        OnPropertyChanged(nameof(WorkspacePulse));
         SavePreferences();
     }
 

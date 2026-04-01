@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.11.5] - 2026-04-01
+
+### Changed
+
+- Refined the desktop shell with stronger hero chrome, clearer section framing, and more intentional app-style hierarchy
+- Added calmer decorative background treatment and workspace pulse context so the UI reads more like a product than a dashboard prototype
+- Added subtle fade transitions for splash, onboarding, and busy overlays to make state changes feel smoother
+
 ## [0.11.4] - 2026-04-01
 
 ### Changed

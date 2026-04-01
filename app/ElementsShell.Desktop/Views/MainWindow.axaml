@@ -2,6 +2,7 @@
         xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
         xmlns:vm="using:ElementsShell.Desktop.ViewModels"
         xmlns:models="using:ElementsShell.Desktop.Models"
+        xmlns:media="clr-namespace:Avalonia.Media;assembly=Avalonia.Base"
         xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
         xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
         mc:Ignorable="d" d:DesignWidth="1540" d:DesignHeight="960"
@@ -123,9 +124,26 @@
             <Setter Property="Padding" Value="16" />
             <Setter Property="MinWidth" Value="220" />
         </Style>
+        <Style Selector="Border.chromeCard">
+            <Setter Property="CornerRadius" Value="22" />
+            <Setter Property="Padding" Value="18" />
+            <Setter Property="Background" Value="#101C2D" />
+            <Setter Property="BorderBrush" Value="#244668" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+        <Style Selector="TextBlock.eyebrow">
+            <Setter Property="Foreground" Value="#67E8F9" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+            <Setter Property="FontSize" Value="12" />
+        </Style>
     </Window.Styles>
 
     <Grid>
+        <Canvas IsHitTestVisible="False">
+            <Ellipse Width="460" Height="460" Canvas.Left="-140" Canvas.Top="-110" Fill="#1B0F7BFF" />
+            <Ellipse Width="360" Height="360" Canvas.Right="80" Canvas.Top="70" Fill="#15D7263D" />
+            <Ellipse Width="320" Height="320" Canvas.Right="260" Canvas.Bottom="-120" Fill="#150FB884" />
+        </Canvas>
         <Grid ColumnDefinitions="340,*" Margin="22">
             <Border Classes="sidebarPanel" Margin="0,0,20,0">
                 <Grid RowDefinitions="Auto,Auto,Auto,*,Auto">
@@ -183,11 +201,12 @@
             </Border>
 
             <Grid Grid.Column="1" RowDefinitions="Auto,Auto,*">
-            <Border Classes="surface" Margin="0,0,0,20">
-                <Grid RowDefinitions="Auto,Auto" RowSpacing="16">
-                    <StackPanel Spacing="8">
-                        <TextBlock Classes="pageTitle" Text="Operate Elements Like a Real Product" />
-                        <TextBlock Text="{Binding OverviewHeadline}" TextWrapping="Wrap" FontSize="16" Classes="muted" />
+            <Border Classes="heroCard" Margin="0,0,0,20">
+                <Grid ColumnDefinitions="1.6*,0.95*" ColumnSpacing="18">
+                    <StackPanel Spacing="10">
+                        <TextBlock Classes="eyebrow" Text="{Binding SectionLabel}" />
+                        <TextBlock Classes="pageTitle" Text="{Binding SectionHeadline}" TextWrapping="Wrap" />
+                        <TextBlock Text="{Binding SectionDescription}" TextWrapping="Wrap" FontSize="16" Foreground="#CFE3FF" />
                         <StackPanel Orientation="Horizontal" Spacing="10">
                             <Border Classes="badge">
                                 <TextBlock Classes="badgeText" Text="Desktop App" />
@@ -198,12 +217,25 @@
                             <Border Classes="badge">
                                 <TextBlock Classes="badgeText" Text="MSI Ready" />
                             </Border>
+                            <Border Classes="badge">
+                                <TextBlock Classes="badgeText" Text="{Binding ContextBadge}" />
+                            </Border>
                         </StackPanel>
                         <TextBlock Text="{Binding StatusMessage}" Foreground="#67E8F9" FontWeight="SemiBold" TextWrapping="Wrap" />
                     </StackPanel>
-                    <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="12">
-                        <Button Classes="secondaryAction" Command="{Binding DisconnectCommand}" Content="Disconnect" />
-                        <Button Classes="primaryAction" Command="{Binding ConnectCommand}" Content="Connect Session" />
+
+                    <StackPanel Grid.Column="1" Spacing="12">
+                        <Border Classes="chromeCard">
+                            <StackPanel Spacing="8">
+                                <TextBlock Classes="eyebrow" Text="Workspace Pulse" />
+                                <TextBlock Text="{Binding WorkspacePulse}" FontSize="20" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
+                                <TextBlock Text="{Binding ContextDetail}" Classes="muted" TextWrapping="Wrap" />
+                            </StackPanel>
+                        </Border>
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Button Classes="secondaryAction" Command="{Binding DisconnectCommand}" Content="Disconnect" />
+                            <Button Classes="primaryAction" Command="{Binding ConnectCommand}" Content="{Binding PrimaryActionLabel}" />
+                        </StackPanel>
                     </StackPanel>
                 </Grid>
             </Border>
@@ -505,6 +537,11 @@
         <Border IsVisible="{Binding IsBusy}"
             Background="#AA050A12"
             ZIndex="100">
+            <Border.Transitions>
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.18" />
+                </Transitions>
+            </Border.Transitions>
             <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="420">
                 <Border Classes="glassPanel">
                     <StackPanel Spacing="18">
@@ -520,6 +557,11 @@
         <Border IsVisible="{Binding IsSplashVisible}"
                 Background="#EE07111F"
                 ZIndex="110">
+            <Border.Transitions>
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.24" />
+                </Transitions>
+            </Border.Transitions>
             <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="560">
                 <Border Classes="glassPanel">
                     <StackPanel Spacing="20">
@@ -540,6 +582,11 @@
         <Border IsVisible="{Binding IsOnboardingVisible}"
             Background="#D9050A12"
             ZIndex="90">
+            <Border.Transitions>
+                <Transitions>
+                    <DoubleTransition Property="Opacity" Duration="0:0:0.2" />
+                </Transitions>
+            </Border.Transitions>
             <Grid Margin="36">
                 <Grid.ColumnDefinitions>
                     <ColumnDefinition Width="1.15*" />
