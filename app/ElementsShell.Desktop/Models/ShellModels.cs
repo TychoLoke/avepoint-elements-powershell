@@ -127,6 +127,30 @@ public sealed class ReportInsightCard
     public string AccentHex { get; init; } = "#0F7BFF";
 }
 
+public sealed class TenantDetailMetric
+{
+    public required string Label { get; init; }
+
+    public required string Value { get; init; }
+
+    public required string Detail { get; init; }
+
+    public string AccentHex { get; init; } = "#0F7BFF";
+}
+
+public sealed class VisualTrendCard
+{
+    public required string Title { get; init; }
+
+    public required string Value { get; init; }
+
+    public required string Detail { get; init; }
+
+    public double FillWidth { get; init; }
+
+    public string AccentHex { get; init; } = "#0F7BFF";
+}
+
 public sealed class DesktopConnectionSettings
 {
     public required string Environment { get; init; }

@@ -202,6 +202,13 @@
             <Setter Property="BorderBrush" Value="#264564" />
             <Setter Property="BorderThickness" Value="1" />
         </Style>
+        <Style Selector="Border.trendCard">
+            <Setter Property="CornerRadius" Value="20" />
+            <Setter Property="Padding" Value="18" />
+            <Setter Property="Background" Value="#0D1727" />
+            <Setter Property="BorderBrush" Value="#244668" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
         <Style Selector="TextBlock.eyebrow">
             <Setter Property="Foreground" Value="#67E8F9" />
             <Setter Property="FontWeight" Value="SemiBold" />
@@ -546,13 +553,35 @@
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
+                                    <TextBlock Classes="sectionTitle" Text="Workspace Signals" />
+                                    <ItemsControl ItemsSource="{Binding VisualTrendCards}" IsVisible="{Binding HasVisualTrendCards}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Horizontal" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
+                                        <ItemsControl.ItemTemplate>
+                                            <DataTemplate x:DataType="models:VisualTrendCard">
+                                                <Border Classes="trendCard" Width="260" Margin="0,0,14,14">
+                                                    <StackPanel Spacing="10">
+                                                        <TextBlock Text="{Binding Title}" Classes="eyebrow" />
+                                                        <TextBlock Text="{Binding Value}" FontSize="28" FontWeight="Bold" Foreground="White" />
+                                                        <TextBlock Text="{Binding Detail}" Classes="muted" TextWrapping="Wrap" />
+                                                        <Border Height="10" CornerRadius="999" Background="#12243A">
+                                                            <Border Width="{Binding FillWidth}" Height="10" CornerRadius="999" Background="{Binding AccentHex}" HorizontalAlignment="Left" />
+                                                        </Border>
+                                                    </StackPanel>
+                                                </Border>
+                                            </DataTemplate>
+                                        </ItemsControl.ItemTemplate>
+                                    </ItemsControl>
                                 </StackPanel>
                             </Border>
 
                             <Border Grid.Row="1" Classes="surface" IsVisible="{Binding IsCustomersSelected}">
                                 <StackPanel Spacing="16">
                                     <Border Classes="heroCard">
-                                        <Grid RowDefinitions="Auto,Auto,Auto" RowSpacing="16">
+                                        <Grid RowDefinitions="Auto,Auto,Auto,Auto" RowSpacing="16">
                                             <Grid ColumnDefinitions="1.5*,0.9*" ColumnSpacing="18">
                                                 <StackPanel Spacing="10">
                                                     <TextBlock Classes="eyebrow" Text="Selected Customer" />
@@ -671,6 +700,48 @@
                                                     </StackPanel>
                                                 </Border>
                                             </Grid>
+                                            <Border Grid.Row="3" Classes="heroCard" Margin="0,16,0,0">
+                                                <Grid ColumnDefinitions="1.2*,0.8*" ColumnSpacing="18">
+                                                    <StackPanel Spacing="10">
+                                                        <TextBlock Classes="eyebrow" Text="Tenant Detail" />
+                                                        <TextBlock Text="{Binding TenantDetailHeadline}" FontSize="24" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
+                                                        <TextBlock Text="{Binding TenantDetailNarrative}" Foreground="#D7E7FF" TextWrapping="Wrap" />
+                                                        <ItemsControl ItemsSource="{Binding TenantDetailMetrics}" IsVisible="{Binding HasTenantDetailMetrics}">
+                                                            <ItemsControl.ItemsPanel>
+                                                                <ItemsPanelTemplate>
+                                                                    <WrapPanel Orientation="Horizontal" />
+                                                                </ItemsPanelTemplate>
+                                                            </ItemsControl.ItemsPanel>
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate x:DataType="models:TenantDetailMetric">
+                                                                    <Border Classes="statTile" Margin="0,0,12,12">
+                                                                        <StackPanel Spacing="8">
+                                                                            <Border Height="5" CornerRadius="999" Background="{Binding AccentHex}" />
+                                                                            <TextBlock Text="{Binding Label}" Classes="eyebrow" />
+                                                                            <TextBlock Text="{Binding Value}" FontSize="20" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
+                                                                            <TextBlock Text="{Binding Detail}" Classes="muted" TextWrapping="Wrap" />
+                                                                        </StackPanel>
+                                                                    </Border>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </StackPanel>
+                                                    <Border Grid.Column="1" Classes="miniPanel">
+                                                        <StackPanel Spacing="10">
+                                                            <TextBlock Classes="eyebrow" Text="Tenant Route" />
+                                                            <TextBlock Text="Use this tenant-focused surface as the path into operations and reporting instead of jumping between disconnected actions." Foreground="White" TextWrapping="Wrap" />
+                                                            <Button Classes="secondaryAction"
+                                                                    Command="{Binding RunDashboardActionCommand}"
+                                                                    CommandParameter="Operations"
+                                                                    Content="Continue to Operations" />
+                                                            <Button Classes="primaryAction"
+                                                                    Command="{Binding RunDashboardActionCommand}"
+                                                                    CommandParameter="OpenReports"
+                                                                    Content="Open Report Center" />
+                                                        </StackPanel>
+                                                    </Border>
+                                                </Grid>
+                                            </Border>
                                         </Grid>
                                     </Border>
                                     <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">

@@ -134,6 +134,8 @@ public partial class MainWindowViewModel : ViewModelBase
         ReportInsightCards = new ObservableCollection<ReportInsightCard>();
         TenantActionCards = new ObservableCollection<DashboardActionCard>();
         OperationsLaneCards = new ObservableCollection<DashboardActionCard>();
+        TenantDetailMetrics = new ObservableCollection<TenantDetailMetric>();
+        VisualTrendCards = new ObservableCollection<VisualTrendCard>();
         DependencyChecks = new ObservableCollection<DependencyCheckItem>(_desktopClient.GetDependencyChecks());
         OnboardingSteps = new ObservableCollection<OnboardingStep>
         {
@@ -143,6 +145,7 @@ public partial class MainWindowViewModel : ViewModelBase
         };
 
         BuildOperationsLanes();
+        BuildVisualTrends();
         ApplyPreferences(_preferencesStore.Load());
         _splashTimer.Start();
     }
@@ -172,6 +175,10 @@ public partial class MainWindowViewModel : ViewModelBase
     public ObservableCollection<DashboardActionCard> TenantActionCards { get; }
 
     public ObservableCollection<DashboardActionCard> OperationsLaneCards { get; }
+
+    public ObservableCollection<TenantDetailMetric> TenantDetailMetrics { get; }
+
+    public ObservableCollection<VisualTrendCard> VisualTrendCards { get; }
 
     public ObservableCollection<DependencyCheckItem> DependencyChecks { get; }
 
@@ -214,6 +221,10 @@ public partial class MainWindowViewModel : ViewModelBase
     public bool HasTenantActionCards => TenantActionCards.Count > 0;
 
     public bool HasOperationsLaneCards => OperationsLaneCards.Count > 0;
+
+    public bool HasTenantDetailMetrics => TenantDetailMetrics.Count > 0;
+
+    public bool HasVisualTrendCards => VisualTrendCards.Count > 0;
 
     public bool IsConnected => ConnectionState == "Connected";
 
@@ -291,6 +302,14 @@ public partial class MainWindowViewModel : ViewModelBase
     public string TenantFocusNarrative => SelectedTenantWorkspaceCard is null
         ? "Choose a tenant card to turn the workspace into a focused operational surface."
         : $"The app is now centered on {SelectedTenantWorkspaceCard.Name}, so backup, baseline, and reporting actions can read like tenant workflows instead of disconnected API tasks.";
+
+    public string TenantDetailHeadline => SelectedTenantWorkspaceCard is null
+        ? "Tenant detail not selected"
+        : $"{SelectedTenantWorkspaceCard.Name} workspace detail";
+
+    public string TenantDetailNarrative => SelectedTenantWorkspaceCard is null
+        ? "Pick a tenant to show a richer operational context."
+        : $"This tenant detail surface gives the app a dedicated place to anchor next actions, metrics, and reporting follow-up for {SelectedTenantWorkspaceCard.Name}.";
 
     public string SummaryHeadline => CurrentCustomerSummary is null
         ? "No customer summary loaded yet."
@@ -427,6 +446,7 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         BuildReportInsights(value);
         BuildOperationsLanes();
+        BuildVisualTrends();
         OnPropertyChanged(nameof(HasCustomerSummary));
         OnPropertyChanged(nameof(HasReportInsights));
         OnPropertyChanged(nameof(ReportNarrativeHeadline));
@@ -445,12 +465,16 @@ public partial class MainWindowViewModel : ViewModelBase
 
         BuildTenantActionCards(value);
         BuildOperationsLanes();
+        BuildTenantDetailMetrics(value);
         OnPropertyChanged(nameof(HasSelectedTenantWorkspace));
         OnPropertyChanged(nameof(HasTenantActionCards));
+        OnPropertyChanged(nameof(HasTenantDetailMetrics));
         OnPropertyChanged(nameof(TenantFocusHeading));
         OnPropertyChanged(nameof(TenantFocusDetail));
         OnPropertyChanged(nameof(TenantFocusActionLabel));
         OnPropertyChanged(nameof(TenantFocusNarrative));
+        OnPropertyChanged(nameof(TenantDetailHeadline));
+        OnPropertyChanged(nameof(TenantDetailNarrative));
         OnPropertyChanged(nameof(ContextDetail));
     }
 
@@ -474,6 +498,7 @@ public partial class MainWindowViewModel : ViewModelBase
         SelectedCustomerStats.Clear();
         TenantWorkspaceCards.Clear();
         TenantActionCards.Clear();
+        TenantDetailMetrics.Clear();
         SelectedTenantWorkspaceCard = null;
 
         if (value is null) {
@@ -483,6 +508,7 @@ public partial class MainWindowViewModel : ViewModelBase
             OnPropertyChanged(nameof(HasTenantWorkspaceCards));
             OnPropertyChanged(nameof(HasNoTenantWorkspaceCards));
             OnPropertyChanged(nameof(HasTenantActionCards));
+            OnPropertyChanged(nameof(HasTenantDetailMetrics));
             OnPropertyChanged(nameof(SelectedCustomerHeading));
             OnPropertyChanged(nameof(SelectedCustomerMeta));
             OnPropertyChanged(nameof(SelectedCustomerStatus));
@@ -900,6 +926,43 @@ public partial class MainWindowViewModel : ViewModelBase
         });
     }
 
+    private void BuildTenantDetailMetrics(TenantWorkspaceCard? tenant)
+    {
+        TenantDetailMetrics.Clear();
+        if (tenant is null || SelectedCustomerRecord is null) {
+            return;
+        }
+
+        TenantDetailMetrics.Add(new TenantDetailMetric
+        {
+            Label = "Tenant Name",
+            Value = tenant.Name,
+            Detail = "Current tenant anchor inside the customer workspace.",
+            AccentHex = "#0F7BFF"
+        });
+        TenantDetailMetrics.Add(new TenantDetailMetric
+        {
+            Label = "Customer",
+            Value = SelectedCustomerRecord.Organization,
+            Detail = "Parent customer context for this tenant workspace.",
+            AccentHex = "#12B886"
+        });
+        TenantDetailMetrics.Add(new TenantDetailMetric
+        {
+            Label = "Region",
+            Value = SelectedCustomerRecord.CountryOrRegion,
+            Detail = "Country or region surfaced from the current customer context.",
+            AccentHex = "#FFB020"
+        });
+        TenantDetailMetrics.Add(new TenantDetailMetric
+        {
+            Label = "Management",
+            Value = SelectedCustomerRecord.ManagementModeName,
+            Detail = "Management posture inherited from the active customer record.",
+            AccentHex = "#7C5CFC"
+        });
+    }
+
     private void BuildReportInsights(CustomerSummaryResult? summary)
     {
         ReportInsightCards.Clear();
@@ -970,6 +1033,46 @@ public partial class MainWindowViewModel : ViewModelBase
             CommandLabel = "Open Risk",
             CommandParameter = "RiskSummary",
             AccentHex = "#7C5CFC"
+        });
+    }
+
+    private void BuildVisualTrends()
+    {
+        VisualTrendCards.Clear();
+
+        var tenantCount = CurrentCustomerSummary?.TenantCount ?? SelectedCustomerRecord?.TenantCount ?? 0;
+        var productCount = CurrentCustomerSummary?.ProductCount ?? 0;
+        var protectedObjects = CurrentCustomerSummary?.ProtectedObjectCount ?? 0;
+
+        VisualTrendCards.Add(new VisualTrendCard
+        {
+            Title = "Tenant Reach",
+            Value = tenantCount == 0 ? "Idle" : tenantCount.ToString(),
+            Detail = tenantCount == 0
+                ? "Load a customer to bring tenant coverage into the overview."
+                : "Tenant contexts available in the current customer scope.",
+            FillWidth = Math.Min(220, 40 + tenantCount * 24),
+            AccentHex = "#0F7BFF"
+        });
+        VisualTrendCards.Add(new VisualTrendCard
+        {
+            Title = "Service Depth",
+            Value = productCount == 0 ? "Awaiting summary" : productCount.ToString(),
+            Detail = productCount == 0
+                ? "Open a summary to shape service depth."
+                : "Products and services condensed into the overview workspace.",
+            FillWidth = Math.Min(220, 40 + productCount * 18),
+            AccentHex = "#12B886"
+        });
+        VisualTrendCards.Add(new VisualTrendCard
+        {
+            Title = "Protected Footprint",
+            Value = protectedObjects == 0 ? "Pending" : protectedObjects.ToString(),
+            Detail = protectedObjects == 0
+                ? "Protected object posture appears after summary generation."
+                : "Protected object coverage reflected in the reporting layer.",
+            FillWidth = Math.Min(220, 40 + Math.Min(protectedObjects, 10) * 18),
+            AccentHex = "#FFB020"
         });
     }
 
