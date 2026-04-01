@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.10.1] - 2026-04-01
+
+### Changed
+
+- Fixed crowded desktop layout issues in the main application window
+- Reworked the header actions, connection form layout, and readiness panel spacing for cleaner Windows rendering
+
 ## [0.10.0] - 2026-04-01
 
 ### Added

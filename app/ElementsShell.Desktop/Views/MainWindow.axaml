@@ -80,7 +80,7 @@
         </Style>
     </Window.Styles>
 
-    <Grid ColumnDefinitions="310,*" Margin="22">
+    <Grid ColumnDefinitions="340,*" Margin="22">
         <Border Classes="sidebarPanel" Margin="0,0,20,0">
             <Grid RowDefinitions="Auto,Auto,Auto,*,Auto">
                 <StackPanel Spacing="10">
@@ -137,13 +137,13 @@
 
         <Grid Grid.Column="1" RowDefinitions="Auto,Auto,*">
             <Border Classes="surface" Margin="0,0,0,20">
-                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="20">
+                <Grid RowDefinitions="Auto,Auto" RowSpacing="16">
                     <StackPanel Spacing="8">
                         <TextBlock Classes="pageTitle" Text="Operate Elements Like a Real Product" />
                         <TextBlock Text="{Binding OverviewHeadline}" TextWrapping="Wrap" FontSize="16" Classes="muted" />
                         <TextBlock Text="{Binding StatusMessage}" Foreground="#67E8F9" FontWeight="SemiBold" TextWrapping="Wrap" />
                     </StackPanel>
-                    <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Top">
+                    <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="12">
                         <Button Classes="secondaryAction" Command="{Binding DisconnectCommand}" Content="Disconnect" />
                         <Button Classes="primaryAction" Command="{Binding ConnectCommand}" Content="Connect Session" />
                     </StackPanel>
@@ -154,7 +154,7 @@
                 <Border Classes="surface">
                     <StackPanel Spacing="18">
                         <TextBlock Classes="sectionTitle" Text="Connection Workspace" />
-                        <Grid ColumnDefinitions="*,*" ColumnSpacing="14">
+                        <StackPanel Spacing="12">
                             <StackPanel Spacing="8">
                                 <TextBlock Text="Environment" FontWeight="SemiBold" Foreground="White" />
                                 <ComboBox SelectedItem="{Binding Environment}">
@@ -168,8 +168,6 @@
                                 <TextBlock Text="Tenant or Partner Label" FontWeight="SemiBold" Foreground="White" />
                                 <TextBox Text="{Binding TenantLabel}" Watermark="Contoso MSP" />
                             </StackPanel>
-                        </Grid>
-                        <Grid ColumnDefinitions="*,*" ColumnSpacing="14">
                             <StackPanel Spacing="8">
                                 <TextBlock Text="Client ID" FontWeight="SemiBold" Foreground="White" />
                                 <TextBox Text="{Binding ClientId}" Watermark="App registration client ID" />
@@ -178,7 +176,7 @@
                                 <TextBlock Text="Client Secret" FontWeight="SemiBold" Foreground="White" />
                                 <TextBox Text="{Binding ClientSecret}" PasswordChar="●" Watermark="Stored in memory only" />
                             </StackPanel>
-                        </Grid>
+                        </StackPanel>
                         <StackPanel Spacing="8">
                             <TextBlock Text="Scope Bundles" FontWeight="SemiBold" Foreground="White" />
                             <TextBox Text="{Binding SelectedBundleSummary}" AcceptsReturn="True" Height="70" TextWrapping="Wrap" IsReadOnly="True" />
@@ -338,10 +336,10 @@
                 <Grid Grid.Column="1" RowDefinitions="Auto,*" RowSpacing="20">
                     <Border Classes="surface">
                         <StackPanel Spacing="14">
-                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                            <StackPanel Spacing="10">
                                 <TextBlock Classes="sectionTitle" Text="Desktop Readiness" />
-                                <Button Classes="secondaryAction" Command="{Binding RefreshDependenciesCommand}" Content="Refresh" />
-                            </Grid>
+                                <Button Classes="secondaryAction" Command="{Binding RefreshDependenciesCommand}" Content="Refresh" HorizontalAlignment="Left" />
+                            </StackPanel>
                             <TextBlock Text="{Binding DependencySummary}" TextWrapping="Wrap" Classes="muted" />
                             <ItemsControl ItemsSource="{Binding DependencyChecks}">
                                 <ItemsControl.ItemTemplate>
