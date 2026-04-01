@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.11.6] - 2026-04-01
+
+### Fixed
+
+- Removed the duplicate WiX `WIXUI_INSTALLDIR` property that was breaking the Windows MSI packaging job
+- Restored the release pipeline path so tagged desktop releases can attach ZIP and MSI assets instead of only showing source archives
+
 ## [0.11.5] - 2026-04-01
 
 ### Changed

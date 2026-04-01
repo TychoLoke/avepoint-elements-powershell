@@ -14,7 +14,6 @@
     <Property Id="ARPPRODUCTICON" Value="ElementsShellIcon.ico" />
     <Property Id="ARPURLINFOABOUT" Value="https://github.com/TychoLoke/avepoint-elements-powershell" />
     <Property Id="ARPHELPLINK" Value="https://github.com/TychoLoke/avepoint-elements-powershell/releases" />
-    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
     <Property Id="WIXUI_EXITDIALOGOPTIONALTEXT" Value="Elements Shell Desktop is installed and ready to run." />
 
     <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
