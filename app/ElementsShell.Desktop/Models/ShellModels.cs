@@ -52,6 +52,15 @@ public sealed class DependencyCheckItem
     public required string Detail { get; init; }
 }
 
+public sealed class OnboardingStep
+{
+    public required string Number { get; init; }
+
+    public required string Title { get; init; }
+
+    public required string Detail { get; init; }
+}
+
 public sealed class DesktopConnectionSettings
 {
     public required string Environment { get; init; }

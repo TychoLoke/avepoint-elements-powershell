@@ -88,64 +88,80 @@
             <Setter Property="FontSize" Value="12" />
             <Setter Property="FontWeight" Value="SemiBold" />
         </Style>
+        <Style Selector="Border.glassPanel">
+            <Setter Property="CornerRadius" Value="30" />
+            <Setter Property="Background" Value="#E6101824" />
+            <Setter Property="BorderBrush" Value="#27405D" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="28" />
+        </Style>
+        <Style Selector="Border.stepCard">
+            <Setter Property="CornerRadius" Value="18" />
+            <Setter Property="Background" Value="#0C1828" />
+            <Setter Property="BorderBrush" Value="#213854" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="18" />
+        </Style>
     </Window.Styles>
 
-    <Grid ColumnDefinitions="340,*" Margin="22">
-        <Border Classes="sidebarPanel" Margin="0,0,20,0">
-            <Grid RowDefinitions="Auto,Auto,Auto,*,Auto">
-                <StackPanel Spacing="10">
-                    <Border CornerRadius="18" Padding="14" Background="#D7263D" Width="82">
-                        <TextBlock Text="ES" HorizontalAlignment="Center" FontSize="26" FontWeight="Bold" Foreground="White" />
-                    </Border>
-                    <StackPanel Spacing="4">
-                        <TextBlock Text="Elements Shell" FontSize="28" FontWeight="Bold" Foreground="White" />
-                        <TextBlock Text="Professional desktop workspace for AvePoint Elements operations." TextWrapping="Wrap" Classes="muted" />
-                    </StackPanel>
-                </StackPanel>
-
-                <Border Grid.Row="1" Margin="0,26,0,20" Padding="16" CornerRadius="18" Background="#12243B" BorderBrush="#244668" BorderThickness="1">
-                    <StackPanel Spacing="8">
-                        <TextBlock Text="Session" FontWeight="SemiBold" Foreground="White" />
-                        <TextBlock Text="{Binding ConnectionBadge}" Foreground="#67E8F9" FontWeight="Bold" />
-                        <TextBlock Text="{Binding Environment}" Foreground="#EEF4FF" />
-                        <TextBlock Text="{Binding TenantLabel}" Classes="muted" />
-                    </StackPanel>
-                </Border>
-
-                <StackPanel Grid.Row="2" Spacing="10">
-                    <ItemsControl ItemsSource="{Binding NavigationItems}">
-                        <ItemsControl.ItemTemplate>
-                            <DataTemplate x:DataType="models:NavigationItem">
-                                <Button Classes="nav"
-                                        Margin="0,0,0,10"
-                                        Command="{Binding $parent[Window].DataContext.SelectSectionCommand}"
-                                        CommandParameter="{Binding Title}">
-                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
-                                        <Border Width="44" Height="44" CornerRadius="14" Background="#0F7BFF">
-                                            <TextBlock Text="{Binding Glyph}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontWeight="Bold" />
-                                        </Border>
-                                        <StackPanel>
-                                            <TextBlock Text="{Binding Title}" Foreground="White" FontWeight="SemiBold" />
-                                            <TextBlock Text="{Binding Subtitle}" Classes="muted" />
-                                        </StackPanel>
-                                    </Grid>
-                                </Button>
-                            </DataTemplate>
-                        </ItemsControl.ItemTemplate>
-                    </ItemsControl>
-                </StackPanel>
-
-                <Border Grid.Row="4" Background="#0C1828" CornerRadius="18" Padding="18" BorderBrush="#213854" BorderThickness="1">
+    <Grid>
+        <Grid ColumnDefinitions="340,*" Margin="22">
+            <Border Classes="sidebarPanel" Margin="0,0,20,0">
+                <Grid RowDefinitions="Auto,Auto,Auto,*,Auto">
                     <StackPanel Spacing="10">
-                        <TextBlock Text="Operator" FontWeight="SemiBold" Foreground="White" />
-                        <TextBlock Text="{Binding OperatorName}" Foreground="#EEF4FF" />
-                        <TextBlock Text="The desktop app runs the embedded PowerShell module and keeps credentials in memory only." TextWrapping="Wrap" Classes="muted" />
+                        <Border CornerRadius="18" Padding="14" Background="#D7263D" Width="82">
+                            <TextBlock Text="ES" HorizontalAlignment="Center" FontSize="26" FontWeight="Bold" Foreground="White" />
+                        </Border>
+                        <StackPanel Spacing="4">
+                            <TextBlock Text="Elements Shell" FontSize="28" FontWeight="Bold" Foreground="White" />
+                            <TextBlock Text="Professional desktop workspace for AvePoint Elements operations." TextWrapping="Wrap" Classes="muted" />
+                        </StackPanel>
                     </StackPanel>
-                </Border>
-            </Grid>
-        </Border>
 
-        <Grid Grid.Column="1" RowDefinitions="Auto,Auto,*">
+                    <Border Grid.Row="1" Margin="0,26,0,20" Padding="16" CornerRadius="18" Background="#12243B" BorderBrush="#244668" BorderThickness="1">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Session" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="{Binding ConnectionBadge}" Foreground="#67E8F9" FontWeight="Bold" />
+                            <TextBlock Text="{Binding Environment}" Foreground="#EEF4FF" />
+                            <TextBlock Text="{Binding TenantLabel}" Classes="muted" />
+                            <Button Classes="secondaryAction" Command="{Binding StartOnboardingCommand}" Content="Open Onboarding" HorizontalAlignment="Left" />
+                        </StackPanel>
+                    </Border>
+
+                    <StackPanel Grid.Row="2" Spacing="10">
+                        <ItemsControl ItemsSource="{Binding NavigationItems}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="models:NavigationItem">
+                                    <Button Classes="nav"
+                                            Margin="0,0,0,10"
+                                            Command="{Binding $parent[Window].DataContext.SelectSectionCommand}"
+                                            CommandParameter="{Binding Title}">
+                                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                                            <Border Width="44" Height="44" CornerRadius="14" Background="#0F7BFF">
+                                                <TextBlock Text="{Binding Glyph}" HorizontalAlignment="Center" VerticalAlignment="Center" Foreground="White" FontWeight="Bold" />
+                                            </Border>
+                                            <StackPanel>
+                                                <TextBlock Text="{Binding Title}" Foreground="White" FontWeight="SemiBold" />
+                                                <TextBlock Text="{Binding Subtitle}" Classes="muted" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Button>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+
+                    <Border Grid.Row="4" Background="#0C1828" CornerRadius="18" Padding="18" BorderBrush="#213854" BorderThickness="1">
+                        <StackPanel Spacing="10">
+                            <TextBlock Text="Operator" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Text="{Binding OperatorName}" Foreground="#EEF4FF" />
+                            <TextBlock Text="The desktop app runs the embedded PowerShell module and keeps credentials in memory only." TextWrapping="Wrap" Classes="muted" />
+                        </StackPanel>
+                    </Border>
+                </Grid>
+            </Border>
+
+            <Grid Grid.Column="1" RowDefinitions="Auto,Auto,*">
             <Border Classes="surface" Margin="0,0,0,20">
                 <Grid RowDefinitions="Auto,Auto" RowSpacing="16">
                     <StackPanel Spacing="8">
@@ -416,6 +432,93 @@
                     </Border>
                 </Grid>
             </Grid>
+            </Grid>
         </Grid>
+
+        <Border IsVisible="{Binding IsBusy}"
+            Background="#AA050A12"
+            ZIndex="100">
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="420">
+                <Border Classes="glassPanel">
+                    <StackPanel Spacing="18">
+                        <TextBlock Text="{Binding BusyTitle}" FontSize="26" FontWeight="Bold" Foreground="White" />
+                        <TextBlock Text="{Binding BusyDetail}" TextWrapping="Wrap" Classes="muted" />
+                        <ProgressBar IsIndeterminate="True" Height="10" />
+                        <TextBlock Text="Please wait while the desktop workspace completes the current action." Classes="muted" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
+        <Border IsVisible="{Binding IsOnboardingVisible}"
+            Background="#D9050A12"
+            ZIndex="90">
+            <Grid Margin="36">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="1.15*" />
+                    <ColumnDefinition Width="0.85*" />
+                </Grid.ColumnDefinitions>
+
+                <Border Classes="glassPanel" Margin="0,0,18,0">
+                    <StackPanel Spacing="18">
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Welcome to Elements Shell Desktop" FontSize="36" FontWeight="Bold" Foreground="White" />
+                            <TextBlock Text="{Binding WelcomeHeadline}" FontSize="17" Foreground="#CFE3FF" />
+                            <TextBlock Text="{Binding WelcomeDetail}" Classes="muted" TextWrapping="Wrap" />
+                        </StackPanel>
+
+                        <ItemsControl ItemsSource="{Binding OnboardingSteps}">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate x:DataType="models:OnboardingStep">
+                                    <Border Classes="stepCard" Margin="0,0,0,12">
+                                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
+                                            <Border Width="52" Height="52" CornerRadius="16" Background="#0F7BFF">
+                                                <TextBlock Text="{Binding Number}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" />
+                                            </Border>
+                                            <StackPanel Spacing="4">
+                                                <TextBlock Text="{Binding Title}" FontSize="18" FontWeight="SemiBold" Foreground="White" />
+                                                <TextBlock Text="{Binding Detail}" TextWrapping="Wrap" Classes="muted" />
+                                            </StackPanel>
+                                        </Grid>
+                                    </Border>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Button Classes="primaryAction" Command="{Binding DismissOnboardingCommand}" Content="Start Working" />
+                            <Button Classes="secondaryAction" Command="{Binding RefreshDependenciesCommand}" Content="Check Readiness" />
+                        </StackPanel>
+                    </StackPanel>
+                </Border>
+
+                <Border Grid.Column="1" Classes="glassPanel">
+                    <StackPanel Spacing="16">
+                        <TextBlock Text="Why this feels different" FontSize="24" FontWeight="Bold" Foreground="White" />
+                        <TextBlock Text="The desktop app gives you a calm entry point into the platform: fewer raw identifiers, clearer workflow transitions, and shaped output around operator intent." TextWrapping="Wrap" Classes="muted" />
+
+                        <Border Classes="stepCard">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Product principles" FontWeight="SemiBold" Foreground="White" />
+                                <TextBlock Text="Clean and simple" Foreground="#CFE3FF" />
+                                <TextBlock Text="Bundle-aware and secure" Foreground="#CFE3FF" />
+                                <TextBlock Text="Operational, not documentation-driven" Foreground="#CFE3FF" />
+                                <TextBlock Text="Installer-ready and desktop-native" Foreground="#CFE3FF" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Classes="stepCard">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Current highlights" FontWeight="SemiBold" Foreground="White" />
+                                <TextBlock Text="Hosted PowerShell engine" Classes="muted" />
+                                <TextBlock Text="Desktop readiness checks" Classes="muted" />
+                                <TextBlock Text="Live customer and summary flows" Classes="muted" />
+                                <TextBlock Text="MSI packaging path" Classes="muted" />
+                            </StackPanel>
+                        </Border>
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
     </Grid>
 </Window>

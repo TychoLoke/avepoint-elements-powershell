@@ -53,6 +53,15 @@ public partial class MainWindowViewModel : ViewModelBase
     private bool _isBusy;
 
     [ObservableProperty]
+    private bool _isOnboardingVisible = true;
+
+    [ObservableProperty]
+    private string _busyTitle = "Working";
+
+    [ObservableProperty]
+    private string _busyDetail = "Preparing your Elements workspace.";
+
+    [ObservableProperty]
     private CustomerRecord? _selectedCustomerRecord;
 
     [ObservableProperty]
@@ -91,6 +100,12 @@ public partial class MainWindowViewModel : ViewModelBase
 
         Customers = new ObservableCollection<CustomerRecord>();
         DependencyChecks = new ObservableCollection<DependencyCheckItem>(_desktopClient.GetDependencyChecks());
+        OnboardingSteps = new ObservableCollection<OnboardingStep>
+        {
+            new() { Number = "01", Title = "Set context", Detail = "Choose your environment and partner label so the app knows where to operate." },
+            new() { Number = "02", Title = "Connect once", Detail = "Enter your client ID and secret, then initialize the bundle-aware session." },
+            new() { Number = "03", Title = "Work from live data", Detail = "Load customers, pick a tenant context, and open shaped summaries instead of raw API output." }
+        };
     }
 
     public ObservableCollection<NavigationItem> NavigationItems { get; }
@@ -104,6 +119,8 @@ public partial class MainWindowViewModel : ViewModelBase
     public ObservableCollection<CustomerRecord> Customers { get; }
 
     public ObservableCollection<DependencyCheckItem> DependencyChecks { get; }
+
+    public ObservableCollection<OnboardingStep> OnboardingSteps { get; }
 
     public bool IsOverviewSelected => SelectedSection == "Overview";
 
@@ -138,6 +155,10 @@ public partial class MainWindowViewModel : ViewModelBase
     public string DependencySummary =>
         string.Join("  •  ", DependencyChecks.Select(item => $"{item.Name}: {item.Status}"));
 
+    public string WelcomeHeadline => "A modern desktop workspace for AvePoint Elements operations.";
+
+    public string WelcomeDetail => "Designed to feel like an application layer, not a pile of cmdlets and copied IDs.";
+
     partial void OnSelectedSectionChanged(string value)
     {
         OnPropertyChanged(nameof(IsOverviewSelected));
@@ -150,6 +171,10 @@ public partial class MainWindowViewModel : ViewModelBase
     {
         OnPropertyChanged(nameof(ConnectionBadge));
         OnPropertyChanged(nameof(WindowTitle));
+
+        if (value == "Connected") {
+            IsOnboardingVisible = false;
+        }
     }
 
     partial void OnCurrentCustomerSummaryChanged(CustomerSummaryResult? value)
@@ -191,6 +216,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
         await RunBusyAsync(async () =>
         {
+            BusyTitle = "Connecting to Elements";
+            BusyDetail = "Initializing secure bundle-aware session and validating the desktop runtime.";
             var result = await _desktopClient.ConnectAsync(BuildConnectionSettings());
             ConnectionState = "Connected";
             SelectedBundleSummary = string.Join(", ", result.ScopeBundle);
@@ -260,6 +287,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
         await RunBusyAsync(async () =>
         {
+            BusyTitle = "Loading customers";
+            BusyDetail = "Pulling live customer context into the desktop workspace.";
             var customers = await _desktopClient.GetCustomersAsync(BuildConnectionSettings());
             Customers.Clear();
             foreach (var customer in customers.OrderBy(item => item.Organization)) {
@@ -293,6 +322,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
         await RunBusyAsync(async () =>
         {
+            BusyTitle = "Building customer summary";
+            BusyDetail = "Collecting service and backup insight for the selected customer.";
             CurrentCustomerSummary = await _desktopClient.GetCustomerSummaryAsync(BuildConnectionSettings(), target.Id);
             SelectedSection = "Reports";
             StatusMessage = $"Loaded live customer summary for {target.Organization}.";
@@ -332,6 +363,21 @@ public partial class MainWindowViewModel : ViewModelBase
         StatusMessage = "Dependency checks refreshed for the desktop app.";
         OnPropertyChanged(nameof(HasDependencyChecks));
         OnPropertyChanged(nameof(DependencySummary));
+    }
+
+    [RelayCommand]
+    private void DismissOnboarding()
+    {
+        IsOnboardingVisible = false;
+        StatusMessage = "Welcome dismissed. The desktop workspace is ready.";
+    }
+
+    [RelayCommand]
+    private void StartOnboarding()
+    {
+        IsOnboardingVisible = true;
+        SelectedSection = "Overview";
+        StatusMessage = "Follow the onboarding steps to start a clean desktop session.";
     }
 
     private DesktopConnectionSettings BuildConnectionSettings()

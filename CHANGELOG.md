@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.11.2] - 2026-04-01
+
+### Changed
+
+- Added a welcome-style onboarding overlay to the desktop app
+- Added a centered loading overlay with progress feedback for live actions
+- Simplified the visual hierarchy so the desktop experience feels cleaner and more modern
+
 ## [0.11.1] - 2026-04-01
 
 ### Changed

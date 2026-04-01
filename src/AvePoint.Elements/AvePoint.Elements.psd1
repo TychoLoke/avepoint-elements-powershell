@@ -1,6 +1,6 @@
 @{
     RootModule           = 'AvePoint.Elements.psm1'
-    ModuleVersion        = '0.11.1'
+    ModuleVersion        = '0.11.2'
     GUID                 = '7fbe5f68-bb17-4a67-81d5-8ad3884d783f'
     Author               = 'Tycho Loke'
     CompanyName          = 'Open Source'
@@ -52,7 +52,7 @@
             Tags         = @('AvePoint', 'Elements', 'MSP', 'Automation', 'PowerShell')
             ProjectUri   = 'https://github.com/TychoLoke/avepoint-elements-powershell'
             LicenseUri   = 'https://github.com/TychoLoke/avepoint-elements-powershell/blob/main/LICENSE'
-            ReleaseNotes = 'Fix release asset publishing for desktop ZIP and MSI packages while keeping the new installer and UI improvements.'
+            ReleaseNotes = 'Add a cleaner onboarding layer, loading overlay, and calmer modern visual flow to the desktop app.'
         }
     }
 }
