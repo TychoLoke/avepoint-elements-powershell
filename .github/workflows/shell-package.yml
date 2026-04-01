@@ -64,7 +64,7 @@ jobs:
           GH_TOKEN: ${{ github.token }}
         run: |
           $tag = $env:GITHUB_REF_NAME
-          $files = @(
+          $patterns = @(
             'dist/ElementsShell.exe'
             'dist/ElementsShell-win-x64-*.zip'
             'dist/ElementsShell-*-sha256.txt'
@@ -77,10 +77,21 @@ jobs:
             'dist/installer/*-msi-sha256.txt'
           )
 
+          $files = foreach ($pattern in $patterns) {
+            Get-ChildItem -Path $pattern -File -ErrorAction SilentlyContinue | Select-Object -ExpandProperty FullName
+          }
+
+          if (-not $files) {
+            throw 'No release assets were found to publish.'
+          }
+
           $existing = gh release view $tag --json tagName --jq .tagName 2>$null
           if ($LASTEXITCODE -ne 0 -or -not $existing) {
-            gh release create $tag $files --title $tag --generate-notes
+            gh release create $tag --title $tag --generate-notes
           }
-          else {
-            gh release upload $tag $files --clobber
+
+          foreach ($file in $files) {
+            $name = Split-Path $file -Leaf
+            gh release delete-asset $tag $name --yes 2>$null | Out-Null
+            gh release upload $tag $file
           }

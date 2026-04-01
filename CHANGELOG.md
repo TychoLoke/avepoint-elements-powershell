@@ -4,6 +4,13 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.11.1] - 2026-04-01
+
+### Changed
+
+- Fixed the GitHub release asset publishing step so desktop ZIP and MSI assets are uploaded reliably
+- Kept the MSI packaging and desktop UI improvements from `0.11.0` while correcting the release workflow
+
 ## [0.11.0] - 2026-04-01
 
 ### Added
