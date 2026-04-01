@@ -61,6 +61,23 @@ public sealed class OnboardingStep
     public required string Detail { get; init; }
 }
 
+public sealed class RecentCustomerItem
+{
+    public string CustomerId { get; init; } = string.Empty;
+
+    public string Organization { get; init; } = string.Empty;
+
+    public string OwnerEmail { get; init; } = string.Empty;
+
+    public string TenantNames { get; init; } = string.Empty;
+
+    public int TenantCount { get; init; }
+
+    public string ManagementModeName { get; init; } = string.Empty;
+
+    public string LastAccessedLabel { get; init; } = string.Empty;
+}
+
 public sealed class DesktopConnectionSettings
 {
     public required string Environment { get; init; }

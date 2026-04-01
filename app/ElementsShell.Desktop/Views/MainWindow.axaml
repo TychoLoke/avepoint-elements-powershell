@@ -102,6 +102,27 @@
             <Setter Property="BorderThickness" Value="1" />
             <Setter Property="Padding" Value="18" />
         </Style>
+        <Style Selector="Border.heroCard">
+            <Setter Property="CornerRadius" Value="28" />
+            <Setter Property="BorderBrush" Value="#30557E" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="26" />
+            <Setter Property="Background">
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#122945" Offset="0" />
+                    <GradientStop Color="#0C1828" Offset="0.65" />
+                    <GradientStop Color="#12111A" Offset="1" />
+                </LinearGradientBrush>
+            </Setter>
+        </Style>
+        <Style Selector="Border.recentCard">
+            <Setter Property="CornerRadius" Value="18" />
+            <Setter Property="Background" Value="#0C1828" />
+            <Setter Property="BorderBrush" Value="#213854" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="MinWidth" Value="220" />
+        </Style>
     </Window.Styles>
 
     <Grid>
@@ -249,7 +270,7 @@
             </Grid>
 
             <Grid Grid.Row="2" ColumnDefinitions="1.45*,1*" ColumnSpacing="20">
-                <Grid RowDefinitions="Auto,Auto,*">
+                <Grid RowDefinitions="Auto,Auto,Auto,*">
                     <Border Classes="surface" Margin="0,0,0,20">
                         <StackPanel Spacing="18">
                             <StackPanel Spacing="4">
@@ -278,7 +299,53 @@
                         </StackPanel>
                     </Border>
 
-                    <Border Grid.Row="1" Classes="surface" Margin="0,0,0,20" IsVisible="{Binding IsOverviewSelected}">
+                    <Border Grid.Row="1" Classes="surface" Margin="0,0,0,20">
+                        <StackPanel Spacing="16">
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                                <StackPanel Spacing="4">
+                                    <TextBlock Classes="sectionTitle" Text="Recent Customer Context" />
+                                    <TextBlock Text="Jump back into live customer work without hunting for IDs again." Classes="muted" TextWrapping="Wrap" />
+                                </StackPanel>
+                                <Button Classes="secondaryAction" Command="{Binding LoadCustomersCommand}" Content="Refresh Live List" />
+                            </Grid>
+                            <TextBlock Text="No recent customer context yet. Select a customer or load a summary to pin it here." IsVisible="{Binding HasNoRecentCustomers}" Classes="muted" />
+                            <ScrollViewer HorizontalScrollBarVisibility="Auto"
+                                          VerticalScrollBarVisibility="Disabled"
+                                          IsVisible="{Binding HasRecentCustomers}">
+                                <ItemsControl ItemsSource="{Binding RecentCustomers}">
+                                    <ItemsControl.ItemsPanel>
+                                        <ItemsPanelTemplate>
+                                            <StackPanel Orientation="Horizontal" Spacing="12" />
+                                        </ItemsPanelTemplate>
+                                    </ItemsControl.ItemsPanel>
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="models:RecentCustomerItem">
+                                            <Border Classes="recentCard" Margin="0,0,12,0">
+                                                <StackPanel Spacing="8">
+                                                    <TextBlock Text="{Binding Organization}" FontSize="18" FontWeight="SemiBold" Foreground="White" />
+                                                    <TextBlock Text="{Binding OwnerEmail}" Foreground="#D7E7FF" />
+                                                    <TextBlock Text="{Binding TenantNames}" TextWrapping="Wrap" Classes="muted" MaxWidth="260" />
+                                                    <Grid ColumnDefinitions="Auto,*" ColumnSpacing="10">
+                                                        <Border Classes="badge">
+                                                            <TextBlock Classes="badgeText" Text="{Binding TenantCount}" />
+                                                        </Border>
+                                                        <TextBlock Text="{Binding LastAccessedLabel}" Classes="muted" VerticalAlignment="Center" />
+                                                    </Grid>
+                                                    <Button Classes="secondaryAction"
+                                                            Command="{Binding $parent[Window].DataContext.SelectRecentCustomerCommand}"
+                                                            CommandParameter="{Binding .}"
+                                                            Content="Open Context"
+                                                            HorizontalAlignment="Left" />
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
+                        </StackPanel>
+                    </Border>
+
+                    <Border Grid.Row="2" Classes="surface" Margin="0,0,0,20" IsVisible="{Binding IsOverviewSelected}">
                         <StackPanel Spacing="16">
                             <TextBlock Classes="sectionTitle" Text="Quick Start Workflows" />
                             <ItemsControl ItemsSource="{Binding WorkflowItems}">
@@ -304,7 +371,7 @@
                         </StackPanel>
                     </Border>
 
-                    <Border Grid.Row="2" Classes="surface" IsVisible="{Binding IsCustomersSelected}">
+                    <Border Grid.Row="3" Classes="surface" IsVisible="{Binding IsCustomersSelected}">
                         <StackPanel Spacing="16">
                             <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
                                 <TextBox Text="{Binding SearchText}" Watermark="Search loaded customers by org, email, or tenant" />
@@ -342,7 +409,7 @@
                         </StackPanel>
                     </Border>
 
-                    <Border Grid.Row="2" Classes="surface" IsVisible="{Binding IsOperationsSelected}">
+                    <Border Grid.Row="3" Classes="surface" IsVisible="{Binding IsOperationsSelected}">
                         <StackPanel Spacing="16">
                             <TextBlock Classes="sectionTitle" Text="Operations Workspace" />
                             <TextBlock Text="This desktop layer is now wired for live module execution. Customer workflows are active first, with broader backup, baseline, and risk workflows next." TextWrapping="Wrap" Classes="muted" />
@@ -353,7 +420,7 @@
                         </StackPanel>
                     </Border>
 
-                    <Border Grid.Row="2" Classes="surface" IsVisible="{Binding IsReportsSelected}">
+                    <Border Grid.Row="3" Classes="surface" IsVisible="{Binding IsReportsSelected}">
                         <StackPanel Spacing="16">
                             <TextBlock Classes="sectionTitle" Text="Customer Summary" />
                             <TextBlock Text="{Binding SummaryHeadline}" FontSize="20" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
@@ -479,7 +546,7 @@
                     <ColumnDefinition Width="0.85*" />
                 </Grid.ColumnDefinitions>
 
-                <Border Classes="glassPanel" Margin="0,0,18,0">
+                <Border Classes="heroCard" Margin="0,0,18,0">
                     <StackPanel Spacing="18">
                         <StackPanel Spacing="8">
                             <TextBlock Text="Welcome to Elements Shell Desktop" FontSize="36" FontWeight="Bold" Foreground="White" />
@@ -487,26 +554,42 @@
                             <TextBlock Text="{Binding WelcomeDetail}" Classes="muted" TextWrapping="Wrap" />
                         </StackPanel>
 
+                        <Border Classes="stepCard">
+                            <StackPanel Spacing="14">
+                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                    <TextBlock Text="{Binding OnboardingProgressLabel}" Foreground="#67E8F9" FontWeight="SemiBold" />
+                                    <TextBlock Text="{Binding CurrentOnboardingStep.Number}" Foreground="#8CA4BF" />
+                                </Grid>
+                                <ProgressBar Value="{Binding OnboardingProgressValue}" Maximum="100" Height="8" />
+                                <TextBlock Text="{Binding CurrentOnboardingStep.Title}" FontSize="24" FontWeight="SemiBold" Foreground="White" />
+                                <TextBlock Text="{Binding CurrentOnboardingStep.Detail}" TextWrapping="Wrap" Classes="muted" />
+                            </StackPanel>
+                        </Border>
+
                         <ItemsControl ItemsSource="{Binding OnboardingSteps}">
+                            <ItemsControl.ItemsPanel>
+                                <ItemsPanelTemplate>
+                                    <StackPanel Orientation="Horizontal" Spacing="12" />
+                                </ItemsPanelTemplate>
+                            </ItemsControl.ItemsPanel>
                             <ItemsControl.ItemTemplate>
                                 <DataTemplate x:DataType="models:OnboardingStep">
-                                    <Border Classes="stepCard" Margin="0,0,0,12">
-                                        <Grid ColumnDefinitions="Auto,*" ColumnSpacing="16">
-                                            <Border Width="52" Height="52" CornerRadius="16" Background="#0F7BFF">
+                                    <Border Classes="stepCard" Width="180">
+                                        <StackPanel Spacing="8">
+                                            <Border Width="42" Height="42" CornerRadius="14" Background="#0F7BFF">
                                                 <TextBlock Text="{Binding Number}" HorizontalAlignment="Center" VerticalAlignment="Center" FontWeight="Bold" Foreground="White" />
                                             </Border>
-                                            <StackPanel Spacing="4">
-                                                <TextBlock Text="{Binding Title}" FontSize="18" FontWeight="SemiBold" Foreground="White" />
-                                                <TextBlock Text="{Binding Detail}" TextWrapping="Wrap" Classes="muted" />
-                                            </StackPanel>
-                                        </Grid>
+                                            <TextBlock Text="{Binding Title}" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
+                                            <TextBlock Text="{Binding Detail}" Classes="muted" TextWrapping="Wrap" MaxHeight="72" />
+                                        </StackPanel>
                                     </Border>
                                 </DataTemplate>
                             </ItemsControl.ItemTemplate>
                         </ItemsControl>
 
                         <StackPanel Orientation="Horizontal" Spacing="12">
-                            <Button Classes="primaryAction" Command="{Binding DismissOnboardingCommand}" Content="Start Working" />
+                            <Button Classes="primaryAction" Command="{Binding AdvanceOnboardingCommand}" Content="{Binding OnboardingPrimaryActionLabel}" />
+                            <Button Classes="secondaryAction" Command="{Binding RewindOnboardingCommand}" Content="{Binding OnboardingSecondaryActionLabel}" />
                             <Button Classes="secondaryAction" Command="{Binding RefreshDependenciesCommand}" Content="Check Readiness" />
                         </StackPanel>
                     </StackPanel>
@@ -515,7 +598,7 @@
                 <Border Grid.Column="1" Classes="glassPanel">
                     <StackPanel Spacing="16">
                         <TextBlock Text="Why this feels different" FontSize="24" FontWeight="Bold" Foreground="White" />
-                        <TextBlock Text="The desktop app gives you a calm entry point into the platform: fewer raw identifiers, clearer workflow transitions, and shaped output around operator intent." TextWrapping="Wrap" Classes="muted" />
+                        <TextBlock Text="The desktop app gives you a calmer entry point into the platform: fewer raw identifiers, clearer workflow transitions, and shaped output around operator intent." TextWrapping="Wrap" Classes="muted" />
 
                         <Border Classes="stepCard">
                             <StackPanel Spacing="8">

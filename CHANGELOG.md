@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.11.4] - 2026-04-01
+
+### Changed
+
+- Reworked desktop onboarding into a clearer step-based flow with progress, back/continue actions, and a more product-like hero layout
+- Added saved recent-customer context so operators can reopen live customer workflows without copying identifiers again
+- Kept the modern desktop shell direction while making the app feel less stateless between sessions
+
 ## [0.11.3] - 2026-04-01
 
 ### Changed

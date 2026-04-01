@@ -63,6 +63,9 @@ public partial class MainWindowViewModel : ViewModelBase
     private bool _isSplashVisible = true;
 
     [ObservableProperty]
+    private int _onboardingStepIndex;
+
+    [ObservableProperty]
     private string _busyTitle = "Working";
 
     [ObservableProperty]
@@ -112,6 +115,7 @@ public partial class MainWindowViewModel : ViewModelBase
         };
 
         Customers = new ObservableCollection<CustomerRecord>();
+        RecentCustomers = new ObservableCollection<RecentCustomerItem>();
         DependencyChecks = new ObservableCollection<DependencyCheckItem>(_desktopClient.GetDependencyChecks());
         OnboardingSteps = new ObservableCollection<OnboardingStep>
         {
@@ -134,6 +138,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public ObservableCollection<CustomerRecord> Customers { get; }
 
+    public ObservableCollection<RecentCustomerItem> RecentCustomers { get; }
+
     public ObservableCollection<DependencyCheckItem> DependencyChecks { get; }
 
     public ObservableCollection<OnboardingStep> OnboardingSteps { get; }
@@ -154,6 +160,10 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public bool HasDependencyChecks => DependencyChecks.Count > 0;
 
+    public bool HasRecentCustomers => RecentCustomers.Count > 0;
+
+    public bool HasNoRecentCustomers => RecentCustomers.Count == 0;
+
     public string ConnectionBadge => ConnectionState == "Connected" ? "SESSION READY" : "NOT CONNECTED";
 
     public string WindowTitle => $"Elements Shell Desktop  {ConnectionBadge}";
@@ -173,9 +183,23 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public string WelcomeHeadline => "A modern desktop workspace for AvePoint Elements operations.";
 
-    public string WelcomeDetail => "Designed to feel like an application layer, not a pile of cmdlets and copied IDs.";
+    public string WelcomeDetail => "Designed to feel like an application layer, not a pile of cmdlets, copied IDs, and manual API plumbing.";
 
     public string SplashMessage => "Loading a calmer, more modern operator workspace.";
+
+    public OnboardingStep CurrentOnboardingStep => OnboardingSteps[Math.Clamp(OnboardingStepIndex, 0, OnboardingSteps.Count - 1)];
+
+    public string OnboardingProgressLabel => $"Step {OnboardingStepIndex + 1} of {OnboardingSteps.Count}";
+
+    public double OnboardingProgressValue => ((double)(OnboardingStepIndex + 1) / OnboardingSteps.Count) * 100;
+
+    public bool CanMoveToPreviousOnboardingStep => OnboardingStepIndex > 0;
+
+    public bool IsOnFinalOnboardingStep => OnboardingStepIndex >= OnboardingSteps.Count - 1;
+
+    public string OnboardingPrimaryActionLabel => IsOnFinalOnboardingStep ? "Enter Workspace" : "Continue";
+
+    public string OnboardingSecondaryActionLabel => CanMoveToPreviousOnboardingStep ? "Back" : "Skip";
 
     partial void OnSelectedSectionChanged(string value)
     {
@@ -222,6 +246,18 @@ public partial class MainWindowViewModel : ViewModelBase
         OnPropertyChanged(nameof(SummaryDetail));
     }
 
+    partial void OnOnboardingStepIndexChanged(int value)
+    {
+        OnPropertyChanged(nameof(CurrentOnboardingStep));
+        OnPropertyChanged(nameof(OnboardingProgressLabel));
+        OnPropertyChanged(nameof(OnboardingProgressValue));
+        OnPropertyChanged(nameof(CanMoveToPreviousOnboardingStep));
+        OnPropertyChanged(nameof(IsOnFinalOnboardingStep));
+        OnPropertyChanged(nameof(OnboardingPrimaryActionLabel));
+        OnPropertyChanged(nameof(OnboardingSecondaryActionLabel));
+        SavePreferences();
+    }
+
     partial void OnSelectedCustomerRecordChanged(CustomerRecord? value)
     {
         if (value is null) {
@@ -261,6 +297,9 @@ public partial class MainWindowViewModel : ViewModelBase
             SelectedBundleSummary = string.Join(", ", result.ScopeBundle);
             StatusMessage = $"Connected to {result.Environment} with {result.ScopeBundle.Count} scope bundles.";
             AddActivity("Connected to AvePoint Elements", $"Desktop session initialized for {result.Environment}.", "Connected");
+            if (OnboardingStepIndex < 1) {
+                OnboardingStepIndex = 1;
+            }
         });
     }
 
@@ -338,6 +377,9 @@ public partial class MainWindowViewModel : ViewModelBase
             AddActivity("Customer list refreshed", $"Loaded {Customers.Count} customers from the module.", "Customers");
             OnPropertyChanged(nameof(HasCustomers));
             OnPropertyChanged(nameof(HasNoCustomers));
+            if (OnboardingStepIndex < 2 && Customers.Count > 0) {
+                OnboardingStepIndex = 2;
+            }
         });
     }
 
@@ -363,6 +405,7 @@ public partial class MainWindowViewModel : ViewModelBase
             BusyTitle = "Building customer summary";
             BusyDetail = "Collecting service and backup insight for the selected customer.";
             CurrentCustomerSummary = await _desktopClient.GetCustomerSummaryAsync(BuildConnectionSettings(), target.Id);
+            SaveRecentCustomer(target);
             SelectedSection = "Reports";
             StatusMessage = $"Loaded live customer summary for {target.Organization}.";
             AddActivity("Customer summary generated", $"Loaded summary metrics for {target.Organization}.", "Summary");
@@ -377,6 +420,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
 
         SelectedCustomerRecord = customer;
+        SaveRecentCustomer(customer);
         SelectedSection = "Customers";
         StatusMessage = $"Customer context selected: {customer.Organization}";
     }
@@ -414,8 +458,64 @@ public partial class MainWindowViewModel : ViewModelBase
     private void StartOnboarding()
     {
         IsOnboardingVisible = true;
+        if (OnboardingStepIndex >= OnboardingSteps.Count) {
+            OnboardingStepIndex = 0;
+        }
         SelectedSection = "Overview";
         StatusMessage = "Follow the onboarding steps to start a clean desktop session.";
+    }
+
+    [RelayCommand]
+    private void AdvanceOnboarding()
+    {
+        if (IsOnFinalOnboardingStep) {
+            DismissOnboarding();
+            return;
+        }
+
+        OnboardingStepIndex = Math.Min(OnboardingStepIndex + 1, OnboardingSteps.Count - 1);
+        StatusMessage = CurrentOnboardingStep.Detail;
+    }
+
+    [RelayCommand]
+    private void RewindOnboarding()
+    {
+        if (!CanMoveToPreviousOnboardingStep) {
+            DismissOnboarding();
+            return;
+        }
+
+        OnboardingStepIndex = Math.Max(OnboardingStepIndex - 1, 0);
+        StatusMessage = CurrentOnboardingStep.Detail;
+    }
+
+    [RelayCommand]
+    private void SelectRecentCustomer(RecentCustomerItem? customer)
+    {
+        if (customer is null) {
+            return;
+        }
+
+        var match = Customers.FirstOrDefault(item => item.Id == customer.CustomerId);
+        if (match is not null) {
+            SelectedCustomerRecord = match;
+        }
+        else
+        {
+            SelectedCustomerRecord = new CustomerRecord
+            {
+                Id = customer.CustomerId,
+                Organization = customer.Organization,
+                OwnerEmail = customer.OwnerEmail,
+                TenantNames = customer.TenantNames,
+                TenantCount = customer.TenantCount,
+                ManagementModeName = customer.ManagementModeName
+            };
+        }
+
+        SelectedSection = "Customers";
+        StatusMessage = $"Restored recent customer context for {customer.Organization}.";
+        AddActivity("Recent customer restored", $"Prepared context for {customer.Organization}.", "Recent");
     }
 
     private DesktopConnectionSettings BuildConnectionSettings()
@@ -475,11 +575,29 @@ public partial class MainWindowViewModel : ViewModelBase
             TenantLabel = preferences.TenantLabel;
             OperatorName = preferences.OperatorName;
             IsOnboardingVisible = !preferences.OnboardingDismissed;
+            OnboardingStepIndex = Math.Clamp(preferences.OnboardingStepIndex, 0, OnboardingSteps.Count - 1);
+            RecentCustomers.Clear();
+            foreach (var customer in preferences.RecentCustomers.Take(6))
+            {
+                RecentCustomers.Add(new RecentCustomerItem
+                {
+                    CustomerId = customer.CustomerId,
+                    Organization = customer.Organization,
+                    OwnerEmail = customer.OwnerEmail,
+                    TenantNames = customer.TenantNames,
+                    TenantCount = customer.TenantCount,
+                    ManagementModeName = customer.ManagementModeName,
+                    LastAccessedLabel = customer.LastAccessedLabel
+                });
+            }
         }
         finally
         {
             _isApplyingPreferences = false;
         }
+
+        OnPropertyChanged(nameof(HasRecentCustomers));
+        OnPropertyChanged(nameof(HasNoRecentCustomers));
     }
 
     private void SavePreferences()
@@ -494,8 +612,47 @@ public partial class MainWindowViewModel : ViewModelBase
             Environment = Environment,
             TenantLabel = TenantLabel,
             OperatorName = OperatorName,
-            OnboardingDismissed = !IsOnboardingVisible
+            OnboardingDismissed = !IsOnboardingVisible,
+            OnboardingStepIndex = OnboardingStepIndex,
+            RecentCustomers = RecentCustomers.Select(item => new RecentCustomerPreference
+            {
+                CustomerId = item.CustomerId,
+                Organization = item.Organization,
+                OwnerEmail = item.OwnerEmail,
+                TenantNames = item.TenantNames,
+                TenantCount = item.TenantCount,
+                ManagementModeName = item.ManagementModeName,
+                LastAccessedLabel = item.LastAccessedLabel
+            }).ToList()
         });
+    }
+
+    private void SaveRecentCustomer(CustomerRecord customer)
+    {
+        var recent = new RecentCustomerItem
+        {
+            CustomerId = customer.Id,
+            Organization = customer.Organization,
+            OwnerEmail = customer.OwnerEmail,
+            TenantNames = customer.TenantNames,
+            TenantCount = customer.TenantCount,
+            ManagementModeName = customer.ManagementModeName,
+            LastAccessedLabel = $"Opened {DateTimeOffset.Now:dd MMM yyyy HH:mm}"
+        };
+
+        var existing = RecentCustomers.FirstOrDefault(item => item.CustomerId == customer.Id);
+        if (existing is not null) {
+            RecentCustomers.Remove(existing);
+        }
+
+        RecentCustomers.Insert(0, recent);
+        while (RecentCustomers.Count > 6) {
+            RecentCustomers.RemoveAt(RecentCustomers.Count - 1);
+        }
+
+        OnPropertyChanged(nameof(HasRecentCustomers));
+        OnPropertyChanged(nameof(HasNoRecentCustomers));
+        SavePreferences();
     }
 
     private void OnSplashTimerTick(object? sender, EventArgs e)
