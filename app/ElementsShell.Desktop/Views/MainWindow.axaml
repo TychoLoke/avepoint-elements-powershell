@@ -131,6 +131,13 @@
             <Setter Property="BorderBrush" Value="#244668" />
             <Setter Property="BorderThickness" Value="1" />
         </Style>
+        <Style Selector="Border.formCard">
+            <Setter Property="CornerRadius" Value="20" />
+            <Setter Property="Padding" Value="20" />
+            <Setter Property="Background" Value="#0F1B2D" />
+            <Setter Property="BorderBrush" Value="#27405D" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
         <Style Selector="TextBlock.eyebrow">
             <Setter Property="Foreground" Value="#67E8F9" />
             <Setter Property="FontWeight" Value="SemiBold" />
@@ -245,7 +252,7 @@
                     <StackPanel Spacing="18">
                         <StackPanel Spacing="4">
                             <TextBlock Classes="sectionTitle" Text="Connection Workspace" />
-                            <TextBlock Text="A guided operator panel for connection context, credentials, and live module workflows." Classes="muted" TextWrapping="Wrap" />
+                            <TextBlock Text="The same session details from onboarding stay visible here so the app feels continuous once you enter the workspace." Classes="muted" TextWrapping="Wrap" />
                         </StackPanel>
                         <StackPanel Spacing="12">
                             <StackPanel Spacing="8">
@@ -644,26 +651,48 @@
 
                 <Border Grid.Column="1" Classes="glassPanel">
                     <StackPanel Spacing="16">
-                        <TextBlock Text="Why this feels different" FontSize="24" FontWeight="Bold" Foreground="White" />
-                        <TextBlock Text="The desktop app gives you a calmer entry point into the platform: fewer raw identifiers, clearer workflow transitions, and shaped output around operator intent." TextWrapping="Wrap" Classes="muted" />
+                        <StackPanel Spacing="6">
+                            <TextBlock Classes="eyebrow" Text="Connection Setup" />
+                            <TextBlock Text="{Binding OnboardingConnectionHeadline}" FontSize="24" FontWeight="Bold" Foreground="White" />
+                            <TextBlock Text="{Binding OnboardingConnectionDetail}" TextWrapping="Wrap" Classes="muted" />
+                        </StackPanel>
 
-                        <Border Classes="stepCard">
-                            <StackPanel Spacing="8">
-                                <TextBlock Text="Product principles" FontWeight="SemiBold" Foreground="White" />
-                                <TextBlock Text="Clean and simple" Foreground="#CFE3FF" />
-                                <TextBlock Text="Bundle-aware and secure" Foreground="#CFE3FF" />
-                                <TextBlock Text="Operational, not documentation-driven" Foreground="#CFE3FF" />
-                                <TextBlock Text="Installer-ready and desktop-native" Foreground="#CFE3FF" />
+                        <Border Classes="formCard">
+                            <StackPanel Spacing="14">
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="Environment" FontWeight="SemiBold" Foreground="White" />
+                                    <ComboBox SelectedItem="{Binding Environment}">
+                                        <x:String>Commercial</x:String>
+                                        <x:String>Government</x:String>
+                                        <x:String>Aos2</x:String>
+                                        <x:String>FedRAMP</x:String>
+                                    </ComboBox>
+                                </StackPanel>
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="Tenant or Partner Label" FontWeight="SemiBold" Foreground="White" />
+                                    <TextBox Text="{Binding TenantLabel}" Watermark="Contoso MSP" />
+                                </StackPanel>
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="Client ID" FontWeight="SemiBold" Foreground="White" />
+                                    <TextBox Text="{Binding ClientId}" Watermark="Elements portal application client ID" />
+                                </StackPanel>
+                                <StackPanel Spacing="8">
+                                    <TextBlock Text="Client Secret" FontWeight="SemiBold" Foreground="White" />
+                                    <TextBox Text="{Binding ClientSecret}" PasswordChar="●" Watermark="Elements portal application client secret" />
+                                </StackPanel>
+                                <Button Classes="primaryAction"
+                                        Command="{Binding ConnectFromOnboardingCommand}"
+                                        Content="{Binding OnboardingConnectionButtonLabel}"
+                                        IsEnabled="{Binding CanConnectFromOnboarding}" />
                             </StackPanel>
                         </Border>
 
                         <Border Classes="stepCard">
                             <StackPanel Spacing="8">
-                                <TextBlock Text="Current highlights" FontWeight="SemiBold" Foreground="White" />
-                                <TextBlock Text="Hosted PowerShell engine" Classes="muted" />
-                                <TextBlock Text="Desktop readiness checks" Classes="muted" />
-                                <TextBlock Text="Live customer and summary flows" Classes="muted" />
-                                <TextBlock Text="MSI packaging path" Classes="muted" />
+                                <TextBlock Text="Portal Guidance" FontWeight="SemiBold" Foreground="White" />
+                                <TextBlock Text="Use the app registration from your AvePoint Elements portal." Foreground="#CFE3FF" TextWrapping="Wrap" />
+                                <TextBlock Text="Client credentials stay in memory only." Classes="muted" />
+                                <TextBlock Text="After connection, the app will use the bundle-aware session automatically." Classes="muted" TextWrapping="Wrap" />
                             </StackPanel>
                         </Border>
                     </StackPanel>

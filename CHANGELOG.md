@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.11.7] - 2026-04-01
+
+### Changed
+
+- Moved real Elements portal connection entry into onboarding so operators can set environment, tenant label, client ID, and client secret before entering the workspace
+- Tightened the desktop session flow so live data actions require an actual connected session instead of relying on field presence alone
+- Continued polishing the shell layout so onboarding and the main workspace feel like one coherent application
+
 ## [0.11.6] - 2026-04-01
 
 ### Fixed

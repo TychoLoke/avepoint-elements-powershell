@@ -164,6 +164,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public bool HasNoRecentCustomers => RecentCustomers.Count == 0;
 
+    public bool IsConnected => ConnectionState == "Connected";
+
     public string ConnectionBadge => ConnectionState == "Connected" ? "SESSION READY" : "NOT CONNECTED";
 
     public string WindowTitle => $"Elements Shell Desktop  {ConnectionBadge}";
@@ -237,6 +239,22 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public string OnboardingSecondaryActionLabel => CanMoveToPreviousOnboardingStep ? "Back" : "Skip";
 
+    public string OnboardingConnectionHeadline => IsConnected
+        ? "Session connected"
+        : "Connect your Elements portal app";
+
+    public string OnboardingConnectionDetail => IsConnected
+        ? "Your session is active. Continue into the workspace to load customers and summaries."
+        : "Use the client ID and client secret from your AvePoint Elements portal app registration. Credentials stay in memory only.";
+
+    public string OnboardingConnectionButtonLabel => IsConnected ? "Connected" : "Connect and Continue";
+
+    public bool CanConnectFromOnboarding =>
+        !IsBusy &&
+        !IsConnected &&
+        !string.IsNullOrWhiteSpace(ClientId) &&
+        !string.IsNullOrWhiteSpace(ClientSecret);
+
     partial void OnSelectedSectionChanged(string value)
     {
         OnPropertyChanged(nameof(IsOverviewSelected));
@@ -253,20 +271,32 @@ public partial class MainWindowViewModel : ViewModelBase
         OnPropertyChanged(nameof(ConnectionBadge));
         OnPropertyChanged(nameof(WindowTitle));
         OnPropertyChanged(nameof(PrimaryActionLabel));
-
-        if (value == "Connected") {
-            IsOnboardingVisible = false;
-        }
+        OnPropertyChanged(nameof(IsConnected));
+        OnPropertyChanged(nameof(OnboardingConnectionHeadline));
+        OnPropertyChanged(nameof(OnboardingConnectionDetail));
+        OnPropertyChanged(nameof(OnboardingConnectionButtonLabel));
+        OnPropertyChanged(nameof(CanConnectFromOnboarding));
     }
 
     partial void OnEnvironmentChanged(string value)
     {
+        OnPropertyChanged(nameof(OnboardingConnectionDetail));
         SavePreferences();
     }
 
     partial void OnTenantLabelChanged(string value)
     {
         SavePreferences();
+    }
+
+    partial void OnClientIdChanged(string value)
+    {
+        OnPropertyChanged(nameof(CanConnectFromOnboarding));
+    }
+
+    partial void OnClientSecretChanged(string value)
+    {
+        OnPropertyChanged(nameof(CanConnectFromOnboarding));
     }
 
     partial void OnOperatorNameChanged(string value)
@@ -341,10 +371,20 @@ public partial class MainWindowViewModel : ViewModelBase
             SelectedBundleSummary = string.Join(", ", result.ScopeBundle);
             StatusMessage = $"Connected to {result.Environment} with {result.ScopeBundle.Count} scope bundles.";
             AddActivity("Connected to AvePoint Elements", $"Desktop session initialized for {result.Environment}.", "Connected");
-            if (OnboardingStepIndex < 1) {
-                OnboardingStepIndex = 1;
+            if (OnboardingStepIndex < 2) {
+                OnboardingStepIndex = 2;
             }
         });
+    }
+
+    [RelayCommand]
+    private async Task ConnectFromOnboardingAsync()
+    {
+        await ConnectAsync();
+
+        if (IsConnected) {
+            StatusMessage = "Connected. Continue into the workspace or load customers next.";
+        }
     }
 
     [RelayCommand]
@@ -502,7 +542,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private void StartOnboarding()
     {
         IsOnboardingVisible = true;
-        if (OnboardingStepIndex >= OnboardingSteps.Count) {
+        if (OnboardingStepIndex >= OnboardingSteps.Count || IsConnected) {
             OnboardingStepIndex = 0;
         }
         SelectedSection = "Overview";
@@ -512,6 +552,17 @@ public partial class MainWindowViewModel : ViewModelBase
     [RelayCommand]
     private void AdvanceOnboarding()
     {
+        if (OnboardingStepIndex == 0) {
+            OnboardingStepIndex = 1;
+            StatusMessage = CurrentOnboardingStep.Detail;
+            return;
+        }
+
+        if (OnboardingStepIndex == 1 && !IsConnected) {
+            StatusMessage = "Connect your Elements portal app first to continue.";
+            return;
+        }
+
         if (IsOnFinalOnboardingStep) {
             DismissOnboarding();
             return;
@@ -581,12 +632,18 @@ public partial class MainWindowViewModel : ViewModelBase
             return false;
         }
 
+        if (!IsConnected) {
+            StatusMessage = "Connect the desktop session first so the app can load live Elements data.";
+            return false;
+        }
+
         return true;
     }
 
     private async Task RunBusyAsync(Func<Task> action)
     {
         IsBusy = true;
+        OnPropertyChanged(nameof(CanConnectFromOnboarding));
         try {
             await action();
         }
@@ -596,6 +653,7 @@ public partial class MainWindowViewModel : ViewModelBase
         }
         finally {
             IsBusy = false;
+            OnPropertyChanged(nameof(CanConnectFromOnboarding));
         }
     }
 
