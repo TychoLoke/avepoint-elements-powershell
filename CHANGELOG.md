@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.12.1] - 2026-04-01
+
+### Changed
+
+- Upgraded the connected home screen with clearer dashboard action cards instead of generic workflow rows
+- Reworked the customer workspace into larger, more app-like customer cards with clearer status and tenancy presentation
+- Continued reducing the “tool surface” feel in the connected experience by using stronger task-oriented components
+
 ## [0.12.0] - 2026-04-01
 
 ### Changed

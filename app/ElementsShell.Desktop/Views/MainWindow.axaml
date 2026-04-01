@@ -155,6 +155,20 @@
             <Setter Property="BorderBrush" Value="#213854" />
             <Setter Property="BorderThickness" Value="1" />
         </Style>
+        <Style Selector="Border.dashboardActionCard">
+            <Setter Property="CornerRadius" Value="20" />
+            <Setter Property="Padding" Value="20" />
+            <Setter Property="Background" Value="#0D1727" />
+            <Setter Property="BorderBrush" Value="#244668" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
+        <Style Selector="Border.customerBigCard">
+            <Setter Property="CornerRadius" Value="22" />
+            <Setter Property="Padding" Value="20" />
+            <Setter Property="Background" Value="#0C1828" />
+            <Setter Property="BorderBrush" Value="#213854" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
         <Style Selector="TextBlock.eyebrow">
             <Setter Property="Foreground" Value="#67E8F9" />
             <Setter Property="FontWeight" Value="SemiBold" />
@@ -475,23 +489,26 @@
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
-                                    <TextBlock Classes="sectionTitle" Text="Guided Workflows" />
-                                    <ItemsControl ItemsSource="{Binding WorkflowItems}">
+                                    <TextBlock Classes="sectionTitle" Text="Primary Actions" />
+                                    <ItemsControl ItemsSource="{Binding DashboardActions}">
+                                        <ItemsControl.ItemsPanel>
+                                            <ItemsPanelTemplate>
+                                                <WrapPanel Orientation="Horizontal" />
+                                            </ItemsPanelTemplate>
+                                        </ItemsControl.ItemsPanel>
                                         <ItemsControl.ItemTemplate>
-                                            <DataTemplate x:DataType="models:WorkflowItem">
-                                                <Border Margin="0,0,0,12" Padding="18" CornerRadius="18" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
-                                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
-                                                        <StackPanel Spacing="6">
-                                                            <TextBlock Text="{Binding Title}" FontSize="18" FontWeight="SemiBold" Foreground="White" />
-                                                            <TextBlock Text="{Binding Detail}" TextWrapping="Wrap" Classes="muted" />
-                                                            <TextBlock Text="{Binding ScopeBundle}" Foreground="#67E8F9" />
-                                                        </StackPanel>
+                                            <DataTemplate x:DataType="models:DashboardActionCard">
+                                                <Border Classes="dashboardActionCard" Width="260" Margin="0,0,14,14">
+                                                    <StackPanel Spacing="12">
+                                                        <Border Height="6" CornerRadius="999" Background="{Binding AccentHex}" />
+                                                        <TextBlock Text="{Binding Title}" FontSize="20" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
+                                                        <TextBlock Text="{Binding Detail}" TextWrapping="Wrap" Classes="muted" />
                                                         <Button Classes="secondaryAction"
-                                                                Command="{Binding $parent[Window].DataContext.OpenWorkflowCommand}"
-                                                                CommandParameter="{Binding Title}"
-                                                                Content="Open"
-                                                                VerticalAlignment="Center" />
-                                                    </Grid>
+                                                                Command="{Binding $parent[Window].DataContext.RunDashboardActionCommand}"
+                                                                CommandParameter="{Binding CommandParameter}"
+                                                                Content="{Binding CommandLabel}"
+                                                                HorizontalAlignment="Left" />
+                                                    </StackPanel>
                                                 </Border>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
@@ -513,20 +530,30 @@
                                         <ItemsControl ItemsSource="{Binding Customers}">
                                             <ItemsControl.ItemTemplate>
                                                 <DataTemplate x:DataType="models:CustomerRecord">
-                                                    <Border Margin="0,0,0,12" Padding="18" CornerRadius="18" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
-                                                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
-                                                            <StackPanel Spacing="6">
-                                                                <TextBlock Text="{Binding Organization}" FontSize="18" FontWeight="SemiBold" Foreground="White" />
-                                                                <TextBlock Text="{Binding OwnerEmail}" Foreground="#D7E7FF" />
+                                                    <Border Classes="customerBigCard" Margin="0,0,0,14">
+                                                        <Grid ColumnDefinitions="*,Auto" ColumnSpacing="18">
+                                                            <StackPanel Spacing="8">
+                                                                <StackPanel Spacing="4">
+                                                                    <TextBlock Text="{Binding Organization}" FontSize="22" FontWeight="SemiBold" Foreground="White" />
+                                                                    <TextBlock Text="{Binding OwnerEmail}" Foreground="#D7E7FF" />
+                                                                </StackPanel>
+                                                                <WrapPanel Orientation="Horizontal" ItemWidth="150">
+                                                                    <Border Classes="badge">
+                                                                        <TextBlock Classes="badgeText" Text="{Binding ManagementModeName}" />
+                                                                    </Border>
+                                                                    <Border Classes="badge">
+                                                                        <TextBlock Classes="badgeText" Text="{Binding JobStatusName}" />
+                                                                    </Border>
+                                                                </WrapPanel>
                                                                 <TextBlock Text="{Binding TenantNames}" TextWrapping="Wrap" Classes="muted" />
-                                                                <TextBlock Text="{Binding JobStatusName}" Foreground="#67E8F9" />
                                                             </StackPanel>
-                                                            <StackPanel Spacing="10" VerticalAlignment="Center">
-                                                                <TextBlock Text="{Binding TenantCount}" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="White" />
+                                                            <StackPanel Spacing="10" VerticalAlignment="Center" HorizontalAlignment="Right">
+                                                                <TextBlock Text="{Binding TenantCount}" HorizontalAlignment="Center" FontSize="28" FontWeight="Bold" Foreground="White" />
+                                                                <TextBlock Text="Tenants" HorizontalAlignment="Center" Classes="muted" />
                                                                 <Button Classes="secondaryAction"
                                                                         Command="{Binding $parent[Window].DataContext.SelectCustomerCommand}"
                                                                         CommandParameter="{Binding .}"
-                                                                        Content="Select" />
+                                                                        Content="Open Customer" />
                                                             </StackPanel>
                                                         </Grid>
                                                     </Border>

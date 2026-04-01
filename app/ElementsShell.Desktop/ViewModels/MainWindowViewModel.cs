@@ -102,6 +102,13 @@ public partial class MainWindowViewModel : ViewModelBase
             new() { Title = "Open Risk Hits", Value = "App layer", Delta = "Operator surface over the module", AccentHex = "#FFB020" }
         };
 
+        DashboardActions = new ObservableCollection<DashboardActionCard>
+        {
+            new() { Title = "Load customer workspace", Detail = "Pull live partner customer context into the app and start from real data.", CommandLabel = "Load Customers", CommandParameter = "LoadCustomers", AccentHex = "#0F7BFF" },
+            new() { Title = "Open customer summary", Detail = "Generate a shaped summary for the selected customer instead of reading raw API output.", CommandLabel = "Open Summary", CommandParameter = "LoadSummary", AccentHex = "#12B886" },
+            new() { Title = "Review operations", Detail = "Move into backup and baseline-oriented workflows from a single operator surface.", CommandLabel = "Open Operations", CommandParameter = "Operations", AccentHex = "#FFB020" }
+        };
+
         WorkflowItems = new ObservableCollection<WorkflowItem>
         {
             new() { Title = "Connect to Elements", Detail = "Authenticate with client ID, secret, environment, and bundle-aware scope setup.", ScopeBundle = "Common, Baseline, User, Risk, Workspace" },
@@ -134,6 +141,8 @@ public partial class MainWindowViewModel : ViewModelBase
     public ObservableCollection<MetricCard> MetricCards { get; }
 
     public ObservableCollection<WorkflowItem> WorkflowItems { get; }
+
+    public ObservableCollection<DashboardActionCard> DashboardActions { get; }
 
     public ObservableCollection<ActivityItem> ActivityItems { get; }
 
@@ -448,6 +457,27 @@ public partial class MainWindowViewModel : ViewModelBase
 
         SelectedSection = workflowTitle.Contains("customer", StringComparison.OrdinalIgnoreCase) ? "Customers" : "Overview";
         StatusMessage = $"Workflow selected: {workflowTitle}";
+    }
+
+    [RelayCommand]
+    private async Task RunDashboardActionAsync(string? action)
+    {
+        switch (action)
+        {
+            case "LoadCustomers":
+                await LoadCustomersAsync();
+                break;
+            case "LoadSummary":
+                await LoadCustomerSummaryAsync();
+                break;
+            case "Operations":
+                SelectedSection = "Operations";
+                StatusMessage = "Opened the operations workspace.";
+                break;
+            default:
+                StatusMessage = "That dashboard action is not available yet.";
+                break;
+        }
     }
 
     [RelayCommand]

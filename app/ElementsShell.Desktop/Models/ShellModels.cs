@@ -23,6 +23,19 @@ public sealed class MetricCard
     public required string AccentHex { get; init; }
 }
 
+public sealed class DashboardActionCard
+{
+    public required string Title { get; init; }
+
+    public required string Detail { get; init; }
+
+    public required string CommandLabel { get; init; }
+
+    public required string CommandParameter { get; init; }
+
+    public required string AccentHex { get; init; }
+}
+
 public sealed class WorkflowItem
 {
     public required string Title { get; init; }
