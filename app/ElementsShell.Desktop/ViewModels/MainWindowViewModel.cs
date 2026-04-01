@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
 using System.Linq;
+using System.Reflection;
 using System.Threading.Tasks;
 using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
@@ -166,9 +167,17 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public bool IsConnected => ConnectionState == "Connected";
 
+    public string AppVersion => Assembly.GetExecutingAssembly().GetName().Version is { } version
+        ? $"v{version.Major}.{version.Minor}.{version.Build}"
+        : "desktop";
+
     public string ConnectionBadge => ConnectionState == "Connected" ? "SESSION READY" : "NOT CONNECTED";
 
     public string WindowTitle => $"Elements Shell Desktop  {ConnectionBadge}";
+
+    public string SessionDescriptor => IsConnected
+        ? $"{Environment}  •  {TenantLabel}"
+        : "Awaiting secure Elements portal connection";
 
     public string OverviewHeadline => "A desktop operator layer for AvePoint Elements that runs the public PowerShell module underneath.";
 
@@ -255,6 +264,24 @@ public partial class MainWindowViewModel : ViewModelBase
         !string.IsNullOrWhiteSpace(ClientId) &&
         !string.IsNullOrWhiteSpace(ClientSecret);
 
+    public string OnboardingStudioHeadline => OnboardingStepIndex switch
+    {
+        0 => "Set your operating context",
+        1 => "Authenticate once and keep moving",
+        _ => "Work from live customer context"
+    };
+
+    public string OnboardingStudioDetail => OnboardingStepIndex switch
+    {
+        0 => "Choose the right environment and partner label so the desktop shell opens with the correct operational context.",
+        1 => "Use the client ID and client secret from the Elements portal app registration. The app keeps them in memory only for the active session.",
+        _ => "Once connected, load customers and summaries without copying IDs or decoding raw API responses."
+    };
+
+    public string ReadinessHeadline => DependencyChecks.All(item => item.Status == "Ready")
+        ? "Desktop runtime is ready"
+        : "One or more desktop checks need attention";
+
     partial void OnSelectedSectionChanged(string value)
     {
         OnPropertyChanged(nameof(IsOverviewSelected));
@@ -272,6 +299,7 @@ public partial class MainWindowViewModel : ViewModelBase
         OnPropertyChanged(nameof(WindowTitle));
         OnPropertyChanged(nameof(PrimaryActionLabel));
         OnPropertyChanged(nameof(IsConnected));
+        OnPropertyChanged(nameof(SessionDescriptor));
         OnPropertyChanged(nameof(OnboardingConnectionHeadline));
         OnPropertyChanged(nameof(OnboardingConnectionDetail));
         OnPropertyChanged(nameof(OnboardingConnectionButtonLabel));
@@ -281,11 +309,13 @@ public partial class MainWindowViewModel : ViewModelBase
     partial void OnEnvironmentChanged(string value)
     {
         OnPropertyChanged(nameof(OnboardingConnectionDetail));
+        OnPropertyChanged(nameof(SessionDescriptor));
         SavePreferences();
     }
 
     partial void OnTenantLabelChanged(string value)
     {
+        OnPropertyChanged(nameof(SessionDescriptor));
         SavePreferences();
     }
 
@@ -327,6 +357,8 @@ public partial class MainWindowViewModel : ViewModelBase
         OnPropertyChanged(nameof(IsOnFinalOnboardingStep));
         OnPropertyChanged(nameof(OnboardingPrimaryActionLabel));
         OnPropertyChanged(nameof(OnboardingSecondaryActionLabel));
+        OnPropertyChanged(nameof(OnboardingStudioHeadline));
+        OnPropertyChanged(nameof(OnboardingStudioDetail));
         SavePreferences();
     }
 
@@ -529,6 +561,7 @@ public partial class MainWindowViewModel : ViewModelBase
         StatusMessage = "Dependency checks refreshed for the desktop app.";
         OnPropertyChanged(nameof(HasDependencyChecks));
         OnPropertyChanged(nameof(DependencySummary));
+        OnPropertyChanged(nameof(ReadinessHeadline));
     }
 
     [RelayCommand]

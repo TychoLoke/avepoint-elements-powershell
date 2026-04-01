@@ -138,6 +138,23 @@
             <Setter Property="BorderBrush" Value="#27405D" />
             <Setter Property="BorderThickness" Value="1" />
         </Style>
+        <Style Selector="Border.brandCard">
+            <Setter Property="CornerRadius" Value="24" />
+            <Setter Property="Padding" Value="18" />
+            <Setter Property="Background">
+                <LinearGradientBrush StartPoint="0,0" EndPoint="1,1">
+                    <GradientStop Color="#D7263D" Offset="0" />
+                    <GradientStop Color="#9B1638" Offset="1" />
+                </LinearGradientBrush>
+            </Setter>
+        </Style>
+        <Style Selector="Border.miniPanel">
+            <Setter Property="CornerRadius" Value="18" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="Background" Value="#0C1828" />
+            <Setter Property="BorderBrush" Value="#213854" />
+            <Setter Property="BorderThickness" Value="1" />
+        </Style>
         <Style Selector="TextBlock.eyebrow">
             <Setter Property="Foreground" Value="#67E8F9" />
             <Setter Property="FontWeight" Value="SemiBold" />
@@ -155,21 +172,28 @@
             <Border Classes="sidebarPanel" Margin="0,0,20,0">
                 <Grid RowDefinitions="Auto,Auto,Auto,*,Auto">
                     <StackPanel Spacing="10">
-                        <Border CornerRadius="18" Padding="14" Background="#D7263D" Width="82">
-                            <TextBlock Text="ES" HorizontalAlignment="Center" FontSize="26" FontWeight="Bold" Foreground="White" />
+                        <Border Classes="brandCard">
+                            <Grid ColumnDefinitions="Auto,*" ColumnSpacing="14">
+                                <Border CornerRadius="18" Padding="14" Background="#FFFFFF18" Width="82">
+                                    <TextBlock Text="ES" HorizontalAlignment="Center" FontSize="26" FontWeight="Bold" Foreground="White" />
+                                </Border>
+                                <StackPanel Spacing="4" VerticalAlignment="Center">
+                                    <TextBlock Text="Elements Shell" FontSize="24" FontWeight="Bold" Foreground="White" />
+                                    <TextBlock Text="Desktop edition" Foreground="#FFE8EC" />
+                                </StackPanel>
+                            </Grid>
                         </Border>
                         <StackPanel Spacing="4">
-                            <TextBlock Text="Elements Shell" FontSize="28" FontWeight="Bold" Foreground="White" />
                             <TextBlock Text="Professional desktop workspace for AvePoint Elements operations." TextWrapping="Wrap" Classes="muted" />
+                            <TextBlock Text="{Binding AppVersion}" Classes="muted" />
                         </StackPanel>
                     </StackPanel>
 
-                    <Border Grid.Row="1" Margin="0,26,0,20" Padding="16" CornerRadius="18" Background="#12243B" BorderBrush="#244668" BorderThickness="1">
+                    <Border Grid.Row="1" Margin="0,26,0,20" Classes="miniPanel">
                         <StackPanel Spacing="8">
-                            <TextBlock Text="Session" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Classes="eyebrow" Text="Session" />
                             <TextBlock Text="{Binding ConnectionBadge}" Foreground="#67E8F9" FontWeight="Bold" />
-                            <TextBlock Text="{Binding Environment}" Foreground="#EEF4FF" />
-                            <TextBlock Text="{Binding TenantLabel}" Classes="muted" />
+                            <TextBlock Text="{Binding SessionDescriptor}" Foreground="#EEF4FF" TextWrapping="Wrap" />
                             <Button Classes="secondaryAction" Command="{Binding StartOnboardingCommand}" Content="Open Onboarding" HorizontalAlignment="Left" />
                         </StackPanel>
                     </Border>
@@ -197,9 +221,9 @@
                         </ItemsControl>
                     </StackPanel>
 
-                    <Border Grid.Row="4" Background="#0C1828" CornerRadius="18" Padding="18" BorderBrush="#213854" BorderThickness="1">
+                    <Border Grid.Row="4" Classes="miniPanel">
                         <StackPanel Spacing="10">
-                            <TextBlock Text="Operator" FontWeight="SemiBold" Foreground="White" />
+                            <TextBlock Classes="eyebrow" Text="Operator" />
                             <TextBlock Text="{Binding OperatorName}" Foreground="#EEF4FF" />
                             <TextBlock Text="The desktop app runs the embedded PowerShell module and keeps credentials in memory only." TextWrapping="Wrap" Classes="muted" />
                         </StackPanel>
@@ -615,8 +639,8 @@
                                     <TextBlock Text="{Binding CurrentOnboardingStep.Number}" Foreground="#8CA4BF" />
                                 </Grid>
                                 <ProgressBar Value="{Binding OnboardingProgressValue}" Maximum="100" Height="8" />
-                                <TextBlock Text="{Binding CurrentOnboardingStep.Title}" FontSize="24" FontWeight="SemiBold" Foreground="White" />
-                                <TextBlock Text="{Binding CurrentOnboardingStep.Detail}" TextWrapping="Wrap" Classes="muted" />
+                                <TextBlock Text="{Binding OnboardingStudioHeadline}" FontSize="24" FontWeight="SemiBold" Foreground="White" />
+                                <TextBlock Text="{Binding OnboardingStudioDetail}" TextWrapping="Wrap" Classes="muted" />
                             </StackPanel>
                         </Border>
 
@@ -684,6 +708,14 @@
                                         Command="{Binding ConnectFromOnboardingCommand}"
                                         Content="{Binding OnboardingConnectionButtonLabel}"
                                         IsEnabled="{Binding CanConnectFromOnboarding}" />
+                            </StackPanel>
+                        </Border>
+
+                        <Border Classes="miniPanel">
+                            <StackPanel Spacing="10">
+                                <TextBlock Classes="eyebrow" Text="Runtime Status" />
+                                <TextBlock Text="{Binding ReadinessHeadline}" FontWeight="SemiBold" Foreground="White" />
+                                <TextBlock Text="{Binding DependencySummary}" TextWrapping="Wrap" Classes="muted" />
                             </StackPanel>
                         </Border>
 

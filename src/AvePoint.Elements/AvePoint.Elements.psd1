@@ -1,6 +1,6 @@
 @{
     RootModule           = 'AvePoint.Elements.psm1'
-    ModuleVersion        = '0.11.7'
+    ModuleVersion        = '0.11.8'
     GUID                 = '7fbe5f68-bb17-4a67-81d5-8ad3884d783f'
     Author               = 'Tycho Loke'
     CompanyName          = 'Open Source'
@@ -52,7 +52,7 @@
             Tags         = @('AvePoint', 'Elements', 'MSP', 'Automation', 'PowerShell')
             ProjectUri   = 'https://github.com/TychoLoke/avepoint-elements-powershell'
             LicenseUri   = 'https://github.com/TychoLoke/avepoint-elements-powershell/blob/main/LICENSE'
-            ReleaseNotes = 'Move real Elements portal connection setup into onboarding and tighten desktop session flow.'
+            ReleaseNotes = 'Refine the desktop shell with studio-grade onboarding, stronger chrome, and cleaner session surfaces.'
         }
     }
 }
