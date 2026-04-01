@@ -91,6 +91,11 @@ public sealed class RecentCustomerItem
     public string LastAccessedLabel { get; init; } = string.Empty;
 }
 
+public sealed class TenantChip
+{
+    public string Name { get; init; } = string.Empty;
+}
+
 public sealed class DesktopConnectionSettings
 {
     public required string Environment { get; init; }

@@ -124,6 +124,7 @@ public partial class MainWindowViewModel : ViewModelBase
 
         Customers = new ObservableCollection<CustomerRecord>();
         RecentCustomers = new ObservableCollection<RecentCustomerItem>();
+        SelectedCustomerTenants = new ObservableCollection<TenantChip>();
         DependencyChecks = new ObservableCollection<DependencyCheckItem>(_desktopClient.GetDependencyChecks());
         OnboardingSteps = new ObservableCollection<OnboardingStep>
         {
@@ -150,6 +151,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public ObservableCollection<RecentCustomerItem> RecentCustomers { get; }
 
+    public ObservableCollection<TenantChip> SelectedCustomerTenants { get; }
+
     public ObservableCollection<DependencyCheckItem> DependencyChecks { get; }
 
     public ObservableCollection<OnboardingStep> OnboardingSteps { get; }
@@ -173,6 +176,10 @@ public partial class MainWindowViewModel : ViewModelBase
     public bool HasRecentCustomers => RecentCustomers.Count > 0;
 
     public bool HasNoRecentCustomers => RecentCustomers.Count == 0;
+
+    public bool HasSelectedCustomer => SelectedCustomerRecord is not null;
+
+    public bool HasSelectedCustomerTenants => SelectedCustomerTenants.Count > 0;
 
     public bool IsConnected => ConnectionState == "Connected";
 
@@ -227,6 +234,16 @@ public partial class MainWindowViewModel : ViewModelBase
         : SelectedCustomerRecord is not null
             ? $"Selected {SelectedCustomerRecord.Organization}"
             : "Start with connection, then load customers or reopen recent context.";
+
+    public string SelectedCustomerHeading => SelectedCustomerRecord?.Organization ?? "No customer selected";
+
+    public string SelectedCustomerMeta => SelectedCustomerRecord is null
+        ? "Load customers or open recent context to start."
+        : $"{SelectedCustomerRecord.OwnerEmail}  •  {SelectedCustomerRecord.CountryOrRegion}";
+
+    public string SelectedCustomerStatus => SelectedCustomerRecord is null
+        ? "No live customer context"
+        : $"{SelectedCustomerRecord.ManagementModeName}  •  {SelectedCustomerRecord.JobStatusName}";
 
     public string SummaryHeadline => CurrentCustomerSummary is null
         ? "No customer summary loaded yet."
@@ -376,14 +393,30 @@ public partial class MainWindowViewModel : ViewModelBase
 
     partial void OnSelectedCustomerRecordChanged(CustomerRecord? value)
     {
+        SelectedCustomerTenants.Clear();
+
         if (value is null) {
+            OnPropertyChanged(nameof(HasSelectedCustomer));
+            OnPropertyChanged(nameof(HasSelectedCustomerTenants));
+            OnPropertyChanged(nameof(SelectedCustomerHeading));
+            OnPropertyChanged(nameof(SelectedCustomerMeta));
+            OnPropertyChanged(nameof(SelectedCustomerStatus));
             return;
         }
 
         SelectedCustomer = value.Organization;
         SelectedTenant = string.IsNullOrWhiteSpace(value.TenantNames) ? "No tenant names returned" : value.TenantNames;
+        foreach (var tenant in value.TenantNames.Split(',', StringSplitOptions.TrimEntries | StringSplitOptions.RemoveEmptyEntries).Take(8))
+        {
+            SelectedCustomerTenants.Add(new TenantChip { Name = tenant });
+        }
         OnPropertyChanged(nameof(ContextBadge));
         OnPropertyChanged(nameof(ContextDetail));
+        OnPropertyChanged(nameof(HasSelectedCustomer));
+        OnPropertyChanged(nameof(HasSelectedCustomerTenants));
+        OnPropertyChanged(nameof(SelectedCustomerHeading));
+        OnPropertyChanged(nameof(SelectedCustomerMeta));
+        OnPropertyChanged(nameof(SelectedCustomerStatus));
     }
 
     [RelayCommand]

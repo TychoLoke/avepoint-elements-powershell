@@ -1,6 +1,6 @@
 @{
     RootModule           = 'AvePoint.Elements.psm1'
-    ModuleVersion        = '0.12.1'
+    ModuleVersion        = '0.12.2'
     GUID                 = '7fbe5f68-bb17-4a67-81d5-8ad3884d783f'
     Author               = 'Tycho Loke'
     CompanyName          = 'Open Source'
@@ -52,7 +52,7 @@
             Tags         = @('AvePoint', 'Elements', 'MSP', 'Automation', 'PowerShell')
             ProjectUri   = 'https://github.com/TychoLoke/avepoint-elements-powershell'
             LicenseUri   = 'https://github.com/TychoLoke/avepoint-elements-powershell/blob/main/LICENSE'
-            ReleaseNotes = 'Upgrade the connected shell with clearer dashboard action cards and larger customer workspace cards.'
+            ReleaseNotes = 'Add a clearer selected-customer detail surface with tenant chips and stronger customer actions.'
         }
     }
 }

@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.12.2] - 2026-04-01
+
+### Changed
+
+- Added a clearer selected-customer detail surface in the customer workspace so selection feels like opening a customer page
+- Added tenant chips and stronger customer actions so the app exposes context more visually instead of relying on dense text
+- Continued moving the connected experience toward purpose-built workspace components
+
 ## [0.12.1] - 2026-04-01
 
 ### Changed
