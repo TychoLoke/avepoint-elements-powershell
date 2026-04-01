@@ -8,7 +8,7 @@ It is designed to be more than a thin REST wrapper. The module focuses on practi
 
 This repository is in active public development.
 
-- Current version: `0.9.0`
+- Current version: `0.9.1`
 - License: MIT
 - PowerShell: `7.0+`
 - Support target: cross-platform where AvePoint API access is available
@@ -116,6 +116,7 @@ The desktop app is meant to become the professional operator surface on top of t
 - workflow-driven operations
 - reporting and activity panels
 - a more application-like experience than a plain terminal menu
+- live customer loading and customer summary workflows backed by the embedded PowerShell module
 
 Run it locally from source:
 
@@ -123,6 +124,18 @@ Run it locally from source:
 export PATH="$HOME/.dotnet:$PATH"
 dotnet run --project app/ElementsShell.Desktop/ElementsShell.Desktop.csproj
 ```
+
+Current desktop behavior:
+
+- the app embeds the `AvePoint.Elements` module into its output
+- the connection workspace accepts `Environment`, `Tenant Label`, `Client ID`, and `Client Secret`
+- the customer workspace can load live customers from `Get-AvptCustomer`
+- the reporting workspace can load a live customer summary from `Get-AvptCustomerSummary`
+
+Current requirement:
+
+- `pwsh` must be available on the machine because the desktop app invokes the embedded module through PowerShell 7
+- credentials stay in memory only and are not persisted by the desktop app
 
 Publish it from PowerShell:
 

@@ -129,7 +129,7 @@
                     <StackPanel Spacing="10">
                         <TextBlock Text="Operator" FontWeight="SemiBold" Foreground="White" />
                         <TextBlock Text="{Binding OperatorName}" Foreground="#EEF4FF" />
-                        <TextBlock Text="{Binding FilteredNavigationSummary}" TextWrapping="Wrap" Classes="muted" />
+                        <TextBlock Text="The desktop app runs the embedded PowerShell module and keeps credentials in memory only." TextWrapping="Wrap" Classes="muted" />
                     </StackPanel>
                 </Border>
             </Grid>
@@ -139,9 +139,9 @@
             <Border Classes="surface" Margin="0,0,0,20">
                 <Grid ColumnDefinitions="*,Auto" ColumnSpacing="20">
                     <StackPanel Spacing="8">
-                        <TextBlock Classes="pageTitle" Text="Operate Elements Like a Product, Not a REST Project" />
+                        <TextBlock Classes="pageTitle" Text="Operate Elements Like a Real Product" />
                         <TextBlock Text="{Binding OverviewHeadline}" TextWrapping="Wrap" FontSize="16" Classes="muted" />
-                        <TextBlock Text="{Binding StatusMessage}" Foreground="#67E8F9" FontWeight="SemiBold" />
+                        <TextBlock Text="{Binding StatusMessage}" Foreground="#67E8F9" FontWeight="SemiBold" TextWrapping="Wrap" />
                     </StackPanel>
                     <StackPanel Orientation="Horizontal" Spacing="12" VerticalAlignment="Top">
                         <Button Classes="secondaryAction" Command="{Binding DisconnectCommand}" Content="Disconnect" />
@@ -150,7 +150,7 @@
                 </Grid>
             </Border>
 
-            <Grid Grid.Row="1" ColumnDefinitions="1.4*,1*" ColumnSpacing="20" Margin="0,0,0,20">
+            <Grid Grid.Row="1" ColumnDefinitions="1.5*,1*" ColumnSpacing="20" Margin="0,0,0,20">
                 <Border Classes="surface">
                     <StackPanel Spacing="18">
                         <TextBlock Classes="sectionTitle" Text="Connection Workspace" />
@@ -169,11 +169,24 @@
                                 <TextBox Text="{Binding TenantLabel}" Watermark="Contoso MSP" />
                             </StackPanel>
                         </Grid>
+                        <Grid ColumnDefinitions="*,*" ColumnSpacing="14">
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Client ID" FontWeight="SemiBold" Foreground="White" />
+                                <TextBox Text="{Binding ClientId}" Watermark="App registration client ID" />
+                            </StackPanel>
+                            <StackPanel Spacing="8">
+                                <TextBlock Text="Client Secret" FontWeight="SemiBold" Foreground="White" />
+                                <TextBox Text="{Binding ClientSecret}" PasswordChar="●" Watermark="Stored in memory only" />
+                            </StackPanel>
+                        </Grid>
                         <StackPanel Spacing="8">
                             <TextBlock Text="Scope Bundles" FontWeight="SemiBold" Foreground="White" />
-                            <TextBox Text="{Binding SelectedBundleSummary}" AcceptsReturn="True" Height="70" TextWrapping="Wrap" />
+                            <TextBox Text="{Binding SelectedBundleSummary}" AcceptsReturn="True" Height="70" TextWrapping="Wrap" IsReadOnly="True" />
                         </StackPanel>
-                        <TextBlock Text="Bundle-aware authentication is designed to split Common, Baseline, User, Risk, and Workspace access into maintainable sessions." TextWrapping="Wrap" Classes="muted" />
+                        <StackPanel Orientation="Horizontal" Spacing="12">
+                            <Button Classes="secondaryAction" Command="{Binding LoadCustomersCommand}" Content="Load Customers" />
+                            <Button Classes="secondaryAction" Command="{Binding LoadCustomerSummaryCommand}" Content="Load Summary" />
+                        </StackPanel>
                     </StackPanel>
                 </Border>
 
@@ -182,19 +195,19 @@
                         <TextBlock Classes="sectionTitle" Text="Live Context" />
                         <StackPanel Spacing="10">
                             <TextBlock Text="Selected customer" FontWeight="SemiBold" Foreground="White" />
-                            <TextBlock Text="{Binding SelectedCustomer}" FontSize="22" Foreground="White" />
+                            <TextBlock Text="{Binding SelectedCustomer}" FontSize="22" Foreground="White" TextWrapping="Wrap" />
                         </StackPanel>
                         <StackPanel Spacing="10">
                             <TextBlock Text="Selected tenant" FontWeight="SemiBold" Foreground="White" />
-                            <TextBlock Text="{Binding SelectedTenant}" FontSize="18" Foreground="#D7E7FF" />
+                            <TextBlock Text="{Binding SelectedTenant}" FontSize="18" Foreground="#D7E7FF" TextWrapping="Wrap" />
                         </StackPanel>
-                        <Button Classes="secondaryAction" Command="{Binding LoadMockCustomerCommand}" Content="Load Demo Context" HorizontalAlignment="Left" />
+                        <TextBlock Text="The desktop app reconnects with the in-memory profile for each live workflow so operators do not need to rebuild headers, auth, or pagination logic." TextWrapping="Wrap" Classes="muted" />
                     </StackPanel>
                 </Border>
             </Grid>
 
-            <Grid Grid.Row="2" ColumnDefinitions="1.4*,1*" ColumnSpacing="20">
-                <Grid RowDefinitions="Auto,Auto,Auto,*">
+            <Grid Grid.Row="2" ColumnDefinitions="1.45*,1*" ColumnSpacing="20">
+                <Grid RowDefinitions="Auto,Auto,*">
                     <Border Classes="surface" Margin="0,0,0,20">
                         <StackPanel Spacing="18">
                             <TextBlock Classes="sectionTitle" Text="Platform Snapshot" />
@@ -211,7 +224,7 @@
                                                 <Border Height="6" CornerRadius="999" Background="{Binding AccentHex}" />
                                                 <TextBlock Text="{Binding Title}" Foreground="#AAC0D9" />
                                                 <TextBlock Text="{Binding Value}" FontSize="30" FontWeight="Bold" Foreground="White" />
-                                                <TextBlock Text="{Binding Delta}" Foreground="#67E8F9" />
+                                                <TextBlock Text="{Binding Delta}" Foreground="#67E8F9" TextWrapping="Wrap" />
                                             </StackPanel>
                                         </Border>
                                     </DataTemplate>
@@ -246,52 +259,77 @@
                         </StackPanel>
                     </Border>
 
-                    <Border Grid.Row="2" Classes="surface" Margin="0,0,0,20" IsVisible="{Binding IsCustomersSelected}">
+                    <Border Grid.Row="2" Classes="surface" IsVisible="{Binding IsCustomersSelected}">
                         <StackPanel Spacing="16">
-                            <TextBlock Classes="sectionTitle" Text="Customer Workspace" />
-                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                                <TextBox Text="{Binding SearchText}" Watermark="Search customer or tenant context" />
-                                <Button Classes="primaryAction" Command="{Binding ApplySearchCommand}" Content="Search" />
+                            <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">
+                                <TextBox Text="{Binding SearchText}" Watermark="Search loaded customers by org, email, or tenant" />
+                                <Button Classes="secondaryAction" Command="{Binding ApplySearchCommand}" Content="Select" />
+                                <Button Classes="primaryAction" Command="{Binding LoadCustomersCommand}" Content="Refresh" />
                             </Grid>
-                            <ItemsControl ItemsSource="{Binding TopCustomerHighlights}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border Margin="0,0,0,10" Padding="16" CornerRadius="16" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
-                                            <TextBlock Text="{Binding .}" Foreground="#EEF4FF" />
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
+                            <TextBlock Classes="sectionTitle" Text="Customer Workspace" />
+                            <TextBlock Text="Load real partner customers into the app, then choose one for drill-down work." TextWrapping="Wrap" Classes="muted" />
+                            <TextBlock Text="No customers loaded yet." IsVisible="{Binding HasNoCustomers}" Classes="muted" />
+                            <ScrollViewer MaxHeight="380">
+                                <ItemsControl ItemsSource="{Binding Customers}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="models:CustomerRecord">
+                                            <Border Margin="0,0,0,12" Padding="18" CornerRadius="18" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
+                                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="16">
+                                                    <StackPanel Spacing="6">
+                                                        <TextBlock Text="{Binding Organization}" FontSize="18" FontWeight="SemiBold" Foreground="White" />
+                                                        <TextBlock Text="{Binding OwnerEmail}" Foreground="#D7E7FF" />
+                                                        <TextBlock Text="{Binding TenantNames}" TextWrapping="Wrap" Classes="muted" />
+                                                        <TextBlock Text="{Binding JobStatusName}" Foreground="#67E8F9" />
+                                                    </StackPanel>
+                                                    <StackPanel Spacing="10" VerticalAlignment="Center">
+                                                        <TextBlock Text="{Binding TenantCount}" HorizontalAlignment="Center" FontSize="24" FontWeight="Bold" Foreground="White" />
+                                                        <Button Classes="secondaryAction"
+                                                                Command="{Binding $parent[Window].DataContext.SelectCustomerCommand}"
+                                                                CommandParameter="{Binding .}"
+                                                                Content="Select" />
+                                                    </StackPanel>
+                                                </Grid>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
                         </StackPanel>
                     </Border>
 
-                    <Border Grid.Row="3" Classes="surface" IsVisible="{Binding IsOperationsSelected}">
+                    <Border Grid.Row="2" Classes="surface" IsVisible="{Binding IsOperationsSelected}">
                         <StackPanel Spacing="16">
                             <TextBlock Classes="sectionTitle" Text="Operations Workspace" />
-                            <ItemsControl ItemsSource="{Binding OperationsHighlights}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate>
-                                        <Border Margin="0,0,0,10" Padding="16" CornerRadius="16" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
-                                            <TextBlock Text="{Binding .}" TextWrapping="Wrap" Foreground="#EEF4FF" />
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
+                            <TextBlock Text="This desktop layer is now wired for live module execution. Customer workflows are active first, with broader backup, baseline, and risk workflows next." TextWrapping="Wrap" Classes="muted" />
                             <StackPanel Orientation="Horizontal" Spacing="12">
-                                <Button Classes="secondaryAction" Command="{Binding GenerateReportCommand}" CommandParameter="Baseline Drift Summary" Content="Baseline Summary" />
                                 <Button Classes="secondaryAction" Command="{Binding GenerateReportCommand}" CommandParameter="Backup Posture Summary" Content="Backup Summary" />
+                                <Button Classes="secondaryAction" Command="{Binding GenerateReportCommand}" CommandParameter="Baseline Drift Summary" Content="Baseline Summary" />
                             </StackPanel>
                         </StackPanel>
                     </Border>
 
-                    <Border Grid.Row="3" Classes="surface" IsVisible="{Binding IsReportsSelected}">
+                    <Border Grid.Row="2" Classes="surface" IsVisible="{Binding IsReportsSelected}">
                         <StackPanel Spacing="16">
-                            <TextBlock Classes="sectionTitle" Text="Reporting Workspace" />
-                            <TextBlock Text="Use desktop workflows to move from customer context to actionable summaries without copying raw identifiers." TextWrapping="Wrap" Classes="muted" />
-                            <StackPanel Orientation="Horizontal" Spacing="12">
-                                <Button Classes="primaryAction" Command="{Binding GenerateReportCommand}" CommandParameter="Executive MSP Overview" Content="Executive Overview" />
-                                <Button Classes="secondaryAction" Command="{Binding GenerateReportCommand}" CommandParameter="Workspace Compliance" Content="Workspace Compliance" />
-                            </StackPanel>
+                            <TextBlock Classes="sectionTitle" Text="Customer Summary" />
+                            <TextBlock Text="{Binding SummaryHeadline}" FontSize="20" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
+                            <TextBlock Text="{Binding SummaryDetail}" TextWrapping="Wrap" Classes="muted" />
+                            <Grid ColumnDefinitions="*,*" ColumnSpacing="14" IsVisible="{Binding HasCustomerSummary}">
+                                <Border CornerRadius="16" Padding="16" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Text="Services" Foreground="#AAC0D9" />
+                                        <TextBlock Text="{Binding CurrentCustomerSummary.ServiceNames}" TextWrapping="Wrap" Foreground="White" />
+                                        <TextBlock Text="{Binding CurrentCustomerSummary.ProductCount}" FontSize="28" FontWeight="Bold" Foreground="#67E8F9" />
+                                    </StackPanel>
+                                </Border>
+                                <Border Grid.Column="1" CornerRadius="16" Padding="16" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
+                                    <StackPanel Spacing="8">
+                                        <TextBlock Text="Backup Coverage" Foreground="#AAC0D9" />
+                                        <TextBlock Text="{Binding CurrentCustomerSummary.BackupModuleCount}" FontSize="28" FontWeight="Bold" Foreground="#67E8F9" />
+                                        <TextBlock Text="{Binding CurrentCustomerSummary.TenantNames}" TextWrapping="Wrap" Foreground="White" />
+                                    </StackPanel>
+                                </Border>
+                            </Grid>
+                            <Button Classes="primaryAction" Command="{Binding LoadCustomerSummaryCommand}" Content="Refresh Summary" HorizontalAlignment="Left" />
                         </StackPanel>
                     </Border>
                 </Grid>
@@ -299,38 +337,40 @@
                 <Grid Grid.Column="1" RowDefinitions="Auto,*" RowSpacing="20">
                     <Border Classes="surface">
                         <StackPanel Spacing="14">
-                            <TextBlock Classes="sectionTitle" Text="What This App Solves" />
-                            <TextBlock Text="Connect once. Pick a workflow. Operate the platform with clean output instead of hand-built REST plumbing." TextWrapping="Wrap" Classes="muted" />
-                            <TextBlock Text="The desktop shell is the operator surface for the same public-safe PowerShell module that already handles auth, retries, pagination, and shaping." TextWrapping="Wrap" Foreground="#EEF4FF" />
+                            <TextBlock Classes="sectionTitle" Text="Why This App Matters" />
+                            <TextBlock Text="It turns the module into an operator surface: connect once, run a workflow, and get usable output without living in raw REST or fragile scripts." TextWrapping="Wrap" Classes="muted" />
+                            <TextBlock Text="The current desktop milestone already runs the bundled module for real customer workflows and summary views." TextWrapping="Wrap" Foreground="#EEF4FF" />
+                            <TextBlock Text="Status: live module execution enabled for desktop customer operations." Foreground="#67E8F9" FontWeight="SemiBold" />
                         </StackPanel>
                     </Border>
 
                     <Border Grid.Row="1" Classes="surface">
                         <StackPanel Spacing="16">
                             <TextBlock Classes="sectionTitle" Text="Recent Activity" />
-                            <ItemsControl ItemsSource="{Binding ActivityItems}">
-                                <ItemsControl.ItemTemplate>
-                                    <DataTemplate x:DataType="models:ActivityItem">
-                                        <Border Margin="0,0,0,12" Padding="16" CornerRadius="16" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
-                                            <StackPanel Spacing="6">
-                                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
-                                                    <TextBlock Text="{Binding Title}" Foreground="White" FontWeight="SemiBold" />
-                                                    <Border Padding="10,4" CornerRadius="999" Background="#1C3553">
-                                                        <TextBlock Text="{Binding Status}" Foreground="#67E8F9" />
-                                                    </Border>
-                                                </Grid>
-                                                <TextBlock Text="{Binding Detail}" TextWrapping="Wrap" Classes="muted" />
-                                                <TextBlock Text="{Binding Timestamp}" Foreground="#8CA4BF" />
-                                            </StackPanel>
-                                        </Border>
-                                    </DataTemplate>
-                                </ItemsControl.ItemTemplate>
-                            </ItemsControl>
+                            <ScrollViewer MaxHeight="520">
+                                <ItemsControl ItemsSource="{Binding ActivityItems}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate x:DataType="models:ActivityItem">
+                                            <Border Margin="0,0,0,12" Padding="16" CornerRadius="16" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
+                                                <StackPanel Spacing="6">
+                                                    <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                                        <TextBlock Text="{Binding Title}" Foreground="White" FontWeight="SemiBold" />
+                                                        <Border Padding="10,4" CornerRadius="999" Background="#1C3553">
+                                                            <TextBlock Text="{Binding Status}" Foreground="#67E8F9" />
+                                                        </Border>
+                                                    </Grid>
+                                                    <TextBlock Text="{Binding Detail}" TextWrapping="Wrap" Classes="muted" />
+                                                    <TextBlock Text="{Binding Timestamp}" Foreground="#8CA4BF" />
+                                                </StackPanel>
+                                            </Border>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </ScrollViewer>
                         </StackPanel>
                     </Border>
                 </Grid>
             </Grid>
         </Grid>
     </Grid>
-
 </Window>

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 
 namespace ElementsShell.Desktop.Models;
 
@@ -40,4 +41,91 @@ public sealed class ActivityItem
     public required string Status { get; init; }
 
     public required DateTimeOffset Timestamp { get; init; }
+}
+
+public sealed class DesktopConnectionSettings
+{
+    public required string Environment { get; init; }
+
+    public string TenantLabel { get; init; } = string.Empty;
+
+    public required string ClientId { get; init; }
+
+    public required string ClientSecret { get; init; }
+
+    public required IReadOnlyList<string> ScopeBundles { get; init; }
+}
+
+public sealed class BundleStatusResult
+{
+    public string Name { get; init; } = string.Empty;
+
+    public int RequestedScopeCount { get; init; }
+
+    public int RequestedScopeLength { get; init; }
+
+    public DateTimeOffset? ExpiresAt { get; init; }
+}
+
+public sealed class ConnectionResult
+{
+    public string Environment { get; init; } = string.Empty;
+
+    public string ClientId { get; init; } = string.Empty;
+
+    public string AuthType { get; init; } = string.Empty;
+
+    public string? TenantName { get; init; }
+
+    public IReadOnlyList<string> ScopeBundle { get; init; } = Array.Empty<string>();
+
+    public IReadOnlyList<BundleStatusResult> BundleStatus { get; init; } = Array.Empty<BundleStatusResult>();
+}
+
+public sealed class CustomerRecord
+{
+    public string Id { get; init; } = string.Empty;
+
+    public string Organization { get; init; } = string.Empty;
+
+    public string OwnerEmail { get; init; } = string.Empty;
+
+    public string CountryOrRegion { get; init; } = string.Empty;
+
+    public string JobStatusName { get; init; } = string.Empty;
+
+    public string ManagementModeName { get; init; } = string.Empty;
+
+    public int TenantCount { get; init; }
+
+    public string TenantNames { get; init; } = string.Empty;
+}
+
+public sealed class CustomerSummaryResult
+{
+    public string CustomerId { get; init; } = string.Empty;
+
+    public string Organization { get; init; } = string.Empty;
+
+    public string OwnerEmail { get; init; } = string.Empty;
+
+    public string CountryOrRegion { get; init; } = string.Empty;
+
+    public string ManagementMode { get; init; } = string.Empty;
+
+    public int TenantCount { get; init; }
+
+    public string TenantNames { get; init; } = string.Empty;
+
+    public int ProductCount { get; init; }
+
+    public string ServiceNames { get; init; } = string.Empty;
+
+    public int BackupModuleCount { get; init; }
+
+    public int ProtectedObjectCount { get; init; }
+
+    public int ScannedObjectCount { get; init; }
+
+    public double AvePointStorageGb { get; init; }
 }

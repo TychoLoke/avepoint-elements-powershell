@@ -4,6 +4,20 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.9.1] - 2026-03-31
+
+### Added
+
+- Desktop PowerShell execution service that imports the embedded `AvePoint.Elements` module at runtime
+- Live desktop workflows for `Connect-AvptElements`, `Get-AvptCustomer`, and `Get-AvptCustomerSummary`
+- Embedded module copy-to-output behavior so the desktop app can run against the bundled module files
+
+### Changed
+
+- Reworked the desktop shell view model and UI around real connection fields, live customer loading, and customer summary reporting
+- Bumped the desktop app and module metadata to `0.9.1`
+- Documented that the current desktop app requires `pwsh` on the host machine
+
 ## [0.9.0] - 2026-03-31
 
 ### Added
