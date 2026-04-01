@@ -450,6 +450,26 @@
             </Grid>
         </Border>
 
+        <Border IsVisible="{Binding IsSplashVisible}"
+                Background="#EE07111F"
+                ZIndex="110">
+            <Grid HorizontalAlignment="Center" VerticalAlignment="Center" Width="560">
+                <Border Classes="glassPanel">
+                    <StackPanel Spacing="20">
+                        <Border Width="88" Height="88" CornerRadius="24" Background="#D7263D" HorizontalAlignment="Left">
+                            <TextBlock Text="ES" HorizontalAlignment="Center" VerticalAlignment="Center" FontSize="32" FontWeight="Bold" Foreground="White" />
+                        </Border>
+                        <StackPanel Spacing="8">
+                            <TextBlock Text="Elements Shell Desktop" FontSize="38" FontWeight="Bold" Foreground="White" />
+                            <TextBlock Text="{Binding SplashMessage}" FontSize="16" Foreground="#CFE3FF" TextWrapping="Wrap" />
+                        </StackPanel>
+                        <ProgressBar IsIndeterminate="True" Height="8" />
+                        <TextBlock Text="Secure desktop application layer for AvePoint Elements MSP operations." Classes="muted" />
+                    </StackPanel>
+                </Border>
+            </Grid>
+        </Border>
+
         <Border IsVisible="{Binding IsOnboardingVisible}"
             Background="#D9050A12"
             ZIndex="90">

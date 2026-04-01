@@ -2,6 +2,7 @@
 using System.Collections.ObjectModel;
 using System.Linq;
 using System.Threading.Tasks;
+using Avalonia.Threading;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using ElementsShell.Desktop.Models;
@@ -12,6 +13,9 @@ namespace ElementsShell.Desktop.ViewModels;
 public partial class MainWindowViewModel : ViewModelBase
 {
     private readonly AvptDesktopPowerShellClient _desktopClient = new();
+    private readonly DesktopPreferencesStore _preferencesStore = new();
+    private readonly DispatcherTimer _splashTimer;
+    private bool _isApplyingPreferences;
 
     [ObservableProperty]
     private string _selectedSection = "Overview";
@@ -56,6 +60,9 @@ public partial class MainWindowViewModel : ViewModelBase
     private bool _isOnboardingVisible = true;
 
     [ObservableProperty]
+    private bool _isSplashVisible = true;
+
+    [ObservableProperty]
     private string _busyTitle = "Working";
 
     [ObservableProperty]
@@ -69,6 +76,12 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public MainWindowViewModel()
     {
+        _splashTimer = new DispatcherTimer
+        {
+            Interval = TimeSpan.FromMilliseconds(1800)
+        };
+        _splashTimer.Tick += OnSplashTimerTick;
+
         NavigationItems = new ObservableCollection<NavigationItem>
         {
             new() { Title = "Overview", Subtitle = "Dashboard and health", Glyph = "01" },
@@ -106,6 +119,9 @@ public partial class MainWindowViewModel : ViewModelBase
             new() { Number = "02", Title = "Connect once", Detail = "Enter your client ID and secret, then initialize the bundle-aware session." },
             new() { Number = "03", Title = "Work from live data", Detail = "Load customers, pick a tenant context, and open shaped summaries instead of raw API output." }
         };
+
+        ApplyPreferences(_preferencesStore.Load());
+        _splashTimer.Start();
     }
 
     public ObservableCollection<NavigationItem> NavigationItems { get; }
@@ -159,6 +175,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public string WelcomeDetail => "Designed to feel like an application layer, not a pile of cmdlets and copied IDs.";
 
+    public string SplashMessage => "Loading a calmer, more modern operator workspace.";
+
     partial void OnSelectedSectionChanged(string value)
     {
         OnPropertyChanged(nameof(IsOverviewSelected));
@@ -175,6 +193,26 @@ public partial class MainWindowViewModel : ViewModelBase
         if (value == "Connected") {
             IsOnboardingVisible = false;
         }
+    }
+
+    partial void OnEnvironmentChanged(string value)
+    {
+        SavePreferences();
+    }
+
+    partial void OnTenantLabelChanged(string value)
+    {
+        SavePreferences();
+    }
+
+    partial void OnOperatorNameChanged(string value)
+    {
+        SavePreferences();
+    }
+
+    partial void OnIsOnboardingVisibleChanged(bool value)
+    {
+        SavePreferences();
     }
 
     partial void OnCurrentCustomerSummaryChanged(CustomerSummaryResult? value)
@@ -426,5 +464,46 @@ public partial class MainWindowViewModel : ViewModelBase
             Status = status,
             Timestamp = DateTimeOffset.UtcNow
         });
+    }
+
+    private void ApplyPreferences(DesktopPreferences preferences)
+    {
+        _isApplyingPreferences = true;
+        try
+        {
+            Environment = preferences.Environment;
+            TenantLabel = preferences.TenantLabel;
+            OperatorName = preferences.OperatorName;
+            IsOnboardingVisible = !preferences.OnboardingDismissed;
+        }
+        finally
+        {
+            _isApplyingPreferences = false;
+        }
+    }
+
+    private void SavePreferences()
+    {
+        if (_isApplyingPreferences)
+        {
+            return;
+        }
+
+        _preferencesStore.Save(new DesktopPreferences
+        {
+            Environment = Environment,
+            TenantLabel = TenantLabel,
+            OperatorName = OperatorName,
+            OnboardingDismissed = !IsOnboardingVisible
+        });
+    }
+
+    private void OnSplashTimerTick(object? sender, EventArgs e)
+    {
+        _splashTimer.Stop();
+        IsSplashVisible = false;
+        StatusMessage = IsOnboardingVisible
+            ? "Welcome ready. Follow the onboarding flow to start."
+            : "Desktop workspace restored from local preferences.";
     }
 }

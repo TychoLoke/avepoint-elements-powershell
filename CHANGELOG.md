@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.11.3] - 2026-04-01
+
+### Changed
+
+- Added a splash-style launch overlay for a smoother first impression
+- Added local desktop preferences for environment, operator label, and onboarding state
+- Made the desktop app feel less stateless between launches
+
 ## [0.11.2] - 2026-04-01
 
 ### Changed
