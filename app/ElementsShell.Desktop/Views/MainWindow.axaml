@@ -202,6 +202,7 @@
                             <TextBlock Text="{Binding SelectedTenant}" FontSize="18" Foreground="#D7E7FF" TextWrapping="Wrap" />
                         </StackPanel>
                         <TextBlock Text="The desktop app reconnects with the in-memory profile for each live workflow so operators do not need to rebuild headers, auth, or pagination logic." TextWrapping="Wrap" Classes="muted" />
+                        <Button Classes="secondaryAction" Command="{Binding RefreshDependenciesCommand}" Content="Run Preflight Check" HorizontalAlignment="Left" />
                     </StackPanel>
                 </Border>
             </Grid>
@@ -337,10 +338,26 @@
                 <Grid Grid.Column="1" RowDefinitions="Auto,*" RowSpacing="20">
                     <Border Classes="surface">
                         <StackPanel Spacing="14">
-                            <TextBlock Classes="sectionTitle" Text="Why This App Matters" />
-                            <TextBlock Text="It turns the module into an operator surface: connect once, run a workflow, and get usable output without living in raw REST or fragile scripts." TextWrapping="Wrap" Classes="muted" />
-                            <TextBlock Text="The current desktop milestone already runs the bundled module for real customer workflows and summary views." TextWrapping="Wrap" Foreground="#EEF4FF" />
-                            <TextBlock Text="Status: live module execution enabled for desktop customer operations." Foreground="#67E8F9" FontWeight="SemiBold" />
+                            <Grid ColumnDefinitions="*,Auto" ColumnSpacing="12">
+                                <TextBlock Classes="sectionTitle" Text="Desktop Readiness" />
+                                <Button Classes="secondaryAction" Command="{Binding RefreshDependenciesCommand}" Content="Refresh" />
+                            </Grid>
+                            <TextBlock Text="{Binding DependencySummary}" TextWrapping="Wrap" Classes="muted" />
+                            <ItemsControl ItemsSource="{Binding DependencyChecks}">
+                                <ItemsControl.ItemTemplate>
+                                    <DataTemplate x:DataType="models:DependencyCheckItem">
+                                        <Border Margin="0,0,0,10" Padding="14" CornerRadius="14" Background="#0C1828" BorderBrush="#213854" BorderThickness="1">
+                                            <StackPanel Spacing="4">
+                                                <Grid ColumnDefinitions="*,Auto" ColumnSpacing="10">
+                                                    <TextBlock Text="{Binding Name}" Foreground="White" FontWeight="SemiBold" />
+                                                    <TextBlock Text="{Binding Status}" Foreground="#67E8F9" />
+                                                </Grid>
+                                                <TextBlock Text="{Binding Detail}" TextWrapping="Wrap" Classes="muted" />
+                                            </StackPanel>
+                                        </Border>
+                                    </DataTemplate>
+                                </ItemsControl.ItemTemplate>
+                            </ItemsControl>
                         </StackPanel>
                     </Border>
 

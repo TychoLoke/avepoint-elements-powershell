@@ -1,9 +1,8 @@
 using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.IO;
 using System.Linq;
-using System.Text;
+using System.Management.Automation;
 using System.Text.Json;
 using System.Threading;
 using System.Threading.Tasks;
@@ -23,6 +22,47 @@ public sealed class AvptDesktopPowerShellClient
     public AvptDesktopPowerShellClient()
     {
         _modulePath = ResolveModulePath();
+    }
+
+    public IReadOnlyList<DependencyCheckItem> GetDependencyChecks()
+    {
+        var checks = new List<DependencyCheckItem>
+        {
+            new()
+            {
+                Name = ".NET Runtime",
+                Status = "Ready",
+                Detail = $".NET {Environment.Version} is running the desktop host."
+            },
+            new()
+            {
+                Name = "Embedded Module",
+                Status = File.Exists(_modulePath) ? "Ready" : "Missing",
+                Detail = _modulePath
+            }
+        };
+
+        try
+        {
+            using var powerShell = PowerShell.Create();
+            checks.Add(new DependencyCheckItem
+            {
+                Name = "PowerShell Engine",
+                Status = "Ready",
+                Detail = $"Hosted in-process via {typeof(PowerShell).Assembly.GetName().Name}."
+            });
+        }
+        catch (Exception ex)
+        {
+            checks.Add(new DependencyCheckItem
+            {
+                Name = "PowerShell Engine",
+                Status = "Error",
+                Detail = ex.Message
+            });
+        }
+
+        return checks;
     }
 
     public Task<ConnectionResult> ConnectAsync(DesktopConnectionSettings settings, CancellationToken cancellationToken = default)
@@ -88,14 +128,17 @@ $result | ConvertTo-Json -Depth 8
     {
         var json = await InvokeScriptAsync(script, cancellationToken).ConfigureAwait(false);
 
-        if (string.IsNullOrWhiteSpace(json) || string.Equals(json.Trim(), "null", StringComparison.OrdinalIgnoreCase)) {
+        if (string.IsNullOrWhiteSpace(json) || string.Equals(json.Trim(), "null", StringComparison.OrdinalIgnoreCase))
+        {
             return Array.Empty<T>();
         }
 
         var trimmed = json.TrimStart();
-        if (trimmed.StartsWith("[", StringComparison.Ordinal)) {
+        if (trimmed.StartsWith("[", StringComparison.Ordinal))
+        {
             var items = JsonSerializer.Deserialize<List<T>>(json, JsonOptions);
-            if (items is null) {
+            if (items is null)
+            {
                 return Array.Empty<T>();
             }
 
@@ -106,53 +149,26 @@ $result | ConvertTo-Json -Depth 8
         return single is null ? Array.Empty<T>() : new[] { single };
     }
 
-    private async Task<string> InvokeScriptAsync(string script, CancellationToken cancellationToken)
+    private Task<string> InvokeScriptAsync(string script, CancellationToken cancellationToken)
     {
-        using var process = new Process
+        return Task.Run(() =>
         {
-            StartInfo = new ProcessStartInfo
+            cancellationToken.ThrowIfCancellationRequested();
+
+            using var powerShell = PowerShell.Create();
+            powerShell.AddScript(script);
+
+            var output = powerShell.Invoke();
+
+            if (powerShell.HadErrors)
             {
-                FileName = "pwsh",
-                Arguments = $"-NoLogo -NoProfile -EncodedCommand {EncodeScript(script)}",
-                RedirectStandardError = true,
-                RedirectStandardOutput = true,
-                UseShellExecute = false,
-                CreateNoWindow = true
+                var errors = string.Join(Environment.NewLine, powerShell.Streams.Error.Select(error => error.ToString()));
+                throw new InvalidOperationException(string.IsNullOrWhiteSpace(errors) ? "PowerShell invocation failed." : errors.Trim());
             }
-        };
 
-        if (!process.Start()) {
-            throw new InvalidOperationException("Failed to start pwsh.");
-        }
-
-        using var registration = cancellationToken.Register(() =>
-        {
-            try {
-                if (!process.HasExited) {
-                    process.Kill(entireProcessTree: true);
-                }
-            }
-            catch {
-            }
-        });
-
-        var standardOutput = process.StandardOutput.ReadToEndAsync(cancellationToken);
-        var standardError = process.StandardError.ReadToEndAsync(cancellationToken);
-        await process.WaitForExitAsync(cancellationToken).ConfigureAwait(false);
-
-        var output = await standardOutput.ConfigureAwait(false);
-        var error = await standardError.ConfigureAwait(false);
-
-        if (process.ExitCode != 0) {
-            throw new InvalidOperationException(string.IsNullOrWhiteSpace(error) ? "PowerShell invocation failed." : error.Trim());
-        }
-
-        return output.Trim();
-    }
-
-    private static string EncodeScript(string script)
-    {
-        return Convert.ToBase64String(Encoding.Unicode.GetBytes(script));
+            var rendered = string.Join(Environment.NewLine, output.Select(item => item?.ToString()).Where(item => !string.IsNullOrWhiteSpace(item)));
+            return rendered.Trim();
+        }, cancellationToken);
     }
 
     private static string ResolveModulePath()
@@ -163,8 +179,10 @@ $result | ConvertTo-Json -Depth 8
             Path.GetFullPath(Path.Combine(AppContext.BaseDirectory, "..", "..", "..", "..", "src", "AvePoint.Elements", "AvePoint.Elements.psd1"))
         };
 
-        foreach (var candidate in candidates) {
-            if (File.Exists(candidate)) {
+        foreach (var candidate in candidates)
+        {
+            if (File.Exists(candidate))
+            {
                 return candidate;
             }
         }

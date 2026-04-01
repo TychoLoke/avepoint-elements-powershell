@@ -8,7 +8,7 @@ It is designed to be more than a thin REST wrapper. The module focuses on practi
 
 This repository is in active public development.
 
-- Current version: `0.9.1`
+- Current version: `0.10.0`
 - License: MIT
 - PowerShell: `7.0+`
 - Support target: cross-platform where AvePoint API access is available
@@ -106,7 +106,7 @@ Start-AvptElementsShell
 The repository now also includes a real desktop application shell built with Avalonia:
 
 - project: `app/ElementsShell.Desktop`
-- target: `.NET 8`
+- target: `.NET 9`
 - experience: dashboard-style operator workspace for AvePoint Elements
 
 The desktop app is meant to become the professional operator surface on top of the same public-safe module foundation. It is designed around:
@@ -117,6 +117,7 @@ The desktop app is meant to become the professional operator surface on top of t
 - reporting and activity panels
 - a more application-like experience than a plain terminal menu
 - live customer loading and customer summary workflows backed by the embedded PowerShell module
+- self-contained Windows desktop packaging with built-in dependency checks
 
 Run it locally from source:
 
@@ -128,13 +129,15 @@ dotnet run --project app/ElementsShell.Desktop/ElementsShell.Desktop.csproj
 Current desktop behavior:
 
 - the app embeds the `AvePoint.Elements` module into its output
+- the app hosts PowerShell in-process through the PowerShell SDK
 - the connection workspace accepts `Environment`, `Tenant Label`, `Client ID`, and `Client Secret`
 - the customer workspace can load live customers from `Get-AvptCustomer`
 - the reporting workspace can load a live customer summary from `Get-AvptCustomerSummary`
+- the Desktop Readiness panel verifies the runtime host, embedded module, and PowerShell engine
 
 Current requirement:
 
-- `pwsh` must be available on the machine because the desktop app invokes the embedded module through PowerShell 7
+- release packages are published self-contained for Windows, so no separate .NET or `pwsh` install should be required for normal desktop use
 - credentials stay in memory only and are not persisted by the desktop app
 
 Publish it from PowerShell:

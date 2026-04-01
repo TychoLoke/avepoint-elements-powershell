@@ -43,6 +43,15 @@ public sealed class ActivityItem
     public required DateTimeOffset Timestamp { get; init; }
 }
 
+public sealed class DependencyCheckItem
+{
+    public required string Name { get; init; }
+
+    public required string Status { get; init; }
+
+    public required string Detail { get; init; }
+}
+
 public sealed class DesktopConnectionSettings
 {
     public required string Environment { get; init; }

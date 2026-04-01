@@ -25,6 +25,11 @@ jobs:
         run: |
           ./tools/Build-ElementsShellExe.ps1
 
+      - name: Build Elements Shell Desktop package
+        shell: pwsh
+        run: |
+          ./tools/Build-ElementsShellDesktop.ps1
+
       - name: Signing placeholder
         if: ${{ false }}
         shell: pwsh
@@ -40,6 +45,10 @@ jobs:
             dist/ElementsShell-win-x64-*.zip
             dist/ElementsShell-*-sha256.txt
             dist/ElementsShell-quickstart-*.txt
+            dist/desktop/ElementsShell.Desktop-win-x64-*.zip
+            dist/desktop/ElementsShell.Desktop-*-sha256.txt
+            dist/desktop/*/ElementsShell.Desktop-quickstart-*.txt
+            dist/desktop/*/ElementsShell.exe
 
       - name: Publish release assets
         if: startsWith(github.ref, 'refs/tags/')
@@ -53,6 +62,10 @@ jobs:
             'dist/ElementsShell-win-x64-*.zip'
             'dist/ElementsShell-*-sha256.txt'
             'dist/ElementsShell-quickstart-*.txt'
+            'dist/desktop/ElementsShell.Desktop-win-x64-*.zip'
+            'dist/desktop/ElementsShell.Desktop-*-sha256.txt'
+            'dist/desktop/*/ElementsShell.Desktop-quickstart-*.txt'
+            'dist/desktop/*/ElementsShell.exe'
           )
 
           $existing = gh release view $tag --json tagName --jq .tagName 2>$null

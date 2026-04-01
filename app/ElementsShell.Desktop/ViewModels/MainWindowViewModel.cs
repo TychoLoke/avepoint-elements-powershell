@@ -90,6 +90,7 @@ public partial class MainWindowViewModel : ViewModelBase
         };
 
         Customers = new ObservableCollection<CustomerRecord>();
+        DependencyChecks = new ObservableCollection<DependencyCheckItem>(_desktopClient.GetDependencyChecks());
     }
 
     public ObservableCollection<NavigationItem> NavigationItems { get; }
@@ -101,6 +102,8 @@ public partial class MainWindowViewModel : ViewModelBase
     public ObservableCollection<ActivityItem> ActivityItems { get; }
 
     public ObservableCollection<CustomerRecord> Customers { get; }
+
+    public ObservableCollection<DependencyCheckItem> DependencyChecks { get; }
 
     public bool IsOverviewSelected => SelectedSection == "Overview";
 
@@ -116,6 +119,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public bool HasCustomerSummary => CurrentCustomerSummary is not null;
 
+    public bool HasDependencyChecks => DependencyChecks.Count > 0;
+
     public string ConnectionBadge => ConnectionState == "Connected" ? "SESSION READY" : "NOT CONNECTED";
 
     public string WindowTitle => $"Elements Shell Desktop  {ConnectionBadge}";
@@ -129,6 +134,9 @@ public partial class MainWindowViewModel : ViewModelBase
     public string SummaryDetail => CurrentCustomerSummary is null
         ? "Connect and load a customer to turn the desktop shell into a live operational workspace."
         : $"Protected objects: {CurrentCustomerSummary.ProtectedObjectCount}  •  Scanned objects: {CurrentCustomerSummary.ScannedObjectCount}  •  AvePoint storage: {CurrentCustomerSummary.AvePointStorageGb} GB";
+
+    public string DependencySummary =>
+        string.Join("  •  ", DependencyChecks.Select(item => $"{item.Name}: {item.Status}"));
 
     partial void OnSelectedSectionChanged(string value)
     {
@@ -310,6 +318,20 @@ public partial class MainWindowViewModel : ViewModelBase
         var title = string.IsNullOrWhiteSpace(reportName) ? "Operations summary" : reportName;
         SelectedSection = "Reports";
         StatusMessage = $"Prepared desktop report view: {title}";
+    }
+
+    [RelayCommand]
+    private void RefreshDependencies()
+    {
+        DependencyChecks.Clear();
+        foreach (var item in _desktopClient.GetDependencyChecks())
+        {
+            DependencyChecks.Add(item);
+        }
+
+        StatusMessage = "Dependency checks refreshed for the desktop app.";
+        OnPropertyChanged(nameof(HasDependencyChecks));
+        OnPropertyChanged(nameof(DependencySummary));
     }
 
     private DesktopConnectionSettings BuildConnectionSettings()

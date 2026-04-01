@@ -9,6 +9,7 @@ testResults.xml
 coverage.xml
 coverage.json
 artifacts/
+dist/
 app/**/bin/
 app/**/obj/
 
