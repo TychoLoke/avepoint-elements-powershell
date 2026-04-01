@@ -175,6 +175,14 @@
             <Setter Property="Background" Value="#143052" />
             <Setter Property="Margin" Value="0,0,8,8" />
         </Style>
+        <Style Selector="Border.statTile">
+            <Setter Property="CornerRadius" Value="18" />
+            <Setter Property="Padding" Value="16" />
+            <Setter Property="Background" Value="#0C1828" />
+            <Setter Property="BorderBrush" Value="#213854" />
+            <Setter Property="BorderThickness" Value="1" />
+            <Setter Property="MinWidth" Value="160" />
+        </Style>
         <Style Selector="TextBlock.eyebrow">
             <Setter Property="Foreground" Value="#67E8F9" />
             <Setter Property="FontWeight" Value="SemiBold" />
@@ -525,36 +533,57 @@
                             <Border Grid.Row="1" Classes="surface" IsVisible="{Binding IsCustomersSelected}">
                                 <StackPanel Spacing="16">
                                     <Border Classes="heroCard">
-                                        <Grid ColumnDefinitions="1.5*,0.9*" ColumnSpacing="18">
-                                            <StackPanel Spacing="10">
-                                                <TextBlock Classes="eyebrow" Text="Selected Customer" />
-                                                <TextBlock Text="{Binding SelectedCustomerHeading}" FontSize="28" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
-                                                <TextBlock Text="{Binding SelectedCustomerMeta}" Foreground="#D7E7FF" TextWrapping="Wrap" />
-                                                <TextBlock Text="{Binding SelectedCustomerStatus}" Classes="muted" TextWrapping="Wrap" />
-                                                <WrapPanel IsVisible="{Binding HasSelectedCustomerTenants}">
-                                                    <ItemsControl ItemsSource="{Binding SelectedCustomerTenants}">
-                                                        <ItemsControl.ItemsPanel>
-                                                            <ItemsPanelTemplate>
-                                                                <WrapPanel />
-                                                            </ItemsPanelTemplate>
-                                                        </ItemsControl.ItemsPanel>
-                                                        <ItemsControl.ItemTemplate>
-                                                            <DataTemplate x:DataType="models:TenantChip">
-                                                                <Border Classes="tenantChip">
-                                                                    <TextBlock Classes="badgeText" Text="{Binding Name}" />
-                                                                </Border>
-                                                            </DataTemplate>
-                                                        </ItemsControl.ItemTemplate>
-                                                    </ItemsControl>
-                                                </WrapPanel>
-                                            </StackPanel>
-                                            <Border Grid.Column="1" Classes="chromeCard">
-                                                <StackPanel Spacing="8">
-                                                    <TextBlock Classes="eyebrow" Text="Customer Actions" />
-                                                    <Button Classes="secondaryAction" Command="{Binding LoadCustomerSummaryCommand}" Content="Open Summary" />
-                                                    <Button Classes="secondaryAction" Command="{Binding GenerateReportCommand}" CommandParameter="Customer Health Snapshot" Content="Open Snapshot" />
+                                        <Grid RowDefinitions="Auto,Auto" RowSpacing="16">
+                                            <Grid ColumnDefinitions="1.5*,0.9*" ColumnSpacing="18">
+                                                <StackPanel Spacing="10">
+                                                    <TextBlock Classes="eyebrow" Text="Selected Customer" />
+                                                    <TextBlock Text="{Binding SelectedCustomerHeading}" FontSize="28" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
+                                                    <TextBlock Text="{Binding SelectedCustomerMeta}" Foreground="#D7E7FF" TextWrapping="Wrap" />
+                                                    <TextBlock Text="{Binding SelectedCustomerStatus}" Classes="muted" TextWrapping="Wrap" />
+                                                    <WrapPanel IsVisible="{Binding HasSelectedCustomerTenants}">
+                                                        <ItemsControl ItemsSource="{Binding SelectedCustomerTenants}">
+                                                            <ItemsControl.ItemsPanel>
+                                                                <ItemsPanelTemplate>
+                                                                    <WrapPanel />
+                                                                </ItemsPanelTemplate>
+                                                            </ItemsControl.ItemsPanel>
+                                                            <ItemsControl.ItemTemplate>
+                                                                <DataTemplate x:DataType="models:TenantChip">
+                                                                    <Border Classes="tenantChip">
+                                                                        <TextBlock Classes="badgeText" Text="{Binding Name}" />
+                                                                    </Border>
+                                                                </DataTemplate>
+                                                            </ItemsControl.ItemTemplate>
+                                                        </ItemsControl>
+                                                    </WrapPanel>
                                                 </StackPanel>
-                                            </Border>
+                                                <Border Grid.Column="1" Classes="chromeCard">
+                                                    <StackPanel Spacing="8">
+                                                        <TextBlock Classes="eyebrow" Text="Customer Actions" />
+                                                        <Button Classes="secondaryAction" Command="{Binding LoadCustomerSummaryCommand}" Content="Open Summary" />
+                                                        <Button Classes="secondaryAction" Command="{Binding GenerateReportCommand}" CommandParameter="Customer Health Snapshot" Content="Open Snapshot" />
+                                                    </StackPanel>
+                                                </Border>
+                                            </Grid>
+
+                                            <ItemsControl Grid.Row="1" ItemsSource="{Binding SelectedCustomerStats}" IsVisible="{Binding HasSelectedCustomerStats}">
+                                                <ItemsControl.ItemsPanel>
+                                                    <ItemsPanelTemplate>
+                                                        <WrapPanel Orientation="Horizontal" />
+                                                    </ItemsPanelTemplate>
+                                                </ItemsControl.ItemsPanel>
+                                                <ItemsControl.ItemTemplate>
+                                                    <DataTemplate x:DataType="models:CustomerWorkspaceStat">
+                                                        <Border Classes="statTile" Margin="0,0,12,0">
+                                                            <StackPanel Spacing="6">
+                                                                <TextBlock Text="{Binding Label}" Classes="eyebrow" />
+                                                                <TextBlock Text="{Binding Value}" FontSize="24" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
+                                                                <TextBlock Text="{Binding Detail}" Classes="muted" TextWrapping="Wrap" />
+                                                            </StackPanel>
+                                                        </Border>
+                                                    </DataTemplate>
+                                                </ItemsControl.ItemTemplate>
+                                            </ItemsControl>
                                         </Grid>
                                     </Border>
                                     <Grid ColumnDefinitions="*,Auto,Auto" ColumnSpacing="12">

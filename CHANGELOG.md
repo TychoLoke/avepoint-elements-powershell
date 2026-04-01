@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.12.3] - 2026-04-01
+
+### Changed
+
+- Expanded the selected-customer workspace with stat tiles so customer context reads more like a page than a selection state
+- Strengthened the customer detail surface with clearer visual presentation of tenancy and operational context
+- Continued moving the connected shell toward richer workspace components instead of generic stacked panels
+
 ## [0.12.2] - 2026-04-01
 
 ### Changed

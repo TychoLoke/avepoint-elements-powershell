@@ -96,6 +96,15 @@ public sealed class TenantChip
     public string Name { get; init; } = string.Empty;
 }
 
+public sealed class CustomerWorkspaceStat
+{
+    public required string Label { get; init; }
+
+    public required string Value { get; init; }
+
+    public required string Detail { get; init; }
+}
+
 public sealed class DesktopConnectionSettings
 {
     public required string Environment { get; init; }

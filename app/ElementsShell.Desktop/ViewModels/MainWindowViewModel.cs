@@ -125,6 +125,7 @@ public partial class MainWindowViewModel : ViewModelBase
         Customers = new ObservableCollection<CustomerRecord>();
         RecentCustomers = new ObservableCollection<RecentCustomerItem>();
         SelectedCustomerTenants = new ObservableCollection<TenantChip>();
+        SelectedCustomerStats = new ObservableCollection<CustomerWorkspaceStat>();
         DependencyChecks = new ObservableCollection<DependencyCheckItem>(_desktopClient.GetDependencyChecks());
         OnboardingSteps = new ObservableCollection<OnboardingStep>
         {
@@ -153,6 +154,8 @@ public partial class MainWindowViewModel : ViewModelBase
 
     public ObservableCollection<TenantChip> SelectedCustomerTenants { get; }
 
+    public ObservableCollection<CustomerWorkspaceStat> SelectedCustomerStats { get; }
+
     public ObservableCollection<DependencyCheckItem> DependencyChecks { get; }
 
     public ObservableCollection<OnboardingStep> OnboardingSteps { get; }
@@ -180,6 +183,8 @@ public partial class MainWindowViewModel : ViewModelBase
     public bool HasSelectedCustomer => SelectedCustomerRecord is not null;
 
     public bool HasSelectedCustomerTenants => SelectedCustomerTenants.Count > 0;
+
+    public bool HasSelectedCustomerStats => SelectedCustomerStats.Count > 0;
 
     public bool IsConnected => ConnectionState == "Connected";
 
@@ -394,10 +399,12 @@ public partial class MainWindowViewModel : ViewModelBase
     partial void OnSelectedCustomerRecordChanged(CustomerRecord? value)
     {
         SelectedCustomerTenants.Clear();
+        SelectedCustomerStats.Clear();
 
         if (value is null) {
             OnPropertyChanged(nameof(HasSelectedCustomer));
             OnPropertyChanged(nameof(HasSelectedCustomerTenants));
+            OnPropertyChanged(nameof(HasSelectedCustomerStats));
             OnPropertyChanged(nameof(SelectedCustomerHeading));
             OnPropertyChanged(nameof(SelectedCustomerMeta));
             OnPropertyChanged(nameof(SelectedCustomerStatus));
@@ -410,10 +417,29 @@ public partial class MainWindowViewModel : ViewModelBase
         {
             SelectedCustomerTenants.Add(new TenantChip { Name = tenant });
         }
+        SelectedCustomerStats.Add(new CustomerWorkspaceStat
+        {
+            Label = "Tenants",
+            Value = value.TenantCount.ToString(),
+            Detail = "Live tenant contexts returned from the Elements module."
+        });
+        SelectedCustomerStats.Add(new CustomerWorkspaceStat
+        {
+            Label = "Management",
+            Value = value.ManagementModeName,
+            Detail = "Current management model for the selected customer."
+        });
+        SelectedCustomerStats.Add(new CustomerWorkspaceStat
+        {
+            Label = "Job Status",
+            Value = value.JobStatusName,
+            Detail = "Latest onboarding or sync state surfaced by the API."
+        });
         OnPropertyChanged(nameof(ContextBadge));
         OnPropertyChanged(nameof(ContextDetail));
         OnPropertyChanged(nameof(HasSelectedCustomer));
         OnPropertyChanged(nameof(HasSelectedCustomerTenants));
+        OnPropertyChanged(nameof(HasSelectedCustomerStats));
         OnPropertyChanged(nameof(SelectedCustomerHeading));
         OnPropertyChanged(nameof(SelectedCustomerMeta));
         OnPropertyChanged(nameof(SelectedCustomerStatus));
