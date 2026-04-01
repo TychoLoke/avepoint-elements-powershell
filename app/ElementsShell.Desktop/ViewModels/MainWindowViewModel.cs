@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.ObjectModel;
+using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
 using System.Threading.Tasks;
@@ -25,7 +27,7 @@ public partial class MainWindowViewModel : ViewModelBase
     private string _environment = "Commercial";
 
     [ObservableProperty]
-    private string _tenantLabel = "Mock MSP";
+    private string _tenantLabel = string.Empty;
 
     [ObservableProperty]
     private string _operatorName = "MSP Operator";
@@ -360,7 +362,7 @@ public partial class MainWindowViewModel : ViewModelBase
         ? "Your session is active. Continue into the workspace to load customers and summaries."
         : "Use the client ID and client secret from your AvePoint Elements portal app registration. Credentials stay in memory only.";
 
-    public string OnboardingConnectionButtonLabel => IsConnected ? "Connected" : "Connect and Continue";
+    public string OnboardingConnectionButtonLabel => IsBusy ? "Connecting..." : IsConnected ? "Connected" : "Connect and Continue";
 
     public string OnboardingFeedbackTitle => IsConnected ? "Session ready" : "Connection feedback";
 
@@ -428,6 +430,12 @@ public partial class MainWindowViewModel : ViewModelBase
         OnPropertyChanged(nameof(OnboardingConnectionButtonLabel));
         OnPropertyChanged(nameof(OnboardingFeedbackTitle));
         OnPropertyChanged(nameof(OnboardingFeedbackBadge));
+        OnPropertyChanged(nameof(CanConnectFromOnboarding));
+    }
+
+    partial void OnIsBusyChanged(bool value)
+    {
+        OnPropertyChanged(nameof(OnboardingConnectionButtonLabel));
         OnPropertyChanged(nameof(CanConnectFromOnboarding));
     }
 
@@ -609,6 +617,16 @@ public partial class MainWindowViewModel : ViewModelBase
 
         if (string.IsNullOrWhiteSpace(ClientId) || string.IsNullOrWhiteSpace(ClientSecret)) {
             StatusMessage = "Client ID and client secret are required for the desktop session.";
+            return;
+        }
+
+        if (!Guid.TryParse(ClientId.Trim(), out _)) {
+            StatusMessage = "Client ID must be a valid GUID from the AvePoint Elements portal app registration.";
+            return;
+        }
+
+        if (DependencyChecks.Any(item => item.Status != "Ready")) {
+            StatusMessage = "One or more desktop readiness checks failed. Refresh dependencies and review the setup panel.";
             return;
         }
 
@@ -839,6 +857,35 @@ public partial class MainWindowViewModel : ViewModelBase
         OnPropertyChanged(nameof(HasDependencyChecks));
         OnPropertyChanged(nameof(DependencySummary));
         OnPropertyChanged(nameof(ReadinessHeadline));
+    }
+
+    [RelayCommand]
+    private void OpenDiagnostics()
+    {
+        var targetPath = DiagnosticLogPath;
+        var targetDirectory = Path.GetDirectoryName(targetPath);
+
+        try
+        {
+            if (!string.IsNullOrWhiteSpace(targetDirectory)) {
+                Directory.CreateDirectory(targetDirectory);
+                if (!File.Exists(targetPath)) {
+                    File.WriteAllText(targetPath, $"[{DateTimeOffset.UtcNow:O}] Diagnostic log initialized.{System.Environment.NewLine}");
+                }
+            }
+
+            Process.Start(new ProcessStartInfo
+            {
+                FileName = targetPath,
+                UseShellExecute = true
+            });
+
+            StatusMessage = "Opened the desktop diagnostic log.";
+        }
+        catch (Exception ex)
+        {
+            StatusMessage = $"Unable to open the diagnostic log automatically. Path: {targetPath}  •  {ex.Message}";
+        }
     }
 
     [RelayCommand]

@@ -350,6 +350,14 @@
                                     </Grid>
                                     <TextBlock Text="{Binding OnboardingFeedbackDetail}" FontWeight="SemiBold" Foreground="White" TextWrapping="Wrap" />
                                     <TextBlock Text="{Binding DiagnosticLogPath}" Classes="muted" TextWrapping="Wrap" />
+                                    <StackPanel Orientation="Horizontal" Spacing="10">
+                                        <Button Classes="secondaryAction"
+                                                Command="{Binding OpenDiagnosticsCommand}"
+                                                Content="Open Diagnostic Log" />
+                                        <Button Classes="secondaryAction"
+                                                Command="{Binding RefreshDependenciesCommand}"
+                                                Content="Refresh Checks" />
+                                    </StackPanel>
                                 </StackPanel>
                             </Border>
                             <Border Grid.Row="1" Classes="miniPanel">

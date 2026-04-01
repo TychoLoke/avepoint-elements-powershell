@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.12.8] - 2026-04-01
+
+### Added
+
+- Added `tools/Invoke-DesktopSmokeTest.ps1` for repeatable local desktop smoke testing with optional environment-variable-based live validation.
+- Added an in-app action to open the desktop diagnostic log directly from the onboarding feedback panel.
+
+### Changed
+
+- Added client ID format validation and readiness validation before desktop connection attempts.
+- Improved the onboarding connect button state so it clearly shows when the app is connecting.
+- Completed a broader QA pass covering Pester, desktop build, packaging, and live connection/customer retrieval smoke validation.
+
 ## [0.12.7] - 2026-04-01
 
 ### Added
