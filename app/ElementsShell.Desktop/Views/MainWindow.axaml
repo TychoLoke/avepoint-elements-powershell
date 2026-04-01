@@ -78,6 +78,16 @@
         <Style Selector="TextBlock.muted">
             <Setter Property="Foreground" Value="#9CB2CB" />
         </Style>
+        <Style Selector="Border.badge">
+            <Setter Property="CornerRadius" Value="999" />
+            <Setter Property="Padding" Value="10,5" />
+            <Setter Property="Background" Value="#143052" />
+        </Style>
+        <Style Selector="TextBlock.badgeText">
+            <Setter Property="Foreground" Value="#8FD3FF" />
+            <Setter Property="FontSize" Value="12" />
+            <Setter Property="FontWeight" Value="SemiBold" />
+        </Style>
     </Window.Styles>
 
     <Grid ColumnDefinitions="340,*" Margin="22">
@@ -141,6 +151,17 @@
                     <StackPanel Spacing="8">
                         <TextBlock Classes="pageTitle" Text="Operate Elements Like a Real Product" />
                         <TextBlock Text="{Binding OverviewHeadline}" TextWrapping="Wrap" FontSize="16" Classes="muted" />
+                        <StackPanel Orientation="Horizontal" Spacing="10">
+                            <Border Classes="badge">
+                                <TextBlock Classes="badgeText" Text="Desktop App" />
+                            </Border>
+                            <Border Classes="badge">
+                                <TextBlock Classes="badgeText" Text="Self-contained" />
+                            </Border>
+                            <Border Classes="badge">
+                                <TextBlock Classes="badgeText" Text="MSI Ready" />
+                            </Border>
+                        </StackPanel>
                         <TextBlock Text="{Binding StatusMessage}" Foreground="#67E8F9" FontWeight="SemiBold" TextWrapping="Wrap" />
                     </StackPanel>
                     <StackPanel Grid.Row="1" Orientation="Horizontal" Spacing="12">
@@ -153,7 +174,10 @@
             <Grid Grid.Row="1" ColumnDefinitions="1.5*,1*" ColumnSpacing="20" Margin="0,0,0,20">
                 <Border Classes="surface">
                     <StackPanel Spacing="18">
-                        <TextBlock Classes="sectionTitle" Text="Connection Workspace" />
+                        <StackPanel Spacing="4">
+                            <TextBlock Classes="sectionTitle" Text="Connection Workspace" />
+                            <TextBlock Text="A guided operator panel for connection context, credentials, and live module workflows." Classes="muted" TextWrapping="Wrap" />
+                        </StackPanel>
                         <StackPanel Spacing="12">
                             <StackPanel Spacing="8">
                                 <TextBlock Text="Environment" FontWeight="SemiBold" Foreground="White" />
@@ -190,7 +214,10 @@
 
                 <Border Grid.Column="1" Classes="surface">
                     <StackPanel Spacing="18">
-                        <TextBlock Classes="sectionTitle" Text="Live Context" />
+                        <StackPanel Spacing="4">
+                            <TextBlock Classes="sectionTitle" Text="Live Context" />
+                            <TextBlock Text="Current desktop operator context from the active workflow." Classes="muted" TextWrapping="Wrap" />
+                        </StackPanel>
                         <StackPanel Spacing="10">
                             <TextBlock Text="Selected customer" FontWeight="SemiBold" Foreground="White" />
                             <TextBlock Text="{Binding SelectedCustomer}" FontSize="22" Foreground="White" TextWrapping="Wrap" />
@@ -209,7 +236,10 @@
                 <Grid RowDefinitions="Auto,Auto,*">
                     <Border Classes="surface" Margin="0,0,0,20">
                         <StackPanel Spacing="18">
-                            <TextBlock Classes="sectionTitle" Text="Platform Snapshot" />
+                            <StackPanel Spacing="4">
+                                <TextBlock Classes="sectionTitle" Text="Platform Snapshot" />
+                                <TextBlock Text="A cleaner desktop summary surface for high-signal operational status." Classes="muted" TextWrapping="Wrap" />
+                            </StackPanel>
                             <ItemsControl ItemsSource="{Binding MetricCards}">
                                 <ItemsControl.ItemsPanel>
                                     <ItemsPanelTemplate>

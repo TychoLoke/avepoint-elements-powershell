@@ -8,7 +8,7 @@ It is designed to be more than a thin REST wrapper. The module focuses on practi
 
 This repository is in active public development.
 
-- Current version: `0.10.0`
+- Current version: `0.11.0`
 - License: MIT
 - PowerShell: `7.0+`
 - Support target: cross-platform where AvePoint API access is available
@@ -118,6 +118,7 @@ The desktop app is meant to become the professional operator surface on top of t
 - a more application-like experience than a plain terminal menu
 - live customer loading and customer summary workflows backed by the embedded PowerShell module
 - self-contained Windows desktop packaging with built-in dependency checks
+- MSI packaging for a more normal Windows install experience
 
 Run it locally from source:
 
@@ -146,6 +147,17 @@ Publish it from PowerShell:
 pwsh ./tools/Build-ElementsShellDesktop.ps1
 ```
 
+Build the MSI installer:
+
+```powershell
+pwsh ./tools/Build-ElementsShellDesktopMsi.ps1
+```
+
+Note:
+
+- MSI packaging uses WiX Toolset and is built on Windows hosts
+- tagged GitHub releases publish the MSI from the Windows packaging workflow
+
 Publish it for a specific runtime:
 
 ```powershell
@@ -165,6 +177,8 @@ The repository also includes:
 
 - `app/ElementsShell.ps1` as the launcher entry point
 - `tools/Build-ElementsShellExe.ps1` to package a Windows `.exe`, `.zip`, and checksum file
+- `tools/Build-ElementsShellDesktop.ps1` to publish the self-contained desktop app package
+- `tools/Build-ElementsShellDesktopMsi.ps1` to build the desktop MSI installer
 - `.github/workflows/shell-package.yml` to build the wrapper in GitHub Actions on Windows and attach `ElementsShell.exe` to tagged releases
 
 Windows release packaging now includes:

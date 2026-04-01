@@ -1,0 +1,10 @@
+{
+  "version": 2,
+  "dgSpecHash": "uzfBZSRNsqw=",
+  "success": true,
+  "projectFilePath": "/home/tycho/projects/avepoint-elements-powershell/installer/ElementsShell.Desktop.Installer/ElementsShell.Desktop.Installer.wixproj",
+  "expectedPackageFiles": [
+    "/home/tycho/.nuget/packages/wixtoolset.ui.wixext/6.0.2/wixtoolset.ui.wixext.6.0.2.nupkg.sha512"
+  ],
+  "logs": []
+}

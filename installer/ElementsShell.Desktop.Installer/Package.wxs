@@ -1,0 +1,69 @@
+<Wix xmlns="http://wixtoolset.org/schemas/v4/wxs"
+     xmlns:ui="http://wixtoolset.org/schemas/v4/wxs/ui">
+  <Package
+      Name="Elements Shell Desktop"
+      Manufacturer="Tycho Loke"
+      Version="$(var.ProductVersion)"
+      UpgradeCode="80F22D99-26C6-4E0A-9A98-85313D5A8290"
+      Scope="perMachine">
+
+    <MajorUpgrade DowngradeErrorMessage="A newer version of Elements Shell Desktop is already installed." />
+    <MediaTemplate EmbedCab="yes" CompressionLevel="high" />
+
+    <Icon Id="ElementsShellIcon.ico" SourceFile="..\..\app\ElementsShell.Desktop\Assets\avalonia-logo.ico" />
+    <Property Id="ARPPRODUCTICON" Value="ElementsShellIcon.ico" />
+    <Property Id="ARPURLINFOABOUT" Value="https://github.com/TychoLoke/avepoint-elements-powershell" />
+    <Property Id="ARPHELPLINK" Value="https://github.com/TychoLoke/avepoint-elements-powershell/releases" />
+    <Property Id="WIXUI_INSTALLDIR" Value="INSTALLFOLDER" />
+    <Property Id="WIXUI_EXITDIALOGOPTIONALTEXT" Value="Elements Shell Desktop is installed and ready to run." />
+
+    <ui:WixUI Id="WixUI_InstallDir" InstallDirectory="INSTALLFOLDER" />
+
+    <StandardDirectory Id="ProgramFiles64Folder">
+      <Directory Id="INSTALLFOLDER" Name="Elements Shell Desktop">
+        <Component Id="MainExecutableComponent" Guid="743D59BC-231E-4D64-A8A1-4D503EE65EF3">
+          <File Id="ElementsShellExe" Source="$(var.PublishDir)\ElementsShell.exe" KeyPath="yes" Checksum="yes">
+            <Shortcut
+                Id="DesktopShortcut"
+                Directory="DesktopFolder"
+                Name="Elements Shell Desktop"
+                Description="Launch Elements Shell Desktop"
+                WorkingDirectory="INSTALLFOLDER"
+                Advertise="no"
+                Icon="ElementsShellIcon.ico" />
+            <Shortcut
+                Id="ProgramMenuShortcut"
+                Directory="ProgramMenuDir"
+                Name="Elements Shell Desktop"
+                Description="Launch Elements Shell Desktop"
+                WorkingDirectory="INSTALLFOLDER"
+                Advertise="no"
+                Icon="ElementsShellIcon.ico" />
+          </File>
+        </Component>
+
+        <Files Include="$(var.PublishDir)\**">
+          <Exclude Files="$(var.PublishDir)\ElementsShell.exe" />
+          <Exclude Files="$(var.PublishDir)\**\*.pdb" />
+        </Files>
+      </Directory>
+    </StandardDirectory>
+
+    <StandardDirectory Id="ProgramMenuFolder">
+      <Directory Id="ProgramMenuDir" Name="Elements Shell Desktop">
+        <Component Id="ProgramMenuFolderComponent" Guid="45FC1B03-A43C-4D4D-95B3-917759D1374B">
+          <RemoveFolder Id="ProgramMenuDirRemove" On="uninstall" />
+          <RegistryValue
+              Root="HKLM"
+              Key="Software\TychoLoke\ElementsShellDesktop"
+              Name="Installed"
+              Type="integer"
+              Value="1"
+              KeyPath="yes" />
+        </Component>
+      </Directory>
+    </StandardDirectory>
+
+    <StandardDirectory Id="DesktopFolder" />
+  </Package>
+</Wix>

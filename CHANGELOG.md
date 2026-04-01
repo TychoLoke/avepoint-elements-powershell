@@ -4,6 +4,19 @@ All notable changes to this project will be documented in this file.
 
 The format is based on Keep a Changelog and the project follows Semantic Versioning.
 
+## [0.11.0] - 2026-04-01
+
+### Added
+
+- WiX-based MSI installer project for Elements Shell Desktop
+- `Build-ElementsShellDesktopMsi.ps1` to turn the published desktop output into an MSI package
+- Release workflow support for publishing desktop MSI assets
+
+### Changed
+
+- Continued refining the desktop application layout and install experience
+- Prepared the project for a more normal Windows installer flow alongside the ZIP package
+
 ## [0.10.1] - 2026-04-01
 
 ### Changed
